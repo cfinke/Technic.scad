@@ -68,7 +68,7 @@ module technic() {
  * part #50450: technic_axle( length = 32 );
  */
 module technic_axle(
-	length=2, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
+	length = 2, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
 ) {
 	                       technic_axle_spline( length = length );
 	rotate( [ 0, 0, 90 ] ) technic_axle_spline( length = length );
@@ -80,7 +80,7 @@ module technic_axle(
 		// To get the rounded corners when viewing the spline looking at the long wide side, we need
 		// to intersect it with rounded rectangle turned 90º in that direction.
 		intersection() {
-			rotate([90,0,0])
+			rotate( [ 90, 0, 0 ] )
 				linear_extrude( technic_axle_spline_thickness, center = true )
 					technic_rounded_rectangle( width = technic_axle_spline_width, height = stud_length_in_ms * length, radius = technic_axle_cross_section_radius );
 
@@ -96,7 +96,7 @@ module technic_axle(
  * part #18654: technic_pin_connector( length = 1 );
  */
 module technic_pin_connector(
-	length=1, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
+	length = 1, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
 ) {
 	union() {
 		// The hollow cylinder that forms the outer wall.
@@ -118,14 +118,14 @@ module technic_pin_connector(
 module technic_rounded_rectangle( width = 1, height = 1, radius = 0.1 ) {
 	union() {
 		// Position a circle to act as each rounded corner of the axle.
-		translate([-( width / 2 ) + radius,  ( height / 2 ) - radius, 0]) circle(r = radius);
-		translate([ ( width / 2 ) - radius,  ( height / 2 ) - radius, 0]) circle(r = radius);
-		translate([ ( width / 2 ) - radius, -( height / 2 ) + radius, 0]) circle(r = radius);
-		translate([-( width / 2 ) + radius, -( height / 2 ) + radius, 0]) circle(r = radius);
+		translate( [ -( width / 2 ) + radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
+		translate( [  ( width / 2 ) - radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
+		translate( [  ( width / 2 ) - radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
+		translate( [ -( width / 2 ) + radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
 
 		// Now add squares to fill in the spaces between the circles in each direction.
-		square([width - ( radius * 2 ), height],                  center = true);
-		square([width,                  height - ( radius * 2 )], center = true);
+		square( [ width - ( radius * 2 ), height ],                 center = true );
+		square( [ width,                  height - ( radius * 2 )], center = true );
 	};
 }
 
