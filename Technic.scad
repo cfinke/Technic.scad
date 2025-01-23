@@ -4,7 +4,7 @@
  * For standard LEGO-compatible bricks, see LEGO.scad. This module
  * is specifically for parts without studs, like gears and axles.
  *
- * Copyright (c) 2025 Christopher Finke
+ * Copyright (c) 2025 Christopher Finke (cfinke@gmail.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
