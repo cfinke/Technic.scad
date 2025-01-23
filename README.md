@@ -25,3 +25,11 @@ Generate a Technic-compatible axle.
 |---|---|---|
 | `length` | int | The length of the pin connector in "stud widths." FWIW, LEGO only makes these in length 1. |
 
+`technic_24_tooth_gear();`
+--------------------------
+![A 24-tooth gear compatible with LEGO part #3648.](images/technic_24_tooth_gear.png)
+
+| Parameter | Values| Description |
+|---|---|---|
+| `width` | int | In multiples of the original gear width, how wide should it be? e.g., a width of 3 would generate a single gear with the same total width as three gears set side-by-side. |
+

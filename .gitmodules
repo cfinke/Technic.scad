@@ -1,0 +1,3 @@
+[submodule "lib/gears"]
+	path = lib/gears
+	url = git@github.com:chrisspen/gears.git

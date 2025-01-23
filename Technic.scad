@@ -30,6 +30,8 @@ $fa = 1; $fs = 0.05;
 
 stud_length_in_ms = 8;
 
+technic_axle_interference_fit_ratio = 1.022;
+
 technic_axle_spline_thickness = 1.8;
 technic_axle_spline_width = 4.75;
 technic_axle_spline_corner_radius = 0.4;
@@ -40,6 +42,21 @@ technic_pin_connector_wall_thickness = 1.3;
 technic_pin_connector_shoulder_wall_thickness = 0.6;
 technic_pin_connector_shoulder_depth = 0.70;
 
+technic_gear_24_tooth_outer_diameter = 25.4;
+technic_gear_24_tooth_bottom_diameter = 21.65;
+technic_gear_24_tooth_inner_diameter = 19.6;
+technic_gear_24_tooth_tooth_depth = ( technic_gear_24_tooth_outer_diameter - technic_gear_24_tooth_bottom_diameter ) / 2;
+technic_gear_pin_hole_outer_diameter = 6.1;
+technic_gear_pin_hole_inner_diameter = 4.8; // Measured and confirmed in multiple places online.
+technic_gear_pin_hole_offset_from_center = 5.675;
+technic_gear_pin_hole_thickness = 6.1;
+technic_gear_tooth_thickness = 3.7;
+technic_gear_wheel_thickness = 1.3;
+technic_gear_axle_reinforcement_width = 9.63;
+technic_gear_axle_reinforcement_height = 5;
+technic_gear_axle_reinforcement_thickness = 7.73;
+technic_gear_axle_slot_length = ( ( technic_gear_pin_hole_offset_from_center * 2 ) + technic_gear_pin_hole_inner_diameter ) * .8; // Close enough :)
+
 // When OpenSCAD does the preview render, if two objects in a difference() end at exactly
 // the same plane, it will show a shadowy 0-thickness layer. If instead, one of the difference()
 // children extends any amount past that surface, the preview is much cleaner.
@@ -47,7 +64,8 @@ EXTENSION_FOR_DIFFERENCE = 1;
 
 module technic() {
 	technic_axle();
-	translate([ technic_pin_connector_outer_diameter, 0, 0]) technic_pin_connector();
+	translate( [ technic_pin_connector_outer_diameter, 0, 0 ] ) technic_pin_connector();
+	translate( [ technic_gear_24_tooth_outer_diameter, 0, 0 ] ) technic_24_tooth_gear();
 }
 
 /**
@@ -103,13 +121,129 @@ module technic_pin_connector(
 		difference() {
 			cylinder( h = stud_length_in_ms * length, r = technic_pin_connector_outer_diameter / 2, center = true );
 			cylinder( h = stud_length_in_ms * length + EXTENSION_FOR_DIFFERENCE, r = ( technic_pin_connector_outer_diameter / 2 ) - technic_pin_connector_shoulder_wall_thickness, center = true );
-		}
+		};
 
 		difference() {
 			cylinder( h = ( stud_length_in_ms * length ) - ( technic_pin_connector_shoulder_depth * 2 ), r = technic_pin_connector_outer_diameter / 2, center = true );
 			cylinder( h = ( stud_length_in_ms * length ) - ( technic_pin_connector_shoulder_depth * 2 ) + EXTENSION_FOR_DIFFERENCE, r = ( technic_pin_connector_outer_diameter / 2 ) - technic_pin_connector_wall_thickness, center = true );
-		}
-	}
+		};
+	};
+}
+
+/**
+ * 24-tooth gears.
+ *
+ * part #3648: technic_24_tooth_gear();
+ */
+module technic_24_tooth_gear(
+	width = 1, // In multiples of the original gear width, how wide should it be? e.g., a width of 3 would generate a single gear with the same total width as three gears set side-by-side.
+) {
+	include <lib/gears/gears.scad>;
+
+	// The overall widest part of a gear is the axle reinforcement.
+	// For determining the other widths (thicknesses), the constants are:
+	// * the difference between the axle reinforcement thickness and the pin hole thickness.
+	// * the difference between the tooth thickness and the wheel thickness.
+	// * the difference between the wheel thickness and the pin hole thickness.
+	// Calculate the remaining values based on these differences.
+	desired_gear_axle_reinforcement_thickness = width * technic_gear_axle_reinforcement_thickness;
+	desired_pin_hole_thickness = desired_gear_axle_reinforcement_thickness - ( technic_gear_axle_reinforcement_thickness - technic_gear_pin_hole_thickness );
+	desired_gear_tooth_thickness = desired_gear_axle_reinforcement_thickness - ( technic_gear_axle_reinforcement_thickness - technic_gear_tooth_thickness );
+	desired_gear_wheel_thickness = desired_gear_axle_reinforcement_thickness - ( technic_gear_axle_reinforcement_thickness - technic_gear_wheel_thickness );
+
+	difference() {
+		union() {
+			// The central hub,
+			difference() {
+				union () {
+					// The hub of the gear.
+					cylinder( r = technic_gear_24_tooth_inner_diameter / 2, h = desired_gear_wheel_thickness, center = true );
+
+					// The walls of the pin holes
+					union () {
+						translate( [ technic_gear_pin_hole_offset_from_center, 0, 0 ] )
+							cylinder( d = technic_gear_pin_hole_outer_diameter, h = desired_pin_hole_thickness, center = true );
+
+						translate( [ -technic_gear_pin_hole_offset_from_center, 0, 0 ] )
+							cylinder( d = technic_gear_pin_hole_outer_diameter, h = desired_pin_hole_thickness, center = true );
+
+						translate( [ 0, technic_gear_pin_hole_offset_from_center, 0 ] )
+							cylinder( d = technic_gear_pin_hole_outer_diameter, h = desired_pin_hole_thickness, center = true );
+
+						translate( [ 0, -technic_gear_pin_hole_offset_from_center, 0 ] )
+							cylinder( d = technic_gear_pin_hole_outer_diameter, h = desired_pin_hole_thickness, center = true );
+					};
+				};
+
+				// The pin holes.
+				union() {
+					translate( [ technic_gear_pin_hole_offset_from_center, 0, 0 ] ) difference() {
+						cylinder( d = technic_gear_pin_hole_inner_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+					};
+
+					translate( [ -technic_gear_pin_hole_offset_from_center, 0, 0 ] )difference() {
+						cylinder( d = technic_gear_pin_hole_inner_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+					};
+
+					translate( [ 0, technic_gear_pin_hole_offset_from_center, 0 ] )difference() {
+						cylinder( d = technic_gear_pin_hole_inner_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+					};
+
+					translate( [ 0, -technic_gear_pin_hole_offset_from_center, 0 ] )difference() {
+						cylinder( d = technic_gear_pin_hole_inner_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+					};
+				};
+			};
+
+			// The teeth.
+			translate( [ 0, 0, - ( desired_gear_tooth_thickness / 2 ) ] ) {
+				// The gear teeth seem like they're a little too long (exceeding technic_gear_24_tooth_outer_diameter), but I can't tell if it matters.
+				spur_gear( modul = 1, tooth_number = 24, width = desired_gear_tooth_thickness, bore = technic_gear_24_tooth_inner_diameter, pressure_angle=20 );
+			};
+
+			// The gear function leaves very small gaps at the bottom corners of the teeth. Fill that all in.
+			difference() {
+				cylinder( d = technic_gear_24_tooth_outer_diameter - ( technic_gear_24_tooth_tooth_depth * 2 ), h = desired_gear_tooth_thickness, center = true );
+				cylinder( d = technic_gear_24_tooth_inner_diameter, h = desired_gear_tooth_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+			};
+
+			difference() {
+				rotate( [ 0, 0, 45 ] ) cube( size = [ technic_gear_axle_reinforcement_width, technic_gear_axle_reinforcement_height, desired_gear_axle_reinforcement_thickness ], center = true );
+				// The walls of the pin holes
+				union () {
+					translate( [ technic_gear_pin_hole_offset_from_center, 0, 0 ] )
+						cylinder( d = technic_gear_pin_hole_outer_diameter, h = desired_gear_axle_reinforcement_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+
+					translate( [ -technic_gear_pin_hole_offset_from_center, 0, 0 ] )
+						cylinder( d = technic_gear_pin_hole_outer_diameter, h = desired_gear_axle_reinforcement_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+
+					translate( [ 0, technic_gear_pin_hole_offset_from_center, 0 ] )
+						cylinder( d = technic_gear_pin_hole_outer_diameter, h = desired_gear_axle_reinforcement_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+
+					translate( [ 0, -technic_gear_pin_hole_offset_from_center, 0 ] )
+						cylinder( d = technic_gear_pin_hole_outer_diameter, h = desired_gear_axle_reinforcement_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+				};
+			};
+		};
+
+		// The axle hole.
+		// This scaling is theoretically correct.
+		rotate( [ 0, 0, 45 ] ) {
+			scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
+				technic_axle( length = width );
+
+				// The cross-opening for the axle fit is as wide as the widest edges of the pin holes. ~12.75
+				// The cross-opening for the axle fit is as wide as the widest edges of the pin holes. ~12.75
+				linear_extrude( height = desired_gear_axle_reinforcement_thickness + EXTENSION_FOR_DIFFERENCE, center = true ) {
+					technic_rounded_rectangle(
+						width = technic_axle_spline_thickness * technic_axle_interference_fit_ratio,
+						height = technic_gear_axle_slot_length,
+						radius = ( technic_axle_spline_thickness * technic_axle_interference_fit_ratio ) / 2
+					);
+				};
+			};
+		};
+	};
 }
 
 /**
