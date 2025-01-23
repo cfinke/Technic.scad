@@ -25,7 +25,7 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
- 
+
 $fa = 1; $fs = 0.05;
 
 stud_length_in_ms = 8;
@@ -36,7 +36,7 @@ technic_axle_spline_corner_radius = 0.4;
 technic_axle_cross_section_radius = 1;
 
 module technic() {
-    technic_axle( length = 10 );
+	technic_axle( length = 10 );
 }
 
 /**
@@ -57,39 +57,43 @@ module technic() {
  * part #50450: technic_axle( length = 32 );
  */
 module technic_axle(
-    length=2, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
+	length=2, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
 ) {
-                           technic_axle_spline( length = length );
-    rotate( [ 0, 0, 90 ] ) technic_axle_spline( length = length );
+	                       technic_axle_spline( length = length );
+	rotate( [ 0, 0, 90 ] ) technic_axle_spline( length = length );
 }
 
 /**
  * Generate one of the axle splines. An axle is made up of two splines, rotated 90º from each other.
  */
 module technic_axle_spline( length ) {
+	// To get the rounded corners when viewing the spline looking at the long wide side, we need
+	// to intersect it with rounded rectangle turned 90º in that direction.
 	intersection() {
 		rotate([90,0,0])
 			linear_extrude( technic_axle_spline_thickness, center = true )
-				rounded_rectangle( width = technic_axle_spline_width, height = stud_length_in_ms * length, radius = technic_axle_cross_section_radius );
-				
+				technic_rounded_rectangle( width = technic_axle_spline_width, height = stud_length_in_ms * length, radius = technic_axle_cross_section_radius );
+
 		linear_extrude( stud_length_in_ms * length, center = true )
-			rounded_rectangle( technic_axle_spline_width, technic_axle_spline_thickness, technic_axle_spline_corner_radius );
+			technic_rounded_rectangle( technic_axle_spline_width, technic_axle_spline_thickness, technic_axle_spline_corner_radius );
 	};
 }
 
 /**
  * Generate a rounded rectangle.
  */
-module rounded_rectangle( width = 1, height = 1, radius = 0.1 ) {
-   union() {
-        // Position a circle to act as each rounded corner of the axle.
-        translate([-( width / 2 ) + radius,  ( height / 2 ) - radius, 0]) circle(r = radius);
-        translate([ ( width / 2 ) - radius,  ( height / 2 ) - radius, 0]) circle(r = radius);
-        translate([ ( width / 2 ) - radius, -( height / 2 ) + radius, 0]) circle(r = radius);
-        translate([-( width / 2 ) + radius, -( height / 2 ) + radius, 0]) circle(r = radius);
-        square([width - ( radius * 2 ), height],                  center = true);
-        square([width,                  height - ( radius * 2 )], center = true);
-    };
+module technic_rounded_rectangle( width = 1, height = 1, radius = 0.1 ) {
+	union() {
+		// Position a circle to act as each rounded corner of the axle.
+		translate([-( width / 2 ) + radius,  ( height / 2 ) - radius, 0]) circle(r = radius);
+		translate([ ( width / 2 ) - radius,  ( height / 2 ) - radius, 0]) circle(r = radius);
+		translate([ ( width / 2 ) - radius, -( height / 2 ) + radius, 0]) circle(r = radius);
+		translate([-( width / 2 ) + radius, -( height / 2 ) + radius, 0]) circle(r = radius);
+
+		// Now add squares to fill in the spaces between the circles in each direction.
+		square([width - ( radius * 2 ), height],                  center = true);
+		square([width,                  height - ( radius * 2 )], center = true);
+	};
 }
 
 technic();
