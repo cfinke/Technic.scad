@@ -35,8 +35,19 @@ technic_axle_spline_width = 4.75;
 technic_axle_spline_corner_radius = 0.4;
 technic_axle_cross_section_radius = 1;
 
+technic_pin_connector_outer_diameter = 7.36;
+technic_pin_connector_wall_thickness = 1.3;
+technic_pin_connector_shoulder_wall_thickness = 0.6;
+technic_pin_connector_shoulder_depth = 0.70;
+
+// When OpenSCAD does the preview render, if two objects in a difference() end at exactly
+// the same plane, it will show a shadowy 0-thickness layer. If instead, one of the difference()
+// children extends any amount past that surface, the preview is much cleaner.
+EXTENSION_FOR_DIFFERENCE = 1;
+
 module technic() {
-	technic_axle( length = 10 );
+	technic_axle();
+	translate([ technic_pin_connector_outer_diameter, 0, 0]) technic_pin_connector();
 }
 
 /**
@@ -61,22 +72,44 @@ module technic_axle(
 ) {
 	                       technic_axle_spline( length = length );
 	rotate( [ 0, 0, 90 ] ) technic_axle_spline( length = length );
+
+	/**
+	 * Generate one of the axle splines. An axle is made up of two splines, rotated 90º from each other.
+	 */
+	module technic_axle_spline( length ) {
+		// To get the rounded corners when viewing the spline looking at the long wide side, we need
+		// to intersect it with rounded rectangle turned 90º in that direction.
+		intersection() {
+			rotate([90,0,0])
+				linear_extrude( technic_axle_spline_thickness, center = true )
+					technic_rounded_rectangle( width = technic_axle_spline_width, height = stud_length_in_ms * length, radius = technic_axle_cross_section_radius );
+
+			linear_extrude( stud_length_in_ms * length, center = true )
+				technic_rounded_rectangle( technic_axle_spline_width, technic_axle_spline_thickness, technic_axle_spline_corner_radius );
+		};
+	}
 }
 
 /**
- * Generate one of the axle splines. An axle is made up of two splines, rotated 90º from each other.
+ * Pin connectors.
+ *
+ * part #18654: technic_pin_connector( length = 1 );
  */
-module technic_axle_spline( length ) {
-	// To get the rounded corners when viewing the spline looking at the long wide side, we need
-	// to intersect it with rounded rectangle turned 90º in that direction.
-	intersection() {
-		rotate([90,0,0])
-			linear_extrude( technic_axle_spline_thickness, center = true )
-				technic_rounded_rectangle( width = technic_axle_spline_width, height = stud_length_in_ms * length, radius = technic_axle_cross_section_radius );
+module technic_pin_connector(
+	length=1, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
+) {
+	union() {
+		// The hollow cylinder that forms the outer wall.
+		difference() {
+			cylinder( h = stud_length_in_ms * length, r = technic_pin_connector_outer_diameter / 2, center = true );
+			cylinder( h = stud_length_in_ms * length + EXTENSION_FOR_DIFFERENCE, r = ( technic_pin_connector_outer_diameter / 2 ) - technic_pin_connector_shoulder_wall_thickness, center = true );
+		}
 
-		linear_extrude( stud_length_in_ms * length, center = true )
-			technic_rounded_rectangle( technic_axle_spline_width, technic_axle_spline_thickness, technic_axle_spline_corner_radius );
-	};
+		difference() {
+			cylinder( h = ( stud_length_in_ms * length ) - ( technic_pin_connector_shoulder_depth * 2 ), r = technic_pin_connector_outer_diameter / 2, center = true );
+			cylinder( h = ( stud_length_in_ms * length ) - ( technic_pin_connector_shoulder_depth * 2 ) + EXTENSION_FOR_DIFFERENCE, r = ( technic_pin_connector_outer_diameter / 2 ) - technic_pin_connector_wall_thickness, center = true );
+		}
+	}
 }
 
 /**
