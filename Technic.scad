@@ -63,9 +63,11 @@ technic_gear_axle_slot_length = ( ( technic_gear_pin_hole_offset_from_center * 2
 EXTENSION_FOR_DIFFERENCE = 1;
 
 module technic() {
-	technic_axle();
-	translate( [ technic_pin_connector_outer_diameter, 0, 0 ] ) technic_pin_connector();
-	translate( [ technic_gear_24_tooth_outer_diameter, 0, 0 ] ) technic_24_tooth_gear();
+	translate( [ 10, 0, 0 ] ) {
+		technic_axle();
+		translate( [ 10, 0, 0 ] ) technic_pin_connector();
+		translate( [ -19, 0, 0 ] ) technic_24_tooth_gear();
+	};
 }
 
 /**

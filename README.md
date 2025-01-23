@@ -1,6 +1,6 @@
 # Technic.scad
 
-An OpenSCAD Technic-compatible piece generator. It currently supports generation of axles and pin connectors.
+An OpenSCAD Technic-compatible piece generator. It currently supports generation of axles, pin connectors, and 24-tooth gears.
 
 ![The default ouput of each Technic.scad module.](images/Technic.png)
 
