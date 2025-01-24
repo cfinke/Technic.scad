@@ -57,6 +57,20 @@ technic_gear_axle_reinforcement_height = 5;
 technic_gear_axle_reinforcement_thickness = 7.73;
 technic_gear_axle_slot_length = ( ( technic_gear_pin_hole_offset_from_center * 2 ) + technic_gear_pin_hole_inner_diameter ) * .8; // Close enough :)
 
+technic_pin_outer_diameter = 4.5;
+technic_pin_inner_diameter = 3;
+technic_pin_collar_diameter = 5.6;
+technic_pin_collar_thickness = 0.85;
+technic_pin_lip_diameter = 5;
+technic_pin_lip_thickness = 0.5;
+technic_pin_slit_width = 0.75;
+technic_pin_slit_length = 3.2;
+technic_pin_slot_width = 0.75;
+technic_pin_slot_length = 5.2;
+technic_pin_friction_thickness = 0.15;
+technic_pin_friction_width = 0.8;
+technic_pin_friction_vertical_length = 5;
+
 // When OpenSCAD does the preview render, if two objects in a difference() end at exactly
 // the same plane, it will show a shadowy 0-thickness layer. If instead, one of the difference()
 // children extends any amount past that surface, the preview is much cleaner.
@@ -67,6 +81,7 @@ module technic() {
 		technic_axle();
 		translate( [ 10, 0, 0 ] ) technic_pin_connector();
 		translate( [ -19, 0, 0 ] ) technic_24_tooth_gear();
+		translate( [ 0, 20, 0 ] ) technic_axle_pin();
 	};
 }
 
@@ -246,6 +261,112 @@ module technic_24_tooth_gear(
 			};
 		};
 	};
+}
+
+/**
+ * Axle/pin combos.
+ *
+ * part #11214: technic_axle_pin( axle_length = 1, pin_length = 2 );
+ */
+module technic_axle_pin(
+	axle_length = 1,
+	pin_length = 2,
+	friction = true
+) {
+	// The axle portion, ending at exactly the 0,0 plane, where the pin can start.
+	intersection() {
+		// Now move it so that just the part of the axle we want to keep stays below 0,0.
+		translate( [ 0, 0, stud_length_in_ms ] ) {
+			// Now move it so that it's not centered, but ends at the 0,0 plane.
+			translate( [ 0, 0, - ( ( ( axle_length + 1 ) * stud_length_in_ms ) ) / 2 ] ) {
+				// Create an axle one size larger so that we can cut if off cleanly.
+				technic_axle( length = axle_length + 1 );
+			}
+		}
+
+		translate( [ 0, 0, - ( ( stud_length_in_ms * axle_length ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
+			linear_extrude( ( stud_length_in_ms * axle_length ) + EXTENSION_FOR_DIFFERENCE ) {
+				circle( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE );
+			}
+		}
+	};
+
+	// Pin collar.
+	cylinder( d = technic_pin_collar_diameter, h = technic_pin_collar_thickness );
+
+	difference() {
+		union() {
+			// Pin body
+			cylinder( d = technic_pin_outer_diameter, h = pin_length * stud_length_in_ms );
+
+			// Pin lip
+			translate( [ 0, 0, ( pin_length * stud_length_in_ms ) - technic_pin_lip_thickness ] ) {
+				cylinder( d = technic_pin_lip_diameter, h = technic_pin_lip_thickness );
+			}
+
+			if ( friction ) {
+				// End lines
+				intersection() {
+					// The cylinders that define the areas vertically where the friction lines will appear
+					union() {
+						for ( idx = [ 0 : pin_length ] ) {
+							// Center.
+							translate( [ 0, 0, ( idx * 2 * stud_length_in_ms ) / 2 - ( technic_pin_friction_vertical_length / 2 )  ] ) {
+								cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_vertical_length );
+							}
+						}
+					}
+
+					// The cubes that define the areas radially where the friction lines will appears.
+					union() {
+						rotate( [0, 0, 45 ] ) translate( [0, 0, ( pin_length * stud_length_in_ms ) / 2 ] ) {
+							cube( [ technic_pin_friction_width, technic_pin_outer_diameter * 2, pin_length * stud_length_in_ms ], center = true );
+						}
+
+						rotate( [0, 0, 135 ] ) translate( [0, 0, ( pin_length * stud_length_in_ms ) / 2 ] ) {
+							cube( [ technic_pin_friction_width, technic_pin_outer_diameter * 2, pin_length * stud_length_in_ms ], center = true );
+						}
+					}
+				}
+
+				// The radial friction lines
+				if ( pin_length > 1 ) {
+					for ( idx = [ 1 : pin_length - 1 ] ) {
+						translate( [ 0, 0, ( idx * 2 * stud_length_in_ms ) / 2 ] ) {
+							cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_width, center = true );
+						}
+					}
+				}
+			}
+		};
+
+		// Remove the center of the pin.
+		cylinder( d = technic_pin_inner_diameter, h = ( pin_length * stud_length_in_ms ) + EXTENSION_FOR_DIFFERENCE );
+
+		// Remove the slit at the top that makes the pin end flex.
+		translate( [ 0, technic_pin_lip_diameter, pin_length * stud_length_in_ms ] ) {
+			rotate( [ 90, 0, 0 ] ) {
+				linear_extrude( technic_pin_lip_diameter * 2 ) {
+					technic_rounded_rectangle( width = technic_pin_slit_width, height = technic_pin_slit_length * 2, radius = technic_pin_slit_width / 2 );
+				}
+			}
+		}
+
+		// Remove the slot across the center of the pin.
+		if ( pin_length > 1 ) {
+			for ( idx = [ 1 : pin_length - 1 ] ) {
+				translate( [ 0, 0, ( idx * 2 * stud_length_in_ms ) / 2 ] ) {
+					rotate( [ 90, 0, idx % 2 == 0 ? 0 : 90 ] ) {
+						translate( [ 0, 0, - technic_pin_lip_diameter ] ) {
+							linear_extrude( technic_pin_lip_diameter * 2 ) {
+								technic_rounded_rectangle( width = technic_pin_slot_width, height = technic_pin_slot_length, radius = technic_pin_slot_width / 2 );
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 /**
