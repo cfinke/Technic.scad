@@ -15,7 +15,7 @@ Generate a Technic-compatible axle.
 
 | Parameter | Values| Description |
 |---|---|---|
-| `length` | int | The length of the axle in "stud widths." |
+| `length` | int | The length of the axle in "studs." |
 
 `technic_pin_connector();`
 --------------------------
@@ -23,7 +23,7 @@ Generate a Technic-compatible axle.
 
 | Parameter | Values| Description |
 |---|---|---|
-| `length` | int | The length of the pin connector in "stud widths." FWIW, LEGO only makes these in length 1. |
+| `length` | int | The length of the pin connector in "studs." FWIW, LEGO only makes these in length 1. |
 
 `technic_24_tooth_gear();`
 --------------------------
@@ -39,6 +39,17 @@ Generate a Technic-compatible axle.
 
 | Parameter | Values| Description |
 |---|---|---|
-| `axle_length` | int | In stud widths, how long the axle component should be. |
-| `pin_length` | int | In stud widths, how long the pin component should be. |
+| `axle_length` | int | In studs, how long the axle component should be. |
+| `pin_length` | int | In studs, how long the pin component should be. |
 | `friction` | bool | Whether the pin component should have friction ridges on it. |
+
+`technic_pin();`
+--------------------------
+![A pin compatible with LEGO part #2780.](images/technic_pin.png)
+
+| Parameter | Values| Description |
+|---|---|---|
+| `top_length` | int | In studs, how long the top half of the pin should be. |
+| `top_friction` | bool | Whether the top half of the pin should have friction ridges on it. |
+| `bottom_length` | int | In studs, how long the bottom half of the pin should be. |
+| `bottom_friction` | bool | Whether the bottom half of the pin should have friction ridges on it. |
