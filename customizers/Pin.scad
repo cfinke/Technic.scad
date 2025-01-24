@@ -28,6 +28,8 @@
 
 use <../Technic.scad>;
 
+$fa = 1; $fs = 0.05;
+
 /* [General] */
 
 // Length of the top end of the pin, in studs
