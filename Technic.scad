@@ -270,10 +270,12 @@ module technic_24_tooth_gear(
  *
  * part #2780: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true );
  * part #3673: technic_pin( top_length = 1, top_friction = false, bottom_length = 1, bottom_friction = false );
+ * part #4274: technic_pin( top_length = 0.5, bottom_length = 1 );
  * part #4459: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true ); // This part has long friction ridges along the length of the pin.
  * part #6558: technic_pin( top_length = 2, top_friction = true, bottom_length = 1, bottom_friction = true );
  * part #32556: technic_pin( top_length = 2, top_friction = false, bottom_length = 1, bottom_friction = false );
- * part #32556: technic_pin( top_length = 3, top_friction = false, bottom_length = 0, bottom_friction = false );
+ * part #77765: technic_pin( top_length = 3, top_friction = false, bottom_length = 0, bottom_friction = false );
+ * part #89678: technic_pin( top_length = 0.5, bottom_length = 1, bottom_friction = true );
  */
 module technic_pin(
 	top_length = 1,
@@ -289,50 +291,56 @@ module technic_pin_half(
 	length = 1,
 	friction = true
 ) {
-	if ( length > 0 ) {
+	if ( length > 0 ) { // A "half pin" just has a 1.7mm extension (2.5 including the collar) of the pin body past the collar.
 		difference() {
 			union() {
 				// Pin body
-				cylinder( d = technic_pin_outer_diameter, h = length * stud_length_in_ms );
-
-				// Pin lip
-				translate( [ 0, 0, ( length * stud_length_in_ms ) - technic_pin_lip_thickness ] ) {
-					cylinder( d = technic_pin_lip_diameter, h = technic_pin_lip_thickness );
+				if ( length == 0.5 ) {
+					cylinder( d = technic_pin_outer_diameter, h = 2.5 );
+				} else {
+					cylinder( d = technic_pin_outer_diameter, h = length * stud_length_in_ms );
 				}
 
 				// Pin collar.
 				cylinder( d = technic_pin_collar_diameter, h = technic_pin_collar_thickness );
 
-				if ( friction ) {
-					// End lines
-					intersection() {
-						// The cylinders that define the areas vertically where the friction lines will appear
-						union() {
-							for ( idx = [ 0 : length ] ) {
-								// Center.
-								translate( [ 0, 0, ( idx * 2 * stud_length_in_ms ) / 2 - ( technic_pin_friction_vertical_length / 2 )  ] ) {
-									cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_vertical_length );
+				if ( length > ( 0.5 ) ) {
+					// Pin lip
+					translate( [ 0, 0, ( length * stud_length_in_ms ) - technic_pin_lip_thickness ] ) {
+						cylinder( d = technic_pin_lip_diameter, h = technic_pin_lip_thickness );
+					}
+
+					if ( friction ) {
+						// End lines
+						intersection() {
+							// The cylinders that define the areas vertically where the friction lines will appear
+							union() {
+								for ( idx = [ 0 : length ] ) {
+									// Center.
+									translate( [ 0, 0, ( idx * 2 * stud_length_in_ms ) / 2 - ( technic_pin_friction_vertical_length / 2 )  ] ) {
+										cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_vertical_length );
+									}
+								}
+							}
+
+							// The cubes that define the areas radially where the friction lines will appears.
+							union() {
+								rotate( [0, 0, 45 ] ) translate( [0, 0, ( length * stud_length_in_ms ) / 2 ] ) {
+									cube( [ technic_pin_friction_width, technic_pin_outer_diameter * 2, length * stud_length_in_ms ], center = true );
+								}
+
+								rotate( [0, 0, 135 ] ) translate( [0, 0, ( length * stud_length_in_ms ) / 2 ] ) {
+									cube( [ technic_pin_friction_width, technic_pin_outer_diameter * 2, length * stud_length_in_ms ], center = true );
 								}
 							}
 						}
 
-						// The cubes that define the areas radially where the friction lines will appears.
-						union() {
-							rotate( [0, 0, 45 ] ) translate( [0, 0, ( length * stud_length_in_ms ) / 2 ] ) {
-								cube( [ technic_pin_friction_width, technic_pin_outer_diameter * 2, length * stud_length_in_ms ], center = true );
-							}
-
-							rotate( [0, 0, 135 ] ) translate( [0, 0, ( length * stud_length_in_ms ) / 2 ] ) {
-								cube( [ technic_pin_friction_width, technic_pin_outer_diameter * 2, length * stud_length_in_ms ], center = true );
-							}
-						}
-					}
-
-					// The radial friction lines
-					if ( length > 1 ) {
-						for ( idx = [ 1 : length - 1 ] ) {
-							translate( [ 0, 0, ( idx * 2 * stud_length_in_ms ) / 2 ] ) {
-								cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_width, center = true );
+						// The radial friction lines
+						if ( length > 1 ) {
+							for ( idx = [ 1 : length - 1 ] ) {
+								translate( [ 0, 0, ( idx * 2 * stud_length_in_ms ) / 2 ] ) {
+									cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_width, center = true );
+								}
 							}
 						}
 					}
@@ -342,11 +350,13 @@ module technic_pin_half(
 			// Remove the center of the pin.
 			translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) cylinder( d = technic_pin_inner_diameter, h = ( length * stud_length_in_ms ) + ( 2 * EXTENSION_FOR_DIFFERENCE ) );
 
-			// Remove the slit at the top that makes the pin end flex.
-			translate( [ 0, technic_pin_lip_diameter, length * stud_length_in_ms ] ) {
-				rotate( [ 90, 0, 0 ] ) {
-					linear_extrude( technic_pin_lip_diameter * 2 ) {
-						technic_rounded_rectangle( width = technic_pin_slit_width, height = technic_pin_slit_length * 2, radius = technic_pin_slit_width / 2 );
+			if ( length >= 1 ) { // Half-pins don't get slits and slots.
+				// Remove the slit at the top that makes the pin end flex.
+				translate( [ 0, technic_pin_lip_diameter, length * stud_length_in_ms ] ) {
+					rotate( [ 90, 0, 0 ] ) {
+						linear_extrude( technic_pin_lip_diameter * 2 ) {
+							technic_rounded_rectangle( width = technic_pin_slit_width, height = technic_pin_slit_length * 2, radius = technic_pin_slit_width / 2 );
+						}
 					}
 				}
 			}

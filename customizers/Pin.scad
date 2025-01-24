@@ -31,13 +31,13 @@ use <../Technic.scad>;
 /* [General] */
 
 // Length of the top end of the pin, in studs
-pin_top_length = 1; // [0:100]
+pin_top_length = 1; // [ 0:0.5:100 ]
 
 // Should the top pin end have friction ridges?
 pin_top_friction = false; // [ true, false ]
 
 // Length of the bottom end of the pin, in studs
-pin_bottom_length = 2; // [0:100]
+pin_bottom_length = 2; // [ 0:0.5:100 ]
 
 // Should the bottom pin end have friction ridges?
 pin_bottom_friction = true; // [ true, false ]
