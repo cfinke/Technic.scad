@@ -33,9 +33,11 @@ stud_length_in_ms = 8;
 technic_axle_interference_fit_ratio = 1.022;
 
 technic_axle_spline_thickness = 1.8;
-technic_axle_spline_width = 4.75;
+technic_axle_spline_width = 4.85; // Matches stud diameter.
 technic_axle_spline_corner_radius = 0.4;
 technic_axle_cross_section_radius = 1;
+technic_axle_stop_thickness = 0.7; // Matches technic_pin_collar_thickness
+technic_axle_stop_diameter = 5.9;
 
 technic_pin_connector_outer_diameter = 7.36;
 technic_pin_connector_wall_thickness = 1.3;
@@ -57,10 +59,10 @@ technic_gear_axle_reinforcement_height = 5;
 technic_gear_axle_reinforcement_thickness = 7.73;
 technic_gear_axle_slot_length = ( ( technic_gear_pin_hole_offset_from_center * 2 ) + technic_gear_pin_hole_inner_diameter ) * .8; // Close enough :)
 
-technic_pin_outer_diameter = 4.5;
-technic_pin_inner_diameter = 3;
+technic_pin_outer_diameter = 4.85; // Matches stud diameter.
+technic_pin_inner_diameter = 3.1; // Matches hollow stud inner diameter.
 technic_pin_collar_diameter = 5.6;
-technic_pin_collar_thickness = 0.85;
+technic_pin_collar_thickness = 0.7; // Matches technic_axle_stop_thickness
 technic_pin_lip_diameter = 5;
 technic_pin_lip_thickness = 0.5;
 technic_pin_slit_width = 0.75;
@@ -84,7 +86,6 @@ module technic() {
 		translate( [ 0, 20, 0 ] ) technic_axle_pin();
 		translate( [ -18, 28, 7 ] ) technic_pin();
 	};
-
 }
 
 /**
@@ -106,24 +107,52 @@ module technic() {
  */
 module technic_axle(
 	length = 2, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
+	stop = false, // Should it have a stop at the end?
 ) {
-	                       technic_axle_spline( length = length );
-	rotate( [ 0, 0, 90 ] ) technic_axle_spline( length = length );
+	difference() {
+		union() {
+			// If there's a stop (and thus an extra segment of length to cut off, we need to move the axle
+			// down a segment, since it's returned from technic_axle_spline with the center of its base at the origin.
+			translate( [ 0, 0, stop ? - ( stud_length_in_ms ) : 0 ] ) {
+				// If there's a stop, add an extra bit of length so that we can cut it off flush without seeing the small bit of rounded corners.
+				                       technic_axle_spline( length = stop ? length + 1 : length );
+				rotate( [ 0, 0, 90 ] ) technic_axle_spline( length = stop ? length + 1 : length );
+			}
+
+			if ( stop ) {
+				cylinder( d = technic_axle_stop_diameter, h = technic_axle_stop_thickness );
+			}
+		}
+
+		if ( stop ) {
+			translate([ 0, 0, -( ( stud_length_in_ms ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
+				cylinder( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE, h = ( stud_length_in_ms ) + EXTENSION_FOR_DIFFERENCE );
+			}
+		}
+	}
 
 	/**
 	 * Generate one of the axle splines. An axle is made up of two splines, rotated 90º from each other.
+	 * Positioned with the bottom center of the axle spline at the origin.
 	 */
 	module technic_axle_spline( length ) {
+		// @todo Real-world axle length appears to be ( stud_length_in_ms * length ) - 0.4, not exactly ( stud_length_in_ms * length )
+
 		// To get the rounded corners when viewing the spline looking at the long wide side, we need
 		// to intersect it with rounded rectangle turned 90º in that direction.
-		intersection() {
-			rotate( [ 90, 0, 0 ] )
-				linear_extrude( technic_axle_spline_thickness, center = true )
-					technic_rounded_rectangle( width = technic_axle_spline_width, height = stud_length_in_ms * length, radius = technic_axle_cross_section_radius );
+		translate( [ 0, 0, stud_length_in_ms * length / 2 ] ) {
+			intersection() {
+				rotate( [ 90, 0, 0 ] ) {
+					linear_extrude( technic_axle_spline_thickness, center = true ) {
+						technic_rounded_rectangle( width = technic_axle_spline_width, height = stud_length_in_ms * length, radius = technic_axle_cross_section_radius );
+					}
+				}
 
-			linear_extrude( stud_length_in_ms * length, center = true )
-				technic_rounded_rectangle( technic_axle_spline_width, technic_axle_spline_thickness, technic_axle_spline_corner_radius );
-		};
+				linear_extrude( stud_length_in_ms * length, center = true ) {
+					technic_rounded_rectangle( technic_axle_spline_width, technic_axle_spline_thickness, technic_axle_spline_corner_radius );
+				}
+			}
+		}
 	}
 }
 
@@ -271,7 +300,7 @@ module technic_24_tooth_gear(
  * part #2780: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true );
  * part #3673: technic_pin( top_length = 1, top_friction = false, bottom_length = 1, bottom_friction = false );
  * part #4274: technic_pin( top_length = 0.5, bottom_length = 1 );
- * part #4459: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true ); // This part has long friction ridges along the length of the pin.
+ * part #4459: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true ); // This part has long friction ridges along the length of the pin, which isn't supported yet.
  * part #6558: technic_pin( top_length = 2, top_friction = true, bottom_length = 1, bottom_friction = true );
  * part #32556: technic_pin( top_length = 2, top_friction = false, bottom_length = 1, bottom_friction = false );
  * part #77765: technic_pin( top_length = 3, top_friction = false, bottom_length = 0, bottom_friction = false );
@@ -296,7 +325,7 @@ module technic_pin_half(
 			union() {
 				// Pin body
 				if ( length == 0.5 ) {
-					cylinder( d = technic_pin_outer_diameter, h = 2.5 );
+					cylinder( d = technic_pin_outer_diameter, h = 1.8 + technic_pin_collar_thickness ); // 1.8 matches stud height
 				} else {
 					cylinder( d = technic_pin_outer_diameter, h = length * stud_length_in_ms );
 				}
@@ -389,25 +418,27 @@ module technic_axle_pin(
 	pin_length = 2,
 	friction = true
 ) {
-	// The axle portion, ending at exactly the 0,0 plane, where the pin can start.
-	intersection() {
-		// Now move it so that just the part of the axle we want to keep stays below 0,0.
-		translate( [ 0, 0, stud_length_in_ms ] ) {
-			// Now move it so that it's not centered, but ends at the 0,0 plane.
-			translate( [ 0, 0, - ( ( ( axle_length + 1 ) * stud_length_in_ms ) ) / 2 ] ) {
-				// Create an axle one size larger so that we can cut if off cleanly.
-				technic_axle( length = axle_length + 1 );
+	translate( [ 0, 0, stud_length_in_ms * axle_length ] ) {
+		intersection() {
+			// Position it so the axle ends at the origin and the pin is above it.
+			rotate( [ 180, 0, 0 ] ) {
+				// Include a stop, which is the same as the pin collar.
+				technic_axle( length = axle_length, stop = true );
 			}
-		}
 
-		translate( [ 0, 0, - ( ( stud_length_in_ms * axle_length ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
-			linear_extrude( ( stud_length_in_ms * axle_length ) + EXTENSION_FOR_DIFFERENCE ) {
-				circle( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE );
+			translate( [ 0, 0, -( ( stud_length_in_ms * axle_length ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
+				linear_extrude( ( stud_length_in_ms * axle_length ) + EXTENSION_FOR_DIFFERENCE ) {
+					circle( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE );
+				}
 			}
-		}
-	};
+		};
 
-	technic_pin_half( length = pin_length, friction = friction );
+		// The pin collar is already generated in technic_axle() as the stop, so shift the pin down a bit so it's not doubled.
+		// @todo In a real piece like this, is the collar part of the axle length or the pin length?
+		translate( [ 0, 0, -technic_pin_collar_thickness ] ) {
+			technic_pin_half( length = pin_length, friction = friction );
+		}
+	}
 }
 
 /**

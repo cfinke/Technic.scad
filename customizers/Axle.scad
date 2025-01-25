@@ -35,4 +35,7 @@ $fa = 1; $fs = 0.05;
 // Length of the axle, in studs
 axle_length = 2; // [1:100]
 
-technic_axle( length = axle_length );
+// Should there be a stop at the end of the axle?
+axle_stop = false; // [ true, false ]
+
+technic_axle( length = axle_length, stop = true );
