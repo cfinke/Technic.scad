@@ -1,6 +1,6 @@
 # Technic.scad
 
-An OpenSCAD Technic-compatible piece generator. It currently supports generation of axles, pin connectors, axle pins, and 24-tooth gears.
+An OpenSCAD Technic-compatible piece generator. It currently supports generation of axles, pin connectors, axle pins, elbows, and 24-tooth gears.
 
 ![The default ouput of each Technic.scad module.](images/Technic.png)
 
@@ -53,3 +53,14 @@ Generate a Technic-compatible axle.
 | `top_friction` | bool | Whether the top half of the pin should have friction ridges on it. |
 | `bottom_length` | int | In studs, how long the bottom half of the pin should be. |
 | `bottom_friction` | bool | Whether the bottom half of the pin should have friction ridges on it. |
+
+`technic_elbow();`
+--------------------------
+![A 90º elbow compatible with LEGO part #25214.](images/technic_elbow.png)
+
+| Parameter | Values| Description |
+|---|---|---|
+| `length` | int | The number of studs one leg would cover, if laid down on a plate. |
+| `width` | int | The number of studs the other leg would cover, if laid down on a plate. |
+| `axle_socket_on_length` | bool | Whether there should be an interior socket for accepting an axle on the X axis. |
+| `axle_socket_on_width` | bool | Whether there should be an interior socket for accepting an axle on the Y axis. |

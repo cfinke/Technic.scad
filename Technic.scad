@@ -33,7 +33,7 @@ stud_length_in_ms = 8;
 technic_axle_interference_fit_ratio = 1.022;
 
 technic_axle_spline_thickness = 1.8;
-technic_axle_spline_width = 4.85; // Matches stud diameter.
+technic_axle_spline_width = 4.85; // Matches LEGO.stud_diameter
 technic_axle_spline_corner_radius = 0.4;
 technic_axle_cross_section_radius = 1;
 technic_axle_stop_thickness = 0.7; // Matches technic_pin_collar_thickness
@@ -59,8 +59,8 @@ technic_gear_axle_reinforcement_height = 5;
 technic_gear_axle_reinforcement_thickness = 7.73;
 technic_gear_axle_slot_length = ( ( technic_gear_pin_hole_offset_from_center * 2 ) + technic_gear_pin_hole_inner_diameter ) * .8; // Close enough :)
 
-technic_pin_outer_diameter = 4.85; // Matches stud diameter.
-technic_pin_inner_diameter = 3.1; // Matches hollow stud inner diameter.
+technic_pin_outer_diameter = 4.85; // Matches LEGO.stud_diameter.
+technic_pin_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
 technic_pin_collar_diameter = 5.6;
 technic_pin_collar_thickness = 0.7; // Matches technic_axle_stop_thickness
 technic_pin_lip_diameter = 5;
@@ -72,6 +72,13 @@ technic_pin_slot_length = 5.2;
 technic_pin_friction_thickness = 0.15;
 technic_pin_friction_width = 0.8;
 technic_pin_friction_vertical_length = 5;
+
+technic_elbow_outer_diameter = 7.9; // Matches LEGO.stud_spacing - LEGO.wall_play
+technic_elbow_inner_diameter = 5;
+technic_elbow_radius = 12;
+technic_elbow_straight_length = 4.85; // Matches LEGO.stud_diameter
+technic_elbow_overall_width = 16; // Matches ( LEGO.stud_spacing * 1.5 ) + ( technic_elbow_outer_diameter / 2 )
+technic_elbow_axle_socket_depth = 2.4;
 
 // When OpenSCAD does the preview render, if two objects in a difference() end at exactly
 // the same plane, it will show a shadowy 0-thickness layer. If instead, one of the difference()
@@ -437,6 +444,103 @@ module technic_axle_pin(
 		// @todo In a real piece like this, is the collar part of the axle length or the pin length?
 		translate( [ 0, 0, -technic_pin_collar_thickness ] ) {
 			technic_pin_half( length = pin_length, friction = friction );
+		}
+	}
+}
+
+/**
+ * Elbows
+ *
+ * part #25214: technic_elbow( length = 2, width = 2 )
+ */
+module technic_elbow(
+	length = 2, // The number of studs one leg would cover, if laid down on a plate.
+	width = 2, // The number of studs the other leg would cover, if laid down on a plate.
+	axle_socket_on_length = true, // Whether there should be an interior socket for accepting an axle on the X axis.
+	axle_socket_on_width = true, // Whether there should be an interior socket for accepting an axle on the Y axis.
+) {
+	// Use the longer dimension as the length and the shorter dimension as the width.
+	// This simplifies some decisions we need to make about what goes where.
+	//
+	// length is along the X axis, width is along the Y axis.
+	real_length = max( 2, max( length, width ) );
+	real_width = max( 2, min( length, width ) );
+
+	difference() {
+		union() {
+			// The two straight parts can be placed in their known positions, and then we can calculate
+			// the starting and stopping points of the elbow.
+			translate( [ ( real_length * stud_length_in_ms ) - technic_elbow_straight_length, 0, 0 ] ) {
+				rotate( [ 0, 90, 0 ] ) {
+					difference() {
+						cylinder( d = technic_elbow_outer_diameter, h = technic_elbow_straight_length );
+						translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) {
+							cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length + ( 2 * EXTENSION_FOR_DIFFERENCE ) );
+						}
+					}
+
+					if ( axle_socket_on_length ) {
+						// Add the material that will be the ridges for the axle socket.
+						cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length - technic_elbow_axle_socket_depth );
+					}
+				}
+			}
+
+			translate( [ 0, ( real_width * stud_length_in_ms ) - technic_elbow_straight_length, 0 ] ) {
+				rotate( [ -90, 0, 0 ] ) {
+					difference() {
+						cylinder( d = technic_elbow_outer_diameter, h = technic_elbow_straight_length );
+						translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length + ( 2 * EXTENSION_FOR_DIFFERENCE ) );
+					}
+
+					if ( axle_socket_on_width ) {
+						// Add the material that will be the ridges for the axle socket.
+						cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length - technic_elbow_axle_socket_depth );
+					}
+				}
+			}
+
+			// So we need a tube to connect ( real_width * stud_length_in_ms ) - technic_elbow_straight_length on both X and Y.
+			translate( [ ( real_width * stud_length_in_ms ) - technic_elbow_straight_length, ( real_width * stud_length_in_ms ) - technic_elbow_straight_length, 0 ] ) {
+				rotate( [ 180, 180, 0 ] ) {
+					rotate_extrude( angle = 90 ) {
+						translate( [ ( real_width * stud_length_in_ms ) - technic_elbow_straight_length, 0, 0 ] ) {
+							circle( d = technic_elbow_outer_diameter );
+						}
+					}
+				}
+			}
+
+			// And we also need to fill in any gaps if length doesn't match width.
+			if ( real_length > real_width ) {
+				translate( [ ( real_width * stud_length_in_ms ) - technic_elbow_straight_length, 0, 0 ] ) {
+					rotate( [ 0, 90, 0 ] ) {
+						cylinder( d = technic_elbow_outer_diameter, h = ( real_length - real_width ) * stud_length_in_ms );
+					}
+				}
+			}
+		}
+
+		if ( axle_socket_on_length ) {
+			// Subtract the axle socket area along the length.
+			translate( [ real_width * stud_length_in_ms, 0, 0 ] ) {
+				rotate( [ 0, -90, 0 ] ) {
+					scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
+						technic_axle( length = 1 );
+					}
+				}
+			}
+		}
+
+		if ( axle_socket_on_width ) {
+			// Subtract the axle socket area along the width.
+			translate( [ 0, real_length * stud_length_in_ms, 0 ] ) {
+				rotate( [ 90, 0, 0 ] ) {
+					scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
+						technic_axle( length = 1 );
+					}
+				}
+			}
 		}
 	}
 }
