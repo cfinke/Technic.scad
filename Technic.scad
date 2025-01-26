@@ -567,6 +567,10 @@ module technic_elbow(
  * part #41239: technic_beam( length = 13 )
  * part #32278: technic_beam( length = 15 )
  *
+ * part #32017: technic_beam( length = 5, height = 1/2 )
+ * part #32063: technic_beam( length = 6, height = 1/2 )
+ * part #32065: technic_beam( length = 7, height = 1/2 )
+ *
  * Origin is below the center of the first hole.
  */
 module technic_beam( length = 5, height = 1 ) {
