@@ -90,18 +90,6 @@ technic_beam_webbing_thickness = 0.8;
 // children extends any amount past that surface, the preview is much cleaner.
 EXTENSION_FOR_DIFFERENCE = 1;
 
-module technic() {
-	translate( [ 0, 30, 0 ] ) technic_beam();
-	translate( [ 0, 0, 0 ] ) technic_pin_connector();
-	translate( [ 0, -30, 0 ] ) technic_axle_pin();
-
-	translate( [ 30, 0, 0 ] ) technic_axle();
-
-	translate( [ 60, 30, 0 ] ) technic_elbow();
-	translate( [ 60, 0, 0 ] ) technic_24_tooth_gear();
-	translate( [ 30, -30, 0 ] ) technic_pin();
-}
-
 /**
  * Axles.
  *
@@ -631,5 +619,3 @@ module technic_rounded_rectangle( width = 1, height = 1, radius = 0.1 ) {
 		square( [ width,                  height - ( radius * 2 )], center = true );
 	};
 }
-
-technic();
