@@ -1,11 +1,22 @@
 # Technic.scad
 
-An OpenSCAD Technic-compatible piece generator. It currently supports generation of axles, pin connectors, axle pins, elbows, and 24-tooth gears.
+An OpenSCAD Technic-compatible piece generator. It currently supports generation of beams, axles, pin connectors, axle pins, elbows, and 24-tooth gears.
 
 ![The default ouput of each Technic.scad module.](images/Technic.png)
 
 Modules
 =======
+
+`technic_beam();`
+-----------------
+![A beam compatible with LEGO part #32524, for example.](images/technic_beam.png)
+
+Generate a Technic-compatible beam.
+
+| Parameter | Values| Description |
+|---|---|---|
+| `length` | int | The number of holes in the beam. |
+| `height` | int | The height (or thickness?) of the beam in multiples of normal beams. |
 
 `technic_axle();`
 -----------------
