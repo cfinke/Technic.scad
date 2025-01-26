@@ -38,4 +38,4 @@ axle_length = 2; // [1:100]
 // Should there be a stop at the end of the axle?
 axle_stop = false; // [ true, false ]
 
-technic_axle( length = axle_length, stop = true );
+technic_axle( length = axle_length, stop = axle_stop );
