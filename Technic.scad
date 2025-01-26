@@ -31,6 +31,8 @@ $fa = 1; $fs = 0.05;
 stud_spacing = 8; // Matches LEGO.stud_spacing
 technic_height_in_ms = 7.8; // Vertically-oriented technic pieces (like pin connectors) use this
 
+technic_hole_diameter = 4.85; // Matches LEGO.stud_diameter
+
 technic_axle_interference_fit_ratio = 1.022;
 
 technic_axle_spline_thickness = 1.8;
@@ -50,7 +52,6 @@ technic_gear_24_tooth_bottom_diameter = 21.65;
 technic_gear_24_tooth_inner_diameter = 19.6;
 technic_gear_24_tooth_tooth_depth = ( technic_gear_24_tooth_outer_diameter - technic_gear_24_tooth_bottom_diameter ) / 2;
 technic_gear_pin_hole_outer_diameter = 6.1;
-technic_gear_pin_hole_inner_diameter = 4.8; // Measured and confirmed in multiple places online.
 technic_gear_pin_hole_offset_from_center = 5.675;
 technic_gear_pin_hole_thickness = 6.1;
 technic_gear_tooth_thickness = 3.7;
@@ -58,7 +59,7 @@ technic_gear_wheel_thickness = 1.3;
 technic_gear_axle_reinforcement_width = 9.63;
 technic_gear_axle_reinforcement_height = 5;
 technic_gear_axle_reinforcement_thickness = 7.73;
-technic_gear_axle_slot_length = ( ( technic_gear_pin_hole_offset_from_center * 2 ) + technic_gear_pin_hole_inner_diameter ) * .8; // Close enough :)
+technic_gear_axle_slot_length = ( ( technic_gear_pin_hole_offset_from_center * 2 ) + technic_hole_diameter ) * .8; // Close enough :)
 
 technic_pin_outer_diameter = 4.85; // Matches LEGO.stud_diameter.
 technic_pin_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
@@ -183,13 +184,13 @@ module technic_pin_connector(
 		union() {
 			// The hollow cylinder that forms the outer wall.
 			difference() {
-				cylinder( h = technic_height_in_ms * length, r = technic_pin_connector_outer_diameter / 2, center = true );
+				cylinder( h = technic_height_in_ms * length, d = technic_pin_connector_outer_diameter, center = true );
 				cylinder( h = technic_height_in_ms * length + EXTENSION_FOR_DIFFERENCE, r = ( technic_pin_connector_outer_diameter / 2 ) - technic_pin_connector_shoulder_wall_thickness, center = true );
 			};
 
 			difference() {
-				cylinder( h = ( technic_height_in_ms * length ) - ( technic_pin_connector_shoulder_depth * 2 ), r = technic_pin_connector_outer_diameter / 2, center = true );
-				cylinder( h = ( technic_height_in_ms * length ) - ( technic_pin_connector_shoulder_depth * 2 ) + EXTENSION_FOR_DIFFERENCE, r = ( technic_pin_connector_outer_diameter / 2 ) - technic_pin_connector_wall_thickness, center = true );
+				cylinder( h = ( technic_height_in_ms * length ) - ( technic_pin_connector_shoulder_depth * 2 ), d = technic_pin_connector_outer_diameter, center = true );
+				cylinder( h = ( technic_height_in_ms * length ) - ( technic_pin_connector_shoulder_depth * 2 ) + EXTENSION_FOR_DIFFERENCE, r = ( technic_hole_diameter / 2 ), center = true );
 			};
 		};
 	}
@@ -245,19 +246,19 @@ module technic_24_tooth_gear(
 				// The pin holes.
 				union() {
 					translate( [ technic_gear_pin_hole_offset_from_center, 0, 0 ] ) difference() {
-						cylinder( d = technic_gear_pin_hole_inner_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+						cylinder( d = technic_hole_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
 					};
 
 					translate( [ -technic_gear_pin_hole_offset_from_center, 0, 0 ] )difference() {
-						cylinder( d = technic_gear_pin_hole_inner_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+						cylinder( d = technic_hole_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
 					};
 
 					translate( [ 0, technic_gear_pin_hole_offset_from_center, 0 ] )difference() {
-						cylinder( d = technic_gear_pin_hole_inner_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+						cylinder( d = technic_hole_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
 					};
 
 					translate( [ 0, -technic_gear_pin_hole_offset_from_center, 0 ] )difference() {
-						cylinder( d = technic_gear_pin_hole_inner_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+						cylinder( d = technic_hole_diameter, h = desired_pin_hole_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
 					};
 				};
 			};
