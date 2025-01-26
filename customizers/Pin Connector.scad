@@ -35,4 +35,4 @@ $fa = 1; $fs = 0.05;
 // Length of the pin connector, in studs
 length = 1; // [1:100]
 
-technic_pin_connector( length = length );
+color( "brown" ) technic_pin_connector( length = length );

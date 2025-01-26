@@ -43,7 +43,7 @@ elbow_axle_socket_on_length = true;
 // Should there be a socket for accepting an axle on the length?
 elbow_axle_socket_on_width = true;
 
-technic_elbow(
+color( "gray" ) technic_elbow(
 	length = elbow_length,
 	width = elbow_width,
 	axle_socket_on_length = elbow_axle_socket_on_length,

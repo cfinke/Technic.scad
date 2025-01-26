@@ -33,4 +33,4 @@ use <../Technic.scad>;
 // Width of the gear, in multiples of individual gears.
 gear_width = 1; // [1:100]
 
-technic_24_tooth_gear( width = gear_width );
+color( "gray" ) technic_24_tooth_gear( width = gear_width );

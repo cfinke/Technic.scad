@@ -44,7 +44,7 @@ pin_bottom_length = 2; // [ 0:0.5:100 ]
 // Should the bottom pin end have friction ridges?
 pin_bottom_friction = true; // [ true, false ]
 
-technic_pin(
+color( "white" ) technic_pin(
 	top_length = pin_top_length,
 	top_friction = pin_top_friction,
 	bottom_length = pin_bottom_length,

@@ -41,7 +41,7 @@ pin_length = 2; // [1:100]
 // Should the pin have friction ridges?
 friction = true; // [ true, false ]
 
-technic_axle_pin(
+color( "green" ) technic_axle_pin(
 	axle_length = axle_length,
 	pin_length = pin_length,
 	friction = friction

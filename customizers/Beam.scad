@@ -36,9 +36,9 @@ $fa = 1; $fs = 0.05;
 beam_length = 5; // [ 1:100 ]
 
 // The height (or thickness) of the beam. A height of 2 is equivalent to two beams stuck side-by-side.
-beam_height = .5; // [ 0.5:.5:100 ]
+beam_height = 1; // [ 0.5:.5:100 ]
 
-technic_beam(
+color( "red" ) technic_beam(
 	length = beam_length,
 	height = beam_height
 );
