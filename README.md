@@ -2,14 +2,14 @@
 
 An OpenSCAD Technic-compatible piece generator. It currently supports generation of beams, axles, pin connectors, axle pins, elbows, and 24-tooth gears.
 
-![The default ouput of each Technic.scad module.]("images/Technic Example.png")
+![The default ouput of each Technic.scad module.](images/Technic%20Example.png)
 
 Modules
 =======
 
 `technic_24_tooth_gear();`
 --------------------------
-![A 24-tooth gear compatible with LEGO part #3648.]("images/Technic 24-Tooth Gear.png")
+![A 24-tooth gear compatible with LEGO part #3648.](images/Technic%2024-Tooth%20Gear.png)
 
 | Parameter | Values| Description |
 |---|---|---|
@@ -17,7 +17,7 @@ Modules
 
 `technic_axle();`
 -----------------
-![An axle compatible with LEGO part #3704.]("images/Technic Axle.png")
+![An axle compatible with LEGO part #3704.](images/Technic%20Axle.png)
 
 Generate a Technic-compatible axle.
 
@@ -27,7 +27,7 @@ Generate a Technic-compatible axle.
 
 `technic_axle_pin();`
 --------------------------
-![An axle pin compatible with LEGO part #11214.]("images/Technic Axle Pin.png")
+![An axle pin compatible with LEGO part #11214.](images/Technic%20Axle%20Pin.png)
 
 | Parameter | Values| Description |
 |---|---|---|
@@ -37,7 +37,7 @@ Generate a Technic-compatible axle.
 
 `technic_beam();`
 -----------------
-![A beam compatible with LEGO part #32524, for example.]("images/Technic Beam.png")
+![A beam compatible with LEGO part #32524, for example.](images/Technic%20Beam.png)
 
 Generate a Technic-compatible beam.
 
@@ -48,7 +48,7 @@ Generate a Technic-compatible beam.
 
 `technic_elbow();`
 --------------------------
-![A 90º elbow compatible with LEGO part #25214.]("images/Technic Elbow.png")
+![A 90º elbow compatible with LEGO part #25214.](images/Technic%20Elbow.png)
 
 | Parameter | Values| Description |
 |---|---|---|
@@ -59,7 +59,7 @@ Generate a Technic-compatible beam.
 
 `technic_pin();`
 --------------------------
-![A pin compatible with LEGO part #2780.]("images/Technic Pin.png")
+![A pin compatible with LEGO part #2780.](images/Technic%20Pin.png)
 
 | Parameter | Values| Description |
 |---|---|---|
@@ -70,7 +70,7 @@ Generate a Technic-compatible beam.
 
 `technic_pin_connector();`
 --------------------------
-![A pin connector compatible with LEGO part #18654.]("images/Technic Pin Connector.png")
+![A pin connector compatible with LEGO part #18654.](images/Technic%20Pin%20Connector.png)
 
 | Parameter | Values| Description |
 |---|---|---|
