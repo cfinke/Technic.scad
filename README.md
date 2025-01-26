@@ -2,8 +2,6 @@
 
 An OpenSCAD Technic-compatible piece generator. It currently supports generation of beams, axles, pin connectors, axle pins, elbows, and 24-tooth gears.
 
-![The default ouput of each Technic.scad module.](images/Technic%20Example.png)
-
 Modules
 =======
 
