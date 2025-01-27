@@ -38,7 +38,60 @@ beam_length = 5; // [ 1:100 ]
 // The height (or thickness) of the beam. A height of 2 is equivalent to two beams stuck side-by-side.
 beam_height = 1; // [ 0.5:.5:100 ]
 
+// Which holes should be axle holes? Numbers separated by commas. e.g., "1, 4, 7"
+beam_axle_holes = "";
+
+/* [Angles] */
+
+// If this is an angled beam, what should be the change in angle (moving clockwise)?
+beam_angle = 0; // [ -179:1:179 ]
+
+// If this is an angled beam, which hole should be the vertex of the angle?
+beam_vertex = 3;
+
 color( "red" ) technic_beam(
 	length = beam_length,
-	height = beam_height
+	height = beam_height,
+	angle = beam_angle,
+	vertex = min( beam_length, beam_vertex ),
+	axle_holes = array_of_strings_to_array_of_ints( split_str( remove_everything_thats_not_a_number_or_comma( beam_axle_holes ), "," ) )
 );
+
+// Functions for managing the conversion of a list of numbers in a text field to an array of actual numbers.
+function remove_everything_thats_not_a_number_or_comma( str ) = chr( [ for ( s = str ) if ( ( ord( s ) >= 48 && ord( s ) <= 57 ) || s == "," ) ord( s ) ] );
+function array_of_strings_to_array_of_ints( str_arr ) = [ for ( s = str_arr ) int( s ) ];
+
+// From https://github.com/openscad/openscad/issues/4568
+function int(s, ret=0, i=0) =
+	i >= len(s)
+	? ret
+	: int(s, ret*10 + ord(s[i]) - ord("0"), i+1);
+
+// from https://github.com/JustinSDK/dotSCAD/blob/master/src/util/_impl/_split_str_impl.scad
+
+/**
+* sub_str.scad
+*
+* @copyright Justin Lin, 2017
+* @license https://opensource.org/licenses/lgpl-3.0.html
+*
+* @see https://openhome.cc/eGossip/OpenSCAD/lib3x-sub_str.html
+*
+*/
+
+function sub_str(t, begin, end) =
+	let(
+		ed = is_undef(end) ? len(t) : end,
+		cum = [
+			for (i = begin, s = t[i], is_continue = i < ed;
+			is_continue;
+			i = i + 1, is_continue = i < ed, s = is_continue ? str(s, t[i]) : undef) s
+		]
+	)
+	cum[len(cum) - 1];
+
+function _split_t_by(idxs, t) =
+	let(leng = len(idxs))
+	[sub_str(t, 0, idxs[0]), each [for (i = 0; i < leng; i = i + 1) sub_str(t, idxs[i] + 1, idxs[i + 1])]];
+
+function split_str(t, delimiter) = len(search(delimiter, t)) == 0 ? [t] : _split_t_by(search(delimiter, t, 0)[0], t);

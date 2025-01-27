@@ -43,6 +43,9 @@ Generate a Technic-compatible beam.
 |---|---|---|
 | `length` | int | The number of holes in the beam. |
 | `height` | int | The height (or thickness?) of the beam in multiples of normal beams. |
+| `angle` | float | The change in angle (clockwise) that will occur at the vertex'th hole. |
+| `vertex` | int | The number of the hole at which the angle should change, if the angle param is not zero. |
+| `axle_holes` | int[] | An array of hole positions that should be axle holes, starting at 1. |
 
 `technic_elbow();`
 --------------------------
