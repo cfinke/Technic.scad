@@ -94,18 +94,18 @@ EXTENSION_FOR_DIFFERENCE = 1;
  * Axles.
  *
  * part #3704:  technic_axle( length = 2 );
- * part #4519:  technic_axle( length = 3 );
  * part #3705:  technic_axle( length = 4 );
- * part #32073: technic_axle( length = 5 );
  * part #3706:  technic_axle( length = 6 );
- * part #44294: technic_axle( length = 7 );
  * part #3707:  technic_axle( length = 8 );
- * part #60485: technic_axle( length = 9 );
- * part #3737:  technic_axle( length = 10 );
- * part #23948: technic_axle( length = 11 );
  * part #3708:  technic_axle( length = 12 );
- * part #50451: technic_axle( length = 16 );
+ * part #3737:  technic_axle( length = 10 );
+ * part #4519:  technic_axle( length = 3 );
+ * part #23948: technic_axle( length = 11 );
+ * part #32073: technic_axle( length = 5 );
+ * part #44294: technic_axle( length = 7 );
  * part #50450: technic_axle( length = 32 );
+ * part #50451: technic_axle( length = 16 );
+ * part #60485: technic_axle( length = 9 );
  *
  * Origin is centered at the bottom of the axle.
  */
