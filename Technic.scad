@@ -661,14 +661,12 @@ module technic_beam( length = 5, height = 1, angle = 0, vertex = 1, axle_holes =
  */
 module technic_rounded_rectangle( width = 1, height = 1, radius = 0.1 ) {
 	union() {
-		// Position a circle to act as each rounded corner of the axle.
-		translate( [ -( width / 2 ) + radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
-		translate( [  ( width / 2 ) - radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
-		translate( [  ( width / 2 ) - radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
-		translate( [ -( width / 2 ) + radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
-
-		// Now add squares to fill in the spaces between the circles in each direction.
-		square( [ width - ( radius * 2 ), height ],                 center = true );
-		square( [ width,                  height - ( radius * 2 )], center = true );
+		hull() {
+			// Position a circle to act as each rounded corner of the axle.
+			translate( [ -( width / 2 ) + radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
+			translate( [  ( width / 2 ) - radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
+			translate( [  ( width / 2 ) - radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
+			translate( [ -( width / 2 ) + radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
+		}
 	};
 }
