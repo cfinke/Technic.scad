@@ -42,6 +42,10 @@ technic_axle_cross_section_radius = 1;
 technic_axle_stop_thickness = 0.7; // Matches technic_pin_collar_thickness
 technic_axle_stop_diameter = 5.9;
 
+technic_bush_big_diameter = 7.4;
+technic_bush_small_diameter = 5.8;
+technic_bush_shoulder_height = 1.3;
+
 technic_pin_connector_outer_diameter = 7.36;
 technic_pin_connector_wall_thickness = 1.3;
 technic_pin_connector_shoulder_wall_thickness = 0.6;
@@ -157,6 +161,27 @@ module technic_axle(
 				}
 			}
 		}
+	}
+}
+
+/**
+ * Bushes.
+ *
+ * part #4265c: technic_bush( height = 1/2 );
+ *
+ * Origin is centered beneath the bush.
+ */
+module technic_bush( height = 1/2 ) {
+	difference() {
+		union () {
+			cylinder( h = height * technic_height_in_ms, d = technic_bush_small_diameter );
+			cylinder( h = technic_bush_shoulder_height, d = technic_bush_big_diameter );
+			translate( [ 0, 0, ( height * technic_height_in_ms ) - technic_bush_shoulder_height ] ) {
+				cylinder( h = technic_bush_shoulder_height, d = technic_bush_big_diameter );
+			}
+		}
+
+		technic_axle_hole( height = height );
 	}
 }
 
@@ -668,5 +693,11 @@ module technic_rounded_rectangle( width = 1, height = 1, radius = 0.1 ) {
 		translate( [  ( width / 2 ) - radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
 		translate( [  ( width / 2 ) - radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
 		translate( [ -( width / 2 ) + radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
+	}
+}
+
+module technic_axle_hole( height = 1 ) {
+	scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
+		translate( [ 0, 0, -( height * technic_height_in_ms ) / 2 ] ) technic_axle( length = height * 2 );
 	}
 }

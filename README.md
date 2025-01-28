@@ -47,6 +47,16 @@ Generate a Technic-compatible beam.
 | `vertex` | int | The number of the hole at which the angle should change, if the angle param is not zero. |
 | `axle_holes` | int[] | An array of hole positions that should be axle holes, starting at 1. |
 
+`technic_bush();`
+-----------------
+![A bush compatible with LEGO part #4265c, for example.](images/Technic%20Bush.png)
+
+Generate a Technic-compatible bush.
+
+| Parameter | Values| Description |
+|---|---|---|
+| `height` | int | The height of the bush. |
+
 `technic_elbow();`
 --------------------------
 ![A 90º elbow compatible with LEGO part #25214.](images/Technic%20Elbow.png)
