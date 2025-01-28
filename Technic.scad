@@ -140,18 +140,20 @@ module technic_axle(
 	 * Positioned with the bottom center of the axle spline at the origin.
 	 */
 	module technic_axle_spline( length ) {
-		// To get the rounded corners when viewing the spline looking at the long wide side, we need
-		// to intersect it with rounded rectangle turned 90º in that direction.
 		translate( [ 0, 0, technic_height_in_ms * length / 2 ] ) {
-			intersection() {
-				rotate( [ 90, 0, 0 ] ) {
-					linear_extrude( technic_axle_spline_thickness, center = true ) {
-						technic_rounded_rectangle( width = technic_axle_spline_width, height = technic_height_in_ms * length, radius = technic_axle_cross_section_radius );
+			rotate( [ 90, 0, 0 ] ) {
+				minkowski() {
+					union () {
+						translate( [ 0, 0, - ( technic_axle_spline_thickness - ( 2 * technic_axle_spline_corner_radius ) ) / 2 ] ) linear_extrude( technic_axle_spline_thickness - ( 2 * technic_axle_spline_corner_radius ) ) {
+							technic_rounded_rectangle(
+								width = technic_axle_spline_width - ( 2 * technic_axle_spline_corner_radius ),
+								height = ( technic_height_in_ms * length ) - ( 2 * technic_axle_spline_corner_radius ),
+								radius = technic_axle_cross_section_radius
+							);
+						}
 					}
-				}
 
-				linear_extrude( technic_height_in_ms * length, center = true ) {
-					technic_rounded_rectangle( technic_axle_spline_width, technic_axle_spline_thickness, technic_axle_spline_corner_radius );
+					sphere( r = technic_axle_spline_corner_radius );
 				}
 			}
 		}
@@ -660,13 +662,11 @@ module technic_beam( length = 5, height = 1, angle = 0, vertex = 1, axle_holes =
  * Generate a rounded rectangle.
  */
 module technic_rounded_rectangle( width = 1, height = 1, radius = 0.1 ) {
-	union() {
-		hull() {
-			// Position a circle to act as each rounded corner of the axle.
-			translate( [ -( width / 2 ) + radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
-			translate( [  ( width / 2 ) - radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
-			translate( [  ( width / 2 ) - radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
-			translate( [ -( width / 2 ) + radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
-		}
-	};
+	hull() {
+		// Position a circle to act as each rounded corner of the axle.
+		translate( [ -( width / 2 ) + radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
+		translate( [  ( width / 2 ) - radius,  ( height / 2 ) - radius, 0 ] ) circle( r = radius );
+		translate( [  ( width / 2 ) - radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
+		translate( [ -( width / 2 ) + radius, -( height / 2 ) + radius, 0 ] ) circle( r = radius );
+	}
 }
