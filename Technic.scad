@@ -37,6 +37,8 @@ technic_hole_diameter = 4.85; // Matches LEGO.stud_diameter
 
 technic_axle_interference_fit_ratio = 1.022;
 
+technic_axle_and_pin_connector_face_thickness = 1; // You would think this would match technic_bush_shoulder_height, but it doesn't really.
+
 technic_axle_spline_thickness = 1.8;
 technic_axle_spline_width = 4.85; // Matches LEGO.stud_diameter
 technic_axle_spline_corner_radius = 0.4;
@@ -46,7 +48,7 @@ technic_axle_stop_diameter = 5.9;
 
 technic_bush_big_diameter = 7.4;
 technic_bush_small_diameter = 5.8;
-technic_bush_shoulder_height = 1.3;
+technic_bush_shoulder_height = 1.3; // Should this match technic_pin_multiple_center_lip_thickess ?
 
 technic_pin_connector_outer_diameter = 7.36;
 technic_pin_connector_wall_thickness = 1.3;
@@ -81,7 +83,7 @@ technic_pin_friction_thickness = 0.15;
 technic_pin_friction_width = 0.8;
 technic_pin_friction_vertical_length = 5;
 technic_pin_multiple_center_width = 7.8;
-technic_pin_multiple_center_lip_thickess = 1.2;
+technic_pin_multiple_center_lip_thickess = 1.2; // Should this match technic_bush_shoulder_height ?
 technic_pin_multiple_offset = 7.75;
 technic_pin_multiple_center_lip_overhang = 1.35;
 
@@ -170,6 +172,72 @@ module technic_axle(
 	}
 }
 
+module technic_axle_and_pin_connector( length = 4, height = 1 ) {
+	// Add the two bushes, one on each end.
+	                                                     technic_bush( height = height, stud_cutouts = false );
+	translate( [ ( length - 1 ) * stud_spacing, 0, 0 ] ) technic_bush( height = height, stud_cutouts = false );
+
+	// Add the connector faces.
+	difference() {
+		union() {
+			difference() {
+				union() {
+					// The bottom face of the connector.
+					hull() {
+						cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_axle_and_pin_connector_face_thickness );
+
+						translate( [ stud_spacing * ( length - 1 ), 0, 0 ] ) {
+							cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_axle_and_pin_connector_face_thickness );
+						}
+					}
+
+					// The top face of the connector.
+					translate( [ 0, 0, ( height * technic_height_in_ms ) - technic_axle_and_pin_connector_face_thickness ] ) { // 1 is the height of the connector, which in LEGO, is always 1, but we could customize.
+						hull() {
+							cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_axle_and_pin_connector_face_thickness );
+
+							translate( [ stud_spacing * ( length - 1 ), 0, 0 ] ) {
+								cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_axle_and_pin_connector_face_thickness );
+							}
+						}
+					}
+
+				}
+
+				// Remove the cylinders from the face that are occupied by the bushes.
+				translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE / 2 ] ) {
+					cylinder( d = technic_bush_big_diameter, h = ( height * technic_height_in_ms ) + EXTENSION_FOR_DIFFERENCE );
+
+					translate( [ stud_spacing * ( length - 1 ), 0, 0 ] ) {
+						cylinder( d = technic_bush_big_diameter, h = ( height * technic_height_in_ms ) + EXTENSION_FOR_DIFFERENCE);
+					}
+				}
+			}
+
+			let ( webbing_thickness = technic_pin_connector_shoulder_wall_thickness ) {
+				// The webbing inside the connector, just like it is in a beam.
+				translate( [ technic_bush_small_diameter / 2, -(webbing_thickness/2), 0 ] ) cube( [ ( length - 1 ) * stud_spacing - technic_bush_small_diameter, webbing_thickness,( height * technic_height_in_ms ) ] );
+			}
+		}
+
+		// Remove the cylinders from the center that are occupied by the pin connectors.
+		for ( i = [ 1 : length - 2 ] ) {
+			for ( j = [ 1 : height ] ) {
+				translate( [ i * technic_beam_hole_spacing, 0, ((j-1) * technic_height_in_ms ) + ( technic_height_in_ms / 2 ) ] ) rotate( [ 90, 0, 0 ] ) translate( [ 0, 0, -( technic_height_in_ms / 2 ) ] ) cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_ms );
+			}
+		}
+	}
+
+	// Add the pin holes along the center, essentially a beam portion.
+	// These protrude every so slightly past the outer connector faces, which looks like an error,
+	// but is how those pieces actually are in reality.
+	for ( i = [ 1 : length - 2 ] ) {
+		for ( j = [ 1 : height ] ) {
+			translate( [ i * technic_beam_hole_spacing, 0, ((j-1) * technic_height_in_ms ) + ( technic_height_in_ms / 2 ) ] ) rotate( [ 90, 0, 0 ] ) translate( [ 0, 0, -( technic_height_in_ms / 2 ) ] ) technic_pin_connector();
+		}
+	}
+}
+
 /**
  * Bushes.
  *
@@ -221,7 +289,7 @@ module technic_bush( height = 1/2, stud_cutouts = true ) {
 		}
 
 		// The axle hole.
-		technic_axle_hole( height = height );
+		translate( [ 0, 0, ( height * technic_height_in_ms ) / 2 ] ) technic_axle_hole( height = height );
 	}
 }
 

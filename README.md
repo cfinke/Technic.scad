@@ -37,6 +37,16 @@ Generate a Technic-compatible axle pin.
 | `pin_length` | int | In studs, how long the pin component should be. |
 | `friction` | bool | Whether the pin component should have friction ridges on it. |
 
+`technic_axle_and_pin_connector();`
+![An axle and pin connector compatible with LEGO part #32184.](images/Technic%20Axle%20and%20Pin%20Connector.png)
+
+Generate a Technic-compatible axle and pin connector.
+
+| Parameter | Values| Description |
+|---|---|---|
+| `length` | int | In studs, how long the connector should be. |
+| `height` | int | How tall the connector should be, in multiples of the standard connector height. |
+
 `technic_beam();`
 -----------------
 ![A beam compatible with LEGO part #32524, for example.](images/Technic%20Beam.png)
