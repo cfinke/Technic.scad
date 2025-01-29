@@ -26,9 +26,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-use <../Technic.scad>;
-
-$fa = 1; $fs = 0.05;
+include <../Technic.scad>;
 
 /* [General] */
 
@@ -36,17 +34,29 @@ $fa = 1; $fs = 0.05;
 pin_top_length = 1; // [ 0:0.5:100 ]
 
 // Should the top pin end have friction ridges?
-pin_top_friction = false; // [ true, false ]
+pin_top_friction = true; // [ true, false ]
 
 // Length of the bottom end of the pin, in studs
-pin_bottom_length = 2; // [ 0:0.5:100 ]
+pin_bottom_length = 1; // [ 0:0.5:100 ]
 
 // Should the bottom pin end have friction ridges?
 pin_bottom_friction = true; // [ true, false ]
+
+// How many sets of pins should there be?
+pin_multiplier = 1; // [ 0:100 ]
+
+// If a multiple pin, should there be axle holes between each set of pins?
+pin_axle_holes = true; // [ true, false ]
+
+// Should the slits in the ends of the pin form a continuous line instead of being parallel with each other? This only really matters for models with pin_multiplier > 1.
+pin_squared_pin_holes = false; // [ true, false ]
 
 color( "white" ) technic_pin(
 	top_length = pin_top_length,
 	top_friction = pin_top_friction,
 	bottom_length = pin_bottom_length,
-	bottom_friction = pin_bottom_friction
+	bottom_friction = pin_bottom_friction,
+	multiplier = pin_multiplier,
+	axle_holes = pin_axle_holes,
+	squared_pin_holes = pin_squared_pin_holes
 );
