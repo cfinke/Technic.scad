@@ -312,19 +312,20 @@ module technic_24_tooth_gear(
 		// The axle hole.
 		// This scaling is theoretically correct.
 		rotate( [ 0, 0, 45 ] ) {
-			scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
-				technic_axle( length = width );
+			union () {
+				technic_axle_hole( height = width );
 
-				// The cross-opening for the axle fit is as wide as the widest edges of the pin holes. ~12.75
-				// The cross-opening for the axle fit is as wide as the widest edges of the pin holes. ~12.75
-				linear_extrude( height = desired_gear_axle_reinforcement_thickness + EXTENSION_FOR_DIFFERENCE, center = true ) {
-					technic_rounded_rectangle(
-						width = technic_axle_spline_thickness * technic_axle_interference_fit_ratio,
-						height = technic_gear_axle_slot_length,
-						radius = ( technic_axle_spline_thickness * technic_axle_interference_fit_ratio ) / 2
-					);
+				scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
+					// The cross-opening for the axle fit is as wide as the widest edges of the pin holes. ~12.75
+					linear_extrude( height = desired_gear_axle_reinforcement_thickness + EXTENSION_FOR_DIFFERENCE, center = true ) {
+						technic_rounded_rectangle(
+							width = technic_axle_spline_thickness * technic_axle_interference_fit_ratio,
+							height = technic_gear_axle_slot_length,
+							radius = ( technic_axle_spline_thickness * technic_axle_interference_fit_ratio ) / 2
+						);
+					};
 				};
-			};
+			}
 		};
 	};
 }
@@ -561,9 +562,7 @@ module technic_elbow(
 			// Subtract the axle socket area along the length.
 			translate( [ real_width * stud_spacing, 0, 0 ] ) {
 				rotate( [ 0, -90, 0 ] ) {
-					scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
-						technic_axle( length = 1 );
-					}
+					technic_axle_hole( height = 1 );
 				}
 			}
 		}
@@ -572,9 +571,7 @@ module technic_elbow(
 			// Subtract the axle socket area along the width.
 			translate( [ 0, real_length * stud_spacing, 0 ] ) {
 				rotate( [ 90, 0, 0 ] ) {
-					scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
-						technic_axle( length = 1 );
-					}
+					technic_axle_hole( height = 1 );
 				}
 			}
 		}
@@ -646,8 +643,8 @@ module technic_beam( length = 5, height = 1, angle = 0, vertex = 1, axle_holes =
 						cylinder( d = technic_pin_connector_outer_diameter, h = height * technic_height_in_ms );
 
 						// @todo This still leaves a tiny bit of extra material in the axle hole at the vertex of an angled beam (if there is one there).
-						scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
-							translate( [ 0, 0, -height * technic_height_in_ms ] ) technic_axle( length = height * 2 );
+						translate( [ 0, 0, -height * technic_height_in_ms ] ) {
+							technic_axle_hole( height = height * 2 );
 						}
 					}
 				} else {
