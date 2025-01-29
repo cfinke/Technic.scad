@@ -9,6 +9,8 @@ Modules
 --------------------------
 ![A 24-tooth gear compatible with LEGO part #3648.](images/Technic%2024-Tooth%20Gear.png)
 
+Generate a Technic-compatible 24-tooth gear.
+
 | Parameter | Values| Description |
 |---|---|---|
 | `width` | int | In multiples of the original gear width, how wide should it be? e.g., a width of 3 would generate a single gear with the same total width as three gears set side-by-side. |
@@ -26,6 +28,8 @@ Generate a Technic-compatible axle.
 `technic_axle_pin();`
 --------------------------
 ![An axle pin compatible with LEGO part #11214.](images/Technic%20Axle%20Pin.png)
+
+Generate a Technic-compatible axle pin.
 
 | Parameter | Values| Description |
 |---|---|---|
@@ -61,6 +65,8 @@ Generate a Technic-compatible bush.
 --------------------------
 ![A 90º elbow compatible with LEGO part #25214.](images/Technic%20Elbow.png)
 
+Generate a Technic-compatible 90º elbow.
+
 | Parameter | Values| Description |
 |---|---|---|
 | `length` | int | The number of studs one leg would cover, if laid down on a plate. |
@@ -72,6 +78,8 @@ Generate a Technic-compatible bush.
 --------------------------
 ![A pin compatible with LEGO part #2780.](images/Technic%20Pin.png)
 
+Generate a Technic-compatible pin.
+
 | Parameter | Values| Description |
 |---|---|---|
 | `top_length` | int | In studs, how long the top half of the pin should be. |
@@ -82,6 +90,8 @@ Generate a Technic-compatible bush.
 `technic_pin_connector();`
 --------------------------
 ![A pin connector compatible with LEGO part #18654.](images/Technic%20Pin%20Connector.png)
+
+Generate a Technic-compatible pin connector.
 
 | Parameter | Values| Description |
 |---|---|---|
