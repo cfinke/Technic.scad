@@ -29,6 +29,8 @@
 $fa = 1; $fs = 0.05;
 
 stud_spacing = 8; // Matches LEGO.stud_spacing
+stud_diameter = 4.85; // Matches LEGO.stud_diameter
+
 technic_height_in_ms = 7.8; // Vertically-oriented technic pieces (like pin connectors) use this
 
 technic_hole_diameter = 4.85; // Matches LEGO.stud_diameter
@@ -171,16 +173,49 @@ module technic_axle(
  *
  * Origin is centered beneath the bush.
  */
-module technic_bush( height = 1/2 ) {
+module technic_bush( height = 1/2, stud_cutouts = true ) {
 	difference() {
 		union () {
-			cylinder( h = height * technic_height_in_ms, d = technic_bush_small_diameter );
+			difference() {
+				// The main inner cylinder that forms the interior walls.
+				cylinder( h = height * technic_height_in_ms, d = technic_bush_small_diameter );
+
+				// Bushes at least 1 unit tall have slots in the side (for air? material savings?)
+				if ( height >= 1 ) {
+					translate ( [ 0,  ( technic_bush_small_diameter + EXTENSION_FOR_DIFFERENCE ) / 2, ( ( height * technic_height_in_ms ) - ( 2 * technic_bush_shoulder_height ) ) / 2 + technic_bush_shoulder_height ]) {
+						rotate( [ 90, 0, 0 ] ) {
+							linear_extrude( technic_bush_small_diameter + EXTENSION_FOR_DIFFERENCE ) {
+								technic_rounded_rectangle( width = technic_pin_slot_width, height = ( height * technic_height_in_ms ) - ( 2 * technic_bush_shoulder_height ) );
+							}
+						}
+					}
+				}
+			}
+
+			// The bottom shoulder.
 			cylinder( h = technic_bush_shoulder_height, d = technic_bush_big_diameter );
+
+			// The top shoulder.
 			translate( [ 0, 0, ( height * technic_height_in_ms ) - technic_bush_shoulder_height ] ) {
-				cylinder( h = technic_bush_shoulder_height, d = technic_bush_big_diameter );
+				difference() {
+					cylinder( h = technic_bush_shoulder_height, d = technic_bush_big_diameter );
+
+					if ( height > 1/2 && stud_cutouts ) {
+						// Bushes taller than 1/2 units get cutouts in the lip so that they'll fit between studs.
+						translate( [ -stud_spacing / 2, -stud_spacing / 2, -EXTENSION_FOR_DIFFERENCE / 2 ] ) {
+							union () {
+								cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
+								translate( [ stud_spacing, 0, 0 ] ) cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
+								translate( [ stud_spacing, stud_spacing, 0 ] ) cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
+								translate( [ 0, stud_spacing, 0 ] ) cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
+							}
+						}
+					}
+				}
 			}
 		}
 
+		// The axle hole.
 		technic_axle_hole( height = height );
 	}
 }
