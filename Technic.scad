@@ -48,7 +48,7 @@ technic_axle_stop_diameter = 5.9;
 
 technic_bush_big_diameter = 7.4;
 technic_bush_small_diameter = 5.8;
-technic_bush_shoulder_height = 1.3; // Should this match technic_pin_multiple_center_lip_thickess ?
+technic_bush_shoulder_height = 1.3; // Should this match technic_pin_multiple_center_lip_thickness ?
 
 technic_pin_connector_outer_diameter = 7.36;
 technic_pin_connector_wall_thickness = 1.3;
@@ -83,7 +83,7 @@ technic_pin_friction_thickness = 0.15;
 technic_pin_friction_width = 0.8;
 technic_pin_friction_vertical_length = 5;
 technic_pin_multiple_center_width = 7.8;
-technic_pin_multiple_center_lip_thickess = 1.2; // Should this match technic_bush_shoulder_height ?
+technic_pin_multiple_center_lip_thickness = 1.2; // Should this match technic_bush_shoulder_height ?
 technic_pin_multiple_offset = 7.75;
 technic_pin_multiple_center_lip_overhang = 1.35;
 
@@ -483,17 +483,17 @@ module technic_pin(
 
 					// The bottom lip that separates the pins from the center section.
 					hull() {
-						cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_pin_multiple_center_lip_thickess );
+						cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_pin_multiple_center_lip_thickness );
 						translate( [ technic_pin_multiple_offset * ( multiplier - 1 ), 0, 0 ] ) {
-							cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_pin_multiple_center_lip_thickess );
+							cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_pin_multiple_center_lip_thickness );
 						}
 					}
 
 					// The top lip that separates the pins from the center section.
-					translate( [ 0, 0, technic_pin_multiple_center_width - technic_pin_multiple_center_lip_thickess ] ) {
+					translate( [ 0, 0, technic_pin_multiple_center_width - technic_pin_multiple_center_lip_thickness ] ) {
 						hull() {
-							cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h =technic_pin_multiple_center_lip_thickess );
-							translate( [ technic_pin_multiple_offset * ( multiplier - 1 ), 0, 0 ] ) cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h =technic_pin_multiple_center_lip_thickess );
+							cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h =technic_pin_multiple_center_lip_thickness );
+							translate( [ technic_pin_multiple_offset * ( multiplier - 1 ), 0, 0 ] ) cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h =technic_pin_multiple_center_lip_thickness );
 						}
 					}
 
