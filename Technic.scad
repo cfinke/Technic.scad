@@ -170,6 +170,7 @@ module technic_axle(
  * Bushes.
  *
  * part #4265c: technic_bush( height = 1/2 );
+ * part #3713:  technic_bush( height = 1 )
  *
  * Origin is centered beneath the bush.
  */
