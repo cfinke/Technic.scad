@@ -99,7 +99,7 @@ Generate a Technic-compatible pin.
 | `bottom_length` | int | In studs, how long the bottom half of the pin should be. |
 | `bottom_friction` | bool | Whether the bottom half of the pin should have friction ridges on it. |
 | `multiplier` | int | Should this generate multiple sets of connected pins? If so, how many? |
-| `squared_pin_holes` | bool | Whether the slits in the ends of the pins should be along the same plane instead of parallel to each other. ||
+| `squared_pin_holes` | bool | Whether the slits in the ends of the pins should be along the same plane instead of parallel to each other. |
 
 `technic_pin_connector();`
 --------------------------

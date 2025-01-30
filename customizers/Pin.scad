@@ -31,19 +31,19 @@ include <../Technic.scad>;
 /* [General] */
 
 // Length of the top end of the pin, in studs
-pin_top_length = 1; // [ 0:0.5:100 ]
+pin_top_length = 1; // [ 1:100 ]
 
 // Should the top pin end have friction ridges?
 pin_top_friction = true; // [ true, false ]
 
 // Length of the bottom end of the pin, in studs
-pin_bottom_length = 1; // [ 0:0.5:100 ]
+pin_bottom_length = 1; // [ 1:100 ]
 
 // Should the bottom pin end have friction ridges?
 pin_bottom_friction = true; // [ true, false ]
 
 // How many sets of pins should there be?
-pin_multiplier = 1; // [ 0:100 ]
+pin_multiplier = 1; // [ 1:100 ]
 
 // If a multiple pin, should there be axle holes between each set of pins?
 pin_axle_holes = true; // [ true, false ]
