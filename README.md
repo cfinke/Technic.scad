@@ -24,6 +24,8 @@ Generate a Technic-compatible axle.
 | Parameter | Values| Description |
 |---|---|---|
 | `length` | int | The length of the axle in "studs." |
+| `stop` | bool | Whether there is a stop at the end. |
+| `stud` | bool | Whether there is a stud at the end. |
 
 `technic_axle_pin();`
 --------------------------

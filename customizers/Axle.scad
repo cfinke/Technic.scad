@@ -38,4 +38,7 @@ axle_length = 2; // [1:100]
 // Should there be a stop at the end of the axle?
 axle_stop = false; // [ true, false ]
 
-color( "blue" ) technic_axle( length = axle_length, stop = axle_stop );
+// Should there be a stud at the end of the axle?
+axle_stud = true; // [ true, false ]
+
+color( "blue" ) technic_axle( length = axle_length, stop = axle_stop, stud = axle_stud );

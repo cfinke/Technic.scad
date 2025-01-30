@@ -51,12 +51,16 @@ pin_axle_holes = true; // [ true, false ]
 // Should the slits in the ends of the pin form a continuous line instead of being parallel with each other? This only really matters for models with pin_multiplier > 1.
 pin_squared_pin_holes = false; // [ true, false ]
 
-color( "white" ) technic_pin(
+// Should the bottom of the pin be a stud? This will override the bottom length setting.
+pin_stud = false; // [ true, false ]
+
+color( "gray" ) technic_pin(
 	top_length = pin_top_length,
 	top_friction = pin_top_friction,
 	bottom_length = pin_bottom_length,
 	bottom_friction = pin_bottom_friction,
 	multiplier = pin_multiplier,
 	axle_holes = pin_axle_holes,
-	squared_pin_holes = pin_squared_pin_holes
+	squared_pin_holes = pin_squared_pin_holes,
+	stud = pin_stud
 );

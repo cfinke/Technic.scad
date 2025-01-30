@@ -30,6 +30,9 @@ $fa = 1; $fs = 0.05;
 
 stud_spacing = 8; // Matches LEGO.stud_spacing
 stud_diameter = 4.85; // Matches LEGO.stud_diameter
+stud_height = 1.8; // Matches LEGO.stud_height
+stud_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
+stud_outer_diameter = 4.85; // Matches LEGO.stud_diameter
 
 technic_height_in_ms = 7.8; // Vertically-oriented technic pieces (like pin connectors) use this
 
@@ -45,6 +48,9 @@ technic_axle_spline_corner_radius = 0.4;
 technic_axle_cross_section_radius = 1;
 technic_axle_stop_thickness = 0.7; // Matches technic_pin_collar_thickness
 technic_axle_stop_diameter = 5.9;
+technic_axle_stud_height = 1.8; // Matches LEGO.stud_height
+technic_axle_stud_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
+technic_axle_stud_outer_diameter = 4.85; // Matches LEGO.stud_diameter
 
 technic_bush_big_diameter = 7.4;
 technic_bush_small_diameter = 5.8;
@@ -74,7 +80,7 @@ technic_pin_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
 technic_pin_collar_diameter = 5.6;
 technic_pin_collar_thickness = 0.7; // Matches technic_axle_stop_thickness
 technic_pin_lip_diameter = 5;
-technic_pin_lip_thickness = 0.5;
+technic_pin_lip_thickness = 0.75;
 technic_pin_slit_width = 0.75;
 technic_pin_slit_length = 3.2;
 technic_pin_slot_width = 0.75;
@@ -112,37 +118,61 @@ EXTENSION_FOR_DIFFERENCE = 1;
  * part #3708:  technic_axle( length = 12 );
  * part #3737:  technic_axle( length = 10 );
  * part #4519:  technic_axle( length = 3 );
+ * part #6587:  technic_axle( length = 3, stud = true );
+ * part #15462: technic_axle( length = 5, stop = true );
  * part #23948: technic_axle( length = 11 );
+ * part #24316: technic_axle( length = 3, stop = true );
  * part #32073: technic_axle( length = 5 );
  * part #44294: technic_axle( length = 7 );
  * part #50450: technic_axle( length = 32 );
  * part #50451: technic_axle( length = 16 );
+ * part #55013: technic_axle( length = 8, stop = true );
  * part #60485: technic_axle( length = 9 );
+ * part #87073: technic_axle( length = 4, stop = true );
  *
  * Origin is centered at the bottom of the axle.
+ *
+ * @param float length The length of the axle, in Technic units.
+ * @param bool stop Whether there is a stop at the end.
+ * @param bool stud Whether there is a stud at the end.
  */
 module technic_axle(
 	length = 2, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
 	stop = false, // Should it have a stop at the end?
+	stud = false, // Should it have a stud on the end?
 ) {
-	difference() {
-		union() {
-			// If there's a stop (and thus an extra segment of length to cut off, we need to move the axle
-			// down a segment, since it's returned from technic_axle_spline with the center of its base at the origin.
-			translate( [ 0, 0, stop ? - ( stud_spacing ) : 0 ] ) {
-				// If there's a stop, add an extra bit of length so that we can cut it off flush without seeing the small bit of rounded corners.
-				                       technic_axle_spline( length = stop ? length + 1 : length );
-				rotate( [ 0, 0, 90 ] ) technic_axle_spline( length = stop ? length + 1 : length );
+	translate( [ 0, 0, stud ? technic_axle_stud_height : 0 ] ) {
+		// A stud always requires a stop, in my opinion.
+		let( has_stop = stop || stud ) {
+			difference() {
+				union() {
+					// If there's a stop (and thus an extra segment of length to cut off, we need to move the axle
+					// down a segment, since it's returned from technic_axle_spline with the center of its base at the origin.
+					translate( [ 0, 0, has_stop ? - ( stud_spacing ) : 0 ] ) {
+						// If there's a stop, add an extra bit of length so that we can cut it off flush without seeing the small bit of rounded corners.
+						                       technic_axle_spline( length = has_stop ? length + 1 : length );
+						rotate( [ 0, 0, 90 ] ) technic_axle_spline( length = has_stop ? length + 1 : length );
+					}
+
+					if ( has_stop ) {
+						// The stop itself.
+						cylinder( d = technic_axle_stop_diameter, h = technic_axle_stop_thickness );
+					}
+				}
+
+				if ( has_stop ) {
+					// Cut off the extra axle below the stop.
+					translate([ 0, 0, -( ( stud_spacing ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
+						cylinder( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE, h = ( stud_spacing ) + EXTENSION_FOR_DIFFERENCE );
+					}
+				}
 			}
 
-			if ( stop ) {
-				cylinder( d = technic_axle_stop_diameter, h = technic_axle_stop_thickness );
-			}
-		}
-
-		if ( stop ) {
-			translate([ 0, 0, -( ( stud_spacing ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
-				cylinder( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE, h = ( stud_spacing ) + EXTENSION_FOR_DIFFERENCE );
+			if ( stud ) {
+				// Add a stud on the bottom.
+				translate( [ 0, 0, -technic_axle_stud_height ] ) {
+					technic_hollow_stud();
+				}
 			}
 		}
 	}
@@ -441,16 +471,16 @@ module technic_24_tooth_gear(
 /**
  * Pins.
  *
- * part #2780: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true );
- * part #3673: technic_pin( top_length = 1, top_friction = false, bottom_length = 1, bottom_friction = false );
- * part #4274: technic_pin( top_length = 0.5, bottom_length = 1 );
- * part #4459: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true ); // This part has long friction ridges along the length of the pin, which isn't supported yet.
- * part #6558: technic_pin( top_length = 2, top_friction = true, bottom_length = 1, bottom_friction = true );
+ * part #2780: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true )
+ * part #3673: technic_pin( top_length = 1, top_friction = false, bottom_length = 1, bottom_friction = false )
+ * part #4274: technic_pin( top_length = 1, stud = true )
+ * part #4459: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true ) // This part has long friction ridges along the length of the pin, which isn't supported yet.
+ * part #6558: technic_pin( top_length = 2, top_friction = true, bottom_length = 1, bottom_friction = true )
  * part #32138: technic_pin( multiplier = 2 )
- * part #32556: technic_pin( top_length = 2, top_friction = false, bottom_length = 1, bottom_friction = false );
+ * part #32556: technic_pin( top_length = 2, top_friction = false, bottom_length = 1, bottom_friction = false )
  * part #65098: technic_pin( multiplier = 2, squared_pin_holes = true )
- * part #77765: technic_pin( top_length = 3, top_friction = false, bottom_length = 0, bottom_friction = false );
- * part #89678: technic_pin( top_length = 0.5, bottom_length = 1, bottom_friction = true );
+ * part #77765: technic_pin( top_length = 3, top_friction = false, bottom_length = 0, bottom_friction = false )
+ * part #89678: technic_pin( top_length = 1, top_friction = true, stud = true )
  *
  * Origin is centered at the bottom of the pin.
  *
@@ -460,6 +490,7 @@ module technic_24_tooth_gear(
  * @param bool bottom_friction Should the bottom part have friction ridges?
  * @param int multiplier How many pin sets should there be?
  * @param bool axle_hole If a multiple pin, should there be an axle hole?
+ * @param bool stud If true, the bottom part of the pin will be a stud, regardless of bottom_length and bottom_friction.
  */
 module technic_pin(
 	top_length = 1,
@@ -468,80 +499,95 @@ module technic_pin(
 	bottom_friction = true,
 	multiplier = 1,
 	axle_holes = true,
-	squared_pin_holes = false
+	squared_pin_holes = false,
+	stud = false
 ) {
-	if ( multiplier > 1 ) {
-		// @todo If the bottom length is 1/2, it's only really ~1.8mm tall instead of a literal half-height, so this translation makes it float a little.
-		translate( [ 0, 0, bottom_length * technic_height_in_ms ] ) {
-			difference() {
-				union() {
-					// The pin halves.
-					for ( i = [ 1 : multiplier ] ) {
-						translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, technic_pin_multiple_center_width ] ) technic_pin_half( length = top_length, friction = top_friction, squared_pin_holes = squared_pin_holes );
-						translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, 0 ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
-					}
+	let ( bottom_length_in_mm = stud ? stud_height : bottom_length * technic_height_in_ms ) {
+		if ( multiplier > 1 ) {
+			translate( [ 0, 0, bottom_length_in_mm ] ) {
+				difference() {
+					union() {
+						// The pin halves.
+						for ( i = [ 1 : multiplier ] ) {
+							translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, technic_pin_multiple_center_width ] ) technic_pin_half( length = top_length, friction = top_friction, squared_pin_holes = squared_pin_holes );
 
-					// The bottom lip that separates the pins from the center section.
-					hull() {
-						cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_pin_multiple_center_lip_thickness );
-						translate( [ technic_pin_multiple_offset * ( multiplier - 1 ), 0, 0 ] ) {
-							cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_pin_multiple_center_lip_thickness );
-						}
-					}
-
-					// The top lip that separates the pins from the center section.
-					translate( [ 0, 0, technic_pin_multiple_center_width - technic_pin_multiple_center_lip_thickness ] ) {
-						hull() {
-							cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h =technic_pin_multiple_center_lip_thickness );
-							translate( [ technic_pin_multiple_offset * ( multiplier - 1 ), 0, 0 ] ) cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h =technic_pin_multiple_center_lip_thickness );
-						}
-					}
-
-					// The body of the center section.
-					hull() {
-						cylinder( d = technic_pin_outer_diameter, h = technic_pin_multiple_center_width );
-						translate( [ technic_pin_multiple_offset * ( multiplier - 1 ), 0, 0 ] ) cylinder( d = technic_pin_outer_diameter, h = technic_pin_multiple_center_width );
-					}
-
-					if ( axle_holes ) {
-						// Generate the support area around the axle holes.
-						for ( i = [ 1 : multiplier - 1 ] ) {
-							translate( [ ( ( i - .5 ) * technic_pin_multiple_offset ), 0, technic_pin_multiple_center_width / 2 ] ) {
-								rotate( [ 90, 0, 0 ] ) {
-									intersection() {
-										// 1.5 is an arbitrary choice that is correct enough, assuming the cross-section size of an axle can't be customized and the width of the center of a multiple-pin can't be customized.
-										scale( [ 1.5, 1.5, 1 ] ) {
-											technic_axle_hole( height = technic_pin_outer_diameter + EXTENSION_FOR_DIFFERENCE );
-										}
-
-										// Only allow the axle support to extend as far as the edge of the lip of the center section.
-										cube( [ technic_pin_multiple_center_width, technic_pin_multiple_center_width, technic_pin_outer_diameter + ( 2 * technic_pin_multiple_center_lip_overhang ) ], center = true );
-									}
-								}
+							if ( stud ) {
+								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, -bottom_length_in_mm] ) technic_hollow_stud();
+							} else {
+								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, 0 ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
 							}
 						}
 
-					}
-				}
+						// The bottom lip that separates the pins from the center section.
+						hull() {
+							cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_pin_multiple_center_lip_thickness );
+							translate( [ technic_pin_multiple_offset * ( multiplier - 1 ), 0, 0 ] ) {
+								cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_pin_multiple_center_lip_thickness );
+							}
+						}
 
-				if ( axle_holes ) {
-					// Remove the axle holes.
-					for ( i = [ 1 : multiplier - 1 ] ) {
-						translate( [ ( ( i - .5 ) * technic_pin_multiple_offset ), 0, technic_pin_multiple_center_width / 2 ] ) {
-							rotate( [ 90, 0, 0 ] ) {
-								translate( [ 0, 0, 0 ] ) {
-									technic_axle_hole( height = technic_pin_outer_diameter + EXTENSION_FOR_DIFFERENCE );
+						// The top lip that separates the pins from the center section.
+						translate( [ 0, 0, technic_pin_multiple_center_width - technic_pin_multiple_center_lip_thickness ] ) {
+							hull() {
+								cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h =technic_pin_multiple_center_lip_thickness );
+								translate( [ technic_pin_multiple_offset * ( multiplier - 1 ), 0, 0 ] ) cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h =technic_pin_multiple_center_lip_thickness );
+							}
+						}
+
+						// The body of the center section.
+						hull() {
+							cylinder( d = technic_pin_outer_diameter, h = technic_pin_multiple_center_width );
+							translate( [ technic_pin_multiple_offset * ( multiplier - 1 ), 0, 0 ] ) cylinder( d = technic_pin_outer_diameter, h = technic_pin_multiple_center_width );
+						}
+
+						if ( axle_holes ) {
+							// Generate the support area around the axle holes.
+							for ( i = [ 1 : multiplier - 1 ] ) {
+								translate( [ ( ( i - .5 ) * technic_pin_multiple_offset ), 0, technic_pin_multiple_center_width / 2 ] ) {
+									rotate( [ 90, 0, 0 ] ) {
+										intersection() {
+											// 1.5 is an arbitrary choice that is correct enough, assuming the cross-section size of an axle can't be customized and the width of the center of a multiple-pin can't be customized.
+											scale( [ 1.5, 1.5, 1 ] ) {
+												technic_axle_hole( height = technic_pin_outer_diameter + EXTENSION_FOR_DIFFERENCE );
+											}
+
+											// Only allow the axle support to extend as far as the edge of the lip of the center section.
+											cube( [ technic_pin_multiple_center_width, technic_pin_multiple_center_width, technic_pin_outer_diameter + ( 2 * technic_pin_multiple_center_lip_overhang ) ], center = true );
+										}
+									}
+								}
+							}
+
+						}
+					}
+
+					if ( axle_holes ) {
+						// Remove the axle holes.
+						for ( i = [ 1 : multiplier - 1 ] ) {
+							translate( [ ( ( i - .5 ) * technic_pin_multiple_offset ), 0, technic_pin_multiple_center_width / 2 ] ) {
+								rotate( [ 90, 0, 0 ] ) {
+									translate( [ 0, 0, 0 ] ) {
+										technic_axle_hole( height = technic_pin_outer_diameter + EXTENSION_FOR_DIFFERENCE );
+									}
 								}
 							}
 						}
 					}
 				}
 			}
-		}
-	} else {
-		translate( [ 0, 0, ( bottom_length * technic_height_in_ms ) - technic_pin_collar_thickness ] ) {
-			technic_pin_half( length = top_length, friction = top_friction, squared_pin_holes = squared_pin_holes );
-			translate( [ 0, 0, technic_pin_collar_thickness ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
+		} else {
+			translate( [ 0, 0, ( bottom_length_in_mm ) - ( stud ? 0 : technic_pin_collar_thickness ) ] ) {
+				// The top half of the pin.
+				technic_pin_half( length = top_length, friction = top_friction, squared_pin_holes = squared_pin_holes );
+
+				if ( stud ) {
+					// The stud.
+					translate( [ 0, 0, -bottom_length_in_mm ] ) technic_hollow_stud();
+				} else {
+					// The bottom half of the pin.
+					translate( [ 0, 0, technic_pin_collar_thickness ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
+				}
+			}
 		}
 	}
 }
@@ -894,5 +940,14 @@ module technic_rounded_rectangle( width = 1, height = 1, radius = 0.1 ) {
 module technic_axle_hole( height = 1 ) {
 	scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
 		translate( [ 0, 0, - ( height * 2 * technic_height_in_ms ) / 2 ] ) technic_axle( length = height * 2 );
+	}
+}
+
+module technic_hollow_stud() {
+	linear_extrude( stud_height ) {
+		difference() {
+			circle( d = stud_outer_diameter );
+			circle( d = stud_inner_diameter );
+		}
 	}
 }
