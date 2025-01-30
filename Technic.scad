@@ -34,7 +34,7 @@ stud_height = 1.8; // Matches LEGO.stud_height
 stud_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
 stud_outer_diameter = 4.85; // Matches LEGO.stud_diameter
 
-technic_height_in_ms = 7.8; // Vertically-oriented technic pieces (like pin connectors) use this
+technic_height_in_mm = 7.8; // Vertically-oriented technic pieces (like pin connectors) use this
 
 technic_hole_diameter = 4.85; // Matches LEGO.stud_diameter
 
@@ -182,14 +182,14 @@ module technic_axle(
 	 * Positioned with the bottom center of the axle spline at the origin.
 	 */
 	module technic_axle_spline( length ) {
-		translate( [ 0, 0, technic_height_in_ms * length / 2 ] ) {
+		translate( [ 0, 0, technic_height_in_mm * length / 2 ] ) {
 			rotate( [ 90, 0, 0 ] ) {
 				minkowski() {
 					union () {
 						translate( [ 0, 0, - ( technic_axle_spline_thickness - ( 2 * technic_axle_spline_corner_radius ) ) / 2 ] ) linear_extrude( technic_axle_spline_thickness - ( 2 * technic_axle_spline_corner_radius ) ) {
 							technic_rounded_rectangle(
 								width = technic_axle_spline_width - ( 2 * technic_axle_spline_corner_radius ),
-								height = ( technic_height_in_ms * length ) - ( 2 * technic_axle_spline_corner_radius ),
+								height = ( technic_height_in_mm * length ) - ( 2 * technic_axle_spline_corner_radius ),
 								radius = technic_axle_cross_section_radius
 							);
 						}
@@ -232,7 +232,7 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 					}
 
 					// The top face of the connector.
-					translate( [ 0, 0, ( height * technic_height_in_ms ) - technic_axle_and_pin_connector_face_thickness ] ) { // 1 is the height of the connector, which in LEGO, is always 1, but we could customize.
+					translate( [ 0, 0, ( height * technic_height_in_mm ) - technic_axle_and_pin_connector_face_thickness ] ) { // 1 is the height of the connector, which in LEGO, is always 1, but we could customize.
 						hull() {
 							cylinder( d = technic_pin_outer_diameter + ( technic_pin_multiple_center_lip_overhang * 2 ), h = technic_axle_and_pin_connector_face_thickness );
 
@@ -246,24 +246,24 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 
 				// Remove the cylinders from the face that are occupied by the bushes.
 				translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE / 2 ] ) {
-					cylinder( d = technic_bush_big_diameter, h = ( height * technic_height_in_ms ) + EXTENSION_FOR_DIFFERENCE );
+					cylinder( d = technic_bush_big_diameter, h = ( height * technic_height_in_mm ) + EXTENSION_FOR_DIFFERENCE );
 
 					translate( [ stud_spacing * ( length - 1 ), 0, 0 ] ) {
-						cylinder( d = technic_bush_big_diameter, h = ( height * technic_height_in_ms ) + EXTENSION_FOR_DIFFERENCE);
+						cylinder( d = technic_bush_big_diameter, h = ( height * technic_height_in_mm ) + EXTENSION_FOR_DIFFERENCE);
 					}
 				}
 			}
 
 			let ( webbing_thickness = technic_pin_connector_shoulder_wall_thickness ) {
 				// The webbing inside the connector, just like it is in a beam.
-				translate( [ technic_bush_small_diameter / 2, -(webbing_thickness/2), 0 ] ) cube( [ ( length - 1 ) * stud_spacing - technic_bush_small_diameter, webbing_thickness,( height * technic_height_in_ms ) ] );
+				translate( [ technic_bush_small_diameter / 2, -(webbing_thickness/2), 0 ] ) cube( [ ( length - 1 ) * stud_spacing - technic_bush_small_diameter, webbing_thickness,( height * technic_height_in_mm ) ] );
 			}
 		}
 
 		// Remove the cylinders from the center that are occupied by the pin connectors.
 		for ( i = [ 1 : length - 2 ] ) {
 			for ( j = [ 1 : height ] ) {
-				translate( [ i * technic_beam_hole_spacing, 0, ((j-1) * technic_height_in_ms ) + ( technic_height_in_ms / 2 ) ] ) rotate( [ 90, 0, 0 ] ) translate( [ 0, 0, -( technic_height_in_ms / 2 ) ] ) cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_ms );
+				translate( [ i * technic_beam_hole_spacing, 0, ((j-1) * technic_height_in_mm ) + ( technic_height_in_mm / 2 ) ] ) rotate( [ 90, 0, 0 ] ) translate( [ 0, 0, -( technic_height_in_mm / 2 ) ] ) cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm );
 			}
 		}
 	}
@@ -273,7 +273,7 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 	// but is how those pieces actually are in reality.
 	for ( i = [ 1 : length - 2 ] ) {
 		for ( j = [ 1 : height ] ) {
-			translate( [ i * technic_beam_hole_spacing, 0, ((j-1) * technic_height_in_ms ) + ( technic_height_in_ms / 2 ) ] ) rotate( [ 90, 0, 0 ] ) translate( [ 0, 0, -( technic_height_in_ms / 2 ) ] ) technic_pin_connector();
+			translate( [ i * technic_beam_hole_spacing, 0, ((j-1) * technic_height_in_mm ) + ( technic_height_in_mm / 2 ) ] ) rotate( [ 90, 0, 0 ] ) translate( [ 0, 0, -( technic_height_in_mm / 2 ) ] ) technic_pin_connector();
 		}
 	}
 }
@@ -291,14 +291,14 @@ module technic_bush( height = 1/2, stud_cutouts = true ) {
 		union () {
 			difference() {
 				// The main inner cylinder that forms the interior walls.
-				cylinder( h = height * technic_height_in_ms, d = technic_bush_small_diameter );
+				cylinder( h = height * technic_height_in_mm, d = technic_bush_small_diameter );
 
 				// Bushes at least 1 unit tall have slots in the side (for air? material savings?)
 				if ( height >= 1 ) {
-					translate ( [ 0,  ( technic_bush_small_diameter + EXTENSION_FOR_DIFFERENCE ) / 2, ( ( height * technic_height_in_ms ) - ( 2 * technic_bush_shoulder_height ) ) / 2 + technic_bush_shoulder_height ]) {
+					translate ( [ 0,  ( technic_bush_small_diameter + EXTENSION_FOR_DIFFERENCE ) / 2, ( ( height * technic_height_in_mm ) - ( 2 * technic_bush_shoulder_height ) ) / 2 + technic_bush_shoulder_height ]) {
 						rotate( [ 90, 0, 0 ] ) {
 							linear_extrude( technic_bush_small_diameter + EXTENSION_FOR_DIFFERENCE ) {
-								technic_rounded_rectangle( width = technic_pin_slot_width, height = ( height * technic_height_in_ms ) - ( 2 * technic_bush_shoulder_height ) );
+								technic_rounded_rectangle( width = technic_pin_slot_width, height = ( height * technic_height_in_mm ) - ( 2 * technic_bush_shoulder_height ) );
 							}
 						}
 					}
@@ -309,7 +309,7 @@ module technic_bush( height = 1/2, stud_cutouts = true ) {
 			cylinder( h = technic_bush_shoulder_height, d = technic_bush_big_diameter );
 
 			// The top shoulder.
-			translate( [ 0, 0, ( height * technic_height_in_ms ) - technic_bush_shoulder_height ] ) {
+			translate( [ 0, 0, ( height * technic_height_in_mm ) - technic_bush_shoulder_height ] ) {
 				difference() {
 					cylinder( h = technic_bush_shoulder_height, d = technic_bush_big_diameter );
 
@@ -329,7 +329,7 @@ module technic_bush( height = 1/2, stud_cutouts = true ) {
 		}
 
 		// The axle hole.
-		translate( [ 0, 0, ( height * technic_height_in_ms ) / 2 ] ) technic_axle_hole( height = height );
+		translate( [ 0, 0, ( height * technic_height_in_mm ) / 2 ] ) technic_axle_hole( height = height );
 	}
 }
 
@@ -343,17 +343,17 @@ module technic_bush( height = 1/2, stud_cutouts = true ) {
 module technic_pin_connector(
 	length = 1, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
 ) {
-	translate( [ 0, 0, ( technic_height_in_ms * length ) / 2 ] ) {
+	translate( [ 0, 0, ( technic_height_in_mm * length ) / 2 ] ) {
 		union() {
 			// The hollow cylinder that forms the outer wall.
 			difference() {
-				cylinder( h = technic_height_in_ms * length, d = technic_pin_connector_outer_diameter, center = true );
-				cylinder( h = technic_height_in_ms * length + EXTENSION_FOR_DIFFERENCE, r = ( technic_pin_connector_outer_diameter / 2 ) - technic_pin_connector_shoulder_wall_thickness, center = true );
+				cylinder( h = technic_height_in_mm * length, d = technic_pin_connector_outer_diameter, center = true );
+				cylinder( h = technic_height_in_mm * length + EXTENSION_FOR_DIFFERENCE, r = ( technic_pin_connector_outer_diameter / 2 ) - technic_pin_connector_shoulder_wall_thickness, center = true );
 			};
 
 			difference() {
-				cylinder( h = ( technic_height_in_ms * length ) - ( technic_pin_connector_shoulder_depth * 2 ), d = technic_pin_connector_outer_diameter, center = true );
-				cylinder( h = ( technic_height_in_ms * length ) - ( technic_pin_connector_shoulder_depth * 2 ) + EXTENSION_FOR_DIFFERENCE, r = ( technic_hole_diameter / 2 ), center = true );
+				cylinder( h = ( technic_height_in_mm * length ) - ( technic_pin_connector_shoulder_depth * 2 ), d = technic_pin_connector_outer_diameter, center = true );
+				cylinder( h = ( technic_height_in_mm * length ) - ( technic_pin_connector_shoulder_depth * 2 ) + EXTENSION_FOR_DIFFERENCE, r = ( technic_hole_diameter / 2 ), center = true );
 			};
 		};
 	}
@@ -512,7 +512,7 @@ module technic_pin(
 	squared_pin_holes = false,
 	stud = false
 ) {
-	let ( bottom_length_in_mm = stud ? stud_height : bottom_length * technic_height_in_ms ) {
+	let ( bottom_length_in_mm = stud ? stud_height : bottom_length * technic_height_in_mm ) {
 		if ( multiplier > 1 ) {
 			translate( [ 0, 0, bottom_length_in_mm ] ) {
 				difference() {
@@ -619,7 +619,7 @@ module technic_pin_half(
 				if ( length == 0.5 ) {
 					cylinder( d = technic_pin_outer_diameter, h = 1.8 + technic_pin_collar_thickness ); // 1.8 matches stud height
 				} else {
-					cylinder( d = technic_pin_outer_diameter, h = length * technic_height_in_ms );
+					cylinder( d = technic_pin_outer_diameter, h = length * technic_height_in_mm );
 				}
 
 				// Pin collar.
@@ -627,7 +627,7 @@ module technic_pin_half(
 
 				if ( length > ( 0.5 ) ) {
 					// Pin lip
-					translate( [ 0, 0, ( length * technic_height_in_ms ) - technic_pin_lip_thickness ] ) {
+					translate( [ 0, 0, ( length * technic_height_in_mm ) - technic_pin_lip_thickness ] ) {
 						cylinder( d = technic_pin_lip_diameter, h = technic_pin_lip_thickness );
 					}
 
@@ -638,7 +638,7 @@ module technic_pin_half(
 							union() {
 								for ( idx = [ 0 : length ] ) {
 									// Center.
-									translate( [ 0, 0, ( idx * 2 * technic_height_in_ms ) / 2 - ( technic_pin_friction_vertical_length / 2 )  ] ) {
+									translate( [ 0, 0, ( idx * 2 * technic_height_in_mm ) / 2 - ( technic_pin_friction_vertical_length / 2 )  ] ) {
 										cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_vertical_length );
 									}
 								}
@@ -646,12 +646,12 @@ module technic_pin_half(
 
 							// The cubes that define the areas radially where the friction lines will appears.
 							union() {
-								rotate( [0, 0, 45 ] ) translate( [0, 0, ( length * technic_height_in_ms ) / 2 ] ) {
-									cube( [ technic_pin_friction_width, technic_pin_outer_diameter * 2, length * technic_height_in_ms ], center = true );
+								rotate( [0, 0, 45 ] ) translate( [0, 0, ( length * technic_height_in_mm ) / 2 ] ) {
+									cube( [ technic_pin_friction_width, technic_pin_outer_diameter * 2, length * technic_height_in_mm ], center = true );
 								}
 
-								rotate( [0, 0, 135 ] ) translate( [0, 0, ( length * technic_height_in_ms ) / 2 ] ) {
-									cube( [ technic_pin_friction_width, technic_pin_outer_diameter * 2, length * technic_height_in_ms ], center = true );
+								rotate( [0, 0, 135 ] ) translate( [0, 0, ( length * technic_height_in_mm ) / 2 ] ) {
+									cube( [ technic_pin_friction_width, technic_pin_outer_diameter * 2, length * technic_height_in_mm ], center = true );
 								}
 							}
 						}
@@ -659,7 +659,7 @@ module technic_pin_half(
 						// The radial friction lines
 						if ( length > 1 ) {
 							for ( idx = [ 1 : length - 1 ] ) {
-								translate( [ 0, 0, ( idx * 2 * technic_height_in_ms ) / 2 ] ) {
+								translate( [ 0, 0, ( idx * 2 * technic_height_in_mm ) / 2 ] ) {
 									cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_width, center = true );
 								}
 							}
@@ -669,12 +669,12 @@ module technic_pin_half(
 			};
 
 			// Remove the center of the pin.
-			translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) cylinder( d = technic_pin_inner_diameter, h = ( length * technic_height_in_ms ) + ( 2 * EXTENSION_FOR_DIFFERENCE ) );
+			translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) cylinder( d = technic_pin_inner_diameter, h = ( length * technic_height_in_mm ) + ( 2 * EXTENSION_FOR_DIFFERENCE ) );
 
 			if ( length >= 1 ) { // Half-pins don't get slits and slots.
 				// Remove the slit at the top that makes the pin end flex.
 				rotate( [ 0, 0, squared_pin_holes ? 90 : 0 ] ) {
-					translate( [ 0, technic_pin_lip_diameter, length * technic_height_in_ms ] ) {
+					translate( [ 0, technic_pin_lip_diameter, length * technic_height_in_mm ] ) {
 						rotate( [ 90, 0, 0 ] ) {
 							linear_extrude( technic_pin_lip_diameter * 2 ) {
 								technic_rounded_rectangle( width = technic_pin_slit_width, height = technic_pin_slit_length * 2, radius = technic_pin_slit_width / 2 );
@@ -687,7 +687,7 @@ module technic_pin_half(
 			// Remove the slot across the center of the pin.
 			if ( length > 1 ) {
 				for ( idx = [ 1 : length - 1 ] ) {
-					translate( [ 0, 0, ( idx * 2 * technic_height_in_ms ) / 2 ] ) {
+					translate( [ 0, 0, ( idx * 2 * technic_height_in_mm ) / 2 ] ) {
 						rotate( [ 90, 0, idx % 2 == 0 ? 0 : 90 ] ) {
 							translate( [ 0, 0, - technic_pin_lip_diameter ] ) {
 								linear_extrude( technic_pin_lip_diameter * 2 ) {
@@ -714,7 +714,7 @@ module technic_axle_pin(
 	pin_length = 2,
 	friction = true
 ) {
-	translate( [ 0, 0, technic_height_in_ms * axle_length ] ) {
+	translate( [ 0, 0, technic_height_in_mm * axle_length ] ) {
 		intersection() {
 			// Position it so the axle ends at the origin and the pin is above it.
 			rotate( [ 180, 0, 0 ] ) {
@@ -722,8 +722,8 @@ module technic_axle_pin(
 				technic_axle( length = axle_length, stop = true );
 			}
 
-			translate( [ 0, 0, -( ( technic_height_in_ms * axle_length ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
-				linear_extrude( ( technic_height_in_ms * axle_length ) + EXTENSION_FOR_DIFFERENCE ) {
+			translate( [ 0, 0, -( ( technic_height_in_mm * axle_length ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
+				linear_extrude( ( technic_height_in_mm * axle_length ) + EXTENSION_FOR_DIFFERENCE ) {
 					circle( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE );
 				}
 			}
@@ -894,10 +894,10 @@ module technic_beam( length = 5, height = 1, angle = 0, vertex = 1, axle_holes =
 			translate( [ technic_beam_hole_spacing * ( i - 1 ), 0, 0 ] ) {
 				if ( len( search( i, axle_holes ) ) > 0 ) {
 					difference() {
-						cylinder( d = technic_pin_connector_outer_diameter, h = height * technic_height_in_ms );
+						cylinder( d = technic_pin_connector_outer_diameter, h = height * technic_height_in_mm );
 
 						// @todo This still leaves a tiny bit of extra material in the axle hole at the vertex of an angled beam (if there is one there).
-						translate( [ 0, 0, -height * technic_height_in_ms ] ) {
+						translate( [ 0, 0, -height * technic_height_in_mm ] ) {
 							technic_axle_hole( height = height * 2 );
 						}
 					}
@@ -908,7 +908,7 @@ module technic_beam( length = 5, height = 1, angle = 0, vertex = 1, axle_holes =
 		}
 
 		// Add the walls along the edges of the rows of pins.
-		translate( [ 0, -( technic_pin_connector_outer_diameter / 2 ), ( technic_height_in_ms * height ) / 2 ] ) {
+		translate( [ 0, -( technic_pin_connector_outer_diameter / 2 ), ( technic_height_in_mm * height ) / 2 ] ) {
 			difference() {
 				translate( [ 0, 0, -technic_beam_webbing_thickness / 2 ] ) {
 					cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_outer_diameter, technic_beam_webbing_thickness ] );
@@ -926,9 +926,9 @@ module technic_beam( length = 5, height = 1, angle = 0, vertex = 1, axle_holes =
 
 		// Add the webbing between the pin connector walls.
 		translate( [ 0, - ( technic_pin_connector_outer_diameter / 2 ), 0 ] ) {
-			cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_ms * height ] );
+			cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_mm * height ] );
 			translate( [ 0, technic_pin_connector_outer_diameter - technic_pin_connector_shoulder_wall_thickness, 0 ] ) {
-				cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_ms * height ] );
+				cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_mm * height ] );
 			}
 		}
 	}
@@ -949,7 +949,7 @@ module technic_rounded_rectangle( width = 1, height = 1, radius = 0.1 ) {
 
 module technic_axle_hole( height = 1 ) {
 	scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
-		translate( [ 0, 0, - ( height * 2 * technic_height_in_ms ) / 2 ] ) technic_axle( length = height * 2 );
+		translate( [ 0, 0, - ( height * 2 * technic_height_in_mm ) / 2 ] ) technic_axle( length = height * 2 );
 	}
 }
 
