@@ -202,6 +202,16 @@ module technic_axle(
 	}
 }
 
+/**
+ * Axle and pin connectors: they connect axles to pins.
+ *
+ * part #32184: technic_axle_and_pin_connector( length = 3 );
+ *
+ * The origin is centered underneath the first axle hole.
+ *
+ * @param float length The length of the connector, in Technic holes.
+ * @param float height The height of the connector, in multiples of standard connector heights.
+ */
 module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 	// Add the two bushes, one on each end.
 	                                                     technic_bush( height = height, stud_cutouts = false );
