@@ -35,4 +35,7 @@ $fa = 1; $fs = 0.05;
 // Height of the bush, in Technic studs
 bush_height = 1; // [0.5:0.5:100]
 
-color( "yellow" ) technic_bush( height = bush_height );
+// Should there be stud cutouts on one end?
+bush_stud_cutouts = true; // [ true, false ]
+
+color( "yellow" ) technic_bush( height = bush_height, stud_cutouts = true );
