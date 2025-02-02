@@ -62,6 +62,7 @@ Generate a Technic-compatible bush.
 | Parameter | Type | Description |
 |---|---|---|
 | `height` | int | The height of the bush. |
+| `stud_cutouts` | bool | Whether one end should have cutouts in the edge to fit between studs. Only applies to heights greater than 1/2. |
 
 `technic_elbow();`
 --------------------------
