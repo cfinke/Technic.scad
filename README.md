@@ -78,7 +78,7 @@ Generate a Technic-compatible 90º elbow.
 
 `technic_gear_double_sided();`
 --------------------------
-![A 24-tooth gear compatible with LEGO part #3648.](images/Technic%2024-Tooth%20Gear.png)
+![A 24-tooth gear compatible with LEGO part #3648.](images/Technic%20Gear%20%28Double-Sided%29.png)
 
 Generate a Technic-compatible 24-tooth gear.
 
@@ -88,7 +88,7 @@ Generate a Technic-compatible 24-tooth gear.
 
 `technic_gear_single_sided();`
 --------------------------
-![A single-sided gear, compatible with LEGO part #6589.](images/Technic%20Gear%28Single-Sided%29.png)
+![A single-sided gear, compatible with LEGO part #6589.](images/Technic%20Gear%20%28Single-Sided%29.png)
 
 Generate a single-sided gear, sometimes called a half-gear.
 
