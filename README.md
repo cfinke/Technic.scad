@@ -1,19 +1,9 @@
 # Technic.scad
 
-An OpenSCAD Technic-compatible piece generator. It currently supports generation of beams, axles, pin connectors, axle pins, elbows, and 24-tooth gears.
+An OpenSCAD Technic-compatible piece generator. It currently supports generation of beams, axles, pin connectors, axle pins, elbows, and gears.
 
 Modules
 =======
-
-`technic_24_tooth_gear();`
---------------------------
-![A 24-tooth gear compatible with LEGO part #3648.](images/Technic%2024-Tooth%20Gear.png)
-
-Generate a Technic-compatible 24-tooth gear.
-
-| Parameter | Values| Description |
-|---|---|---|
-| `width` | int | In multiples of the original gear width, how wide should it be? e.g., a width of 3 would generate a single gear with the same total width as three gears set side-by-side. |
 
 `technic_axle();`
 -----------------
@@ -21,7 +11,7 @@ Generate a Technic-compatible 24-tooth gear.
 
 Generate a Technic-compatible axle.
 
-| Parameter | Values| Description |
+| Parameter | Type | Description |
 |---|---|---|
 | `length` | int | The length of the axle in "studs." |
 | `stop` | bool | Whether there is a stop at the end. |
@@ -33,7 +23,7 @@ Generate a Technic-compatible axle.
 
 Generate a Technic-compatible axle pin.
 
-| Parameter | Values| Description |
+| Parameter | Type | Description |
 |---|---|---|
 | `axle_length` | int | In studs, how long the axle component should be. |
 | `pin_length` | int | In studs, how long the pin component should be. |
@@ -44,7 +34,7 @@ Generate a Technic-compatible axle pin.
 
 Generate a Technic-compatible axle and pin connector.
 
-| Parameter | Values| Description |
+| Parameter | Type | Description |
 |---|---|---|
 | `length` | int | In studs, how long the connector should be. |
 | `height` | int | How tall the connector should be, in multiples of the standard connector height. |
@@ -55,7 +45,7 @@ Generate a Technic-compatible axle and pin connector.
 
 Generate a Technic-compatible beam.
 
-| Parameter | Values| Description |
+| Parameter | Type | Description |
 |---|---|---|
 | `length` | int | The number of holes in the beam. |
 | `height` | int | The height (or thickness?) of the beam in multiples of normal beams. |
@@ -69,7 +59,7 @@ Generate a Technic-compatible beam.
 
 Generate a Technic-compatible bush.
 
-| Parameter | Values| Description |
+| Parameter | Type | Description |
 |---|---|---|
 | `height` | int | The height of the bush. |
 
@@ -79,12 +69,34 @@ Generate a Technic-compatible bush.
 
 Generate a Technic-compatible 90º elbow.
 
-| Parameter | Values| Description |
+| Parameter | Type | Description |
 |---|---|---|
 | `length` | int | The number of studs one leg would cover, if laid down on a plate. |
 | `width` | int | The number of studs the other leg would cover, if laid down on a plate. |
 | `axle_socket_on_length` | bool | Whether there should be an interior socket for accepting an axle on the X axis. |
 | `axle_socket_on_width` | bool | Whether there should be an interior socket for accepting an axle on the Y axis. |
+
+`technic_gear_double_sided();`
+--------------------------
+![A 24-tooth gear compatible with LEGO part #3648.](images/Technic%2024-Tooth%20Gear.png)
+
+Generate a Technic-compatible 24-tooth gear.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `width` | int | In multiples of the original gear width, how wide should it be? e.g., a width of 3 would generate a single gear with the same total width as three gears set side-by-side. |
+
+`technic_gear_single_sided();`
+--------------------------
+![A single-sided gear, compatible with LEGO part #6589.](images/Technic%20Gear%28Single-Sided%29.png)
+
+Generate a single-sided gear, sometimes called a half-gear.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `teeth` | int | How many teeth should the gear have? The minimum reasonable value is probably 10. |
+| `bevel` | bool | Should the gear teeth be beveled? |
+| `center_hole` | string | What connector should the center hole be compatible with? Supported values are "axle" and "pin". |
 
 `technic_pin();`
 --------------------------
@@ -92,7 +104,7 @@ Generate a Technic-compatible 90º elbow.
 
 Generate a Technic-compatible pin.
 
-| Parameter | Values| Description |
+| Parameter | Type | Description |
 |---|---|---|
 | `top_length` | int | In studs, how long the top half of the pin should be. |
 | `top_friction` | bool | Whether the top half of the pin should have friction ridges on it. |
@@ -107,6 +119,6 @@ Generate a Technic-compatible pin.
 
 Generate a Technic-compatible pin connector.
 
-| Parameter | Values| Description |
+| Parameter | Type | Description |
 |---|---|---|
 | `length` | int | The length of the pin connector in "studs." FWIW, LEGO only makes these in length 1. |

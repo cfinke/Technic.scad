@@ -28,16 +28,16 @@
 
 $fa = 1; $fs = 0.05;
 
+// LEGO.scad values.
 stud_spacing = 8; // Matches LEGO.stud_spacing
 stud_diameter = 4.85; // Matches LEGO.stud_diameter
 stud_height = 1.8; // Matches LEGO.stud_height
 stud_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
 stud_outer_diameter = 4.85; // Matches LEGO.stud_diameter
 
+// Global Technic.scad values.
 technic_height_in_mm = 7.8; // Vertically-oriented technic pieces (like pin connectors) use this
-
 technic_hole_diameter = 4.85; // Matches LEGO.stud_diameter
-
 technic_axle_interference_fit_ratio = 1.022;
 
 technic_axle_and_pin_connector_face_thickness = 1; // You would think this would match technic_bush_shoulder_height, but it doesn't really.
@@ -60,6 +60,18 @@ technic_pin_connector_outer_diameter = 7.36;
 technic_pin_connector_wall_thickness = 1.3;
 technic_pin_connector_shoulder_wall_thickness = 0.6;
 technic_pin_connector_shoulder_depth = 0.70;
+
+technic_gear_12_tooth_gear_diameter = 12.7;
+technic_gear_12_tooth_base_thickness = 0.4;
+technic_gear_12_tooth_diameter = 12.6;
+technic_gear_12_tooth_hub_diameter = 6.3;
+technic_gear_12_tooth_lip_inner_diameter = 6.9;
+technic_gear_12_tooth_lip_outer_diameter = 8.8;
+technic_gear_12_tooth_lip_thickness = 0.8;
+technic_gear_12_tooth_tooth_height = 2.4;
+technic_gear_12_tooth_tooth_thickness = 2.4;
+technic_gear_12_tooth_tooth_width_at_bottom = 1.4;
+technic_gear_12_tooth_tooth_width_at_top = 0.8;
 
 technic_gear_24_tooth_outer_diameter = 25.4;
 technic_gear_24_tooth_bottom_diameter = 21.65;
@@ -279,6 +291,143 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 }
 
 /**
+ * Axle/pin combos.
+ *
+ * part #11214: technic_axle_pin( axle_length = 1, pin_length = 2 );
+ *
+ * Origin is centered at the bottom of the axle.
+ */
+module technic_axle_pin(
+	axle_length = 1,
+	pin_length = 2,
+	friction = true
+) {
+	translate( [ 0, 0, technic_height_in_mm * axle_length ] ) {
+		intersection() {
+			// Position it so the axle ends at the origin and the pin is above it.
+			rotate( [ 180, 0, 0 ] ) {
+				// Include a stop, which is the same as the pin collar.
+				technic_axle( length = axle_length, stop = true );
+			}
+
+			translate( [ 0, 0, -( ( technic_height_in_mm * axle_length ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
+				linear_extrude( ( technic_height_in_mm * axle_length ) + EXTENSION_FOR_DIFFERENCE ) {
+					circle( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE );
+				}
+			}
+		};
+
+		// The pin collar is already generated in technic_axle() as the stop, so shift the pin down a bit so it's not doubled.
+		// @todo In a real piece like this, is the collar part of the axle length or the pin length?
+		translate( [ 0, 0, -technic_pin_collar_thickness ] ) {
+			technic_pin_half( length = pin_length, friction = friction );
+		}
+	}
+}
+
+/**
+ * Beams.
+ *
+ * part #6629: technic_beam( length = 9, angle = 53.5, vertex = 6, axle_holes = [1, 9] )
+ * part #6632: technic_beam( length = 3, height = 1/2, axle_holes = [1, 3] )
+ * part #7229: technic_beam( length = 3, axle_holes = [2] )
+ * part #11478: technic_beam( length = 5, height = 1/2, axle_holes = [1, 5] )
+ * part #18654: technic_beam( length = 1 ) [equivalent to a pin connector]
+ * part #32017: technic_beam( length = 5, height = 1/2 )
+ * part #32056: technic_beam( length = 5, height = 1/2, angle = 90, vertex = 3, axle_holes = [1,3,5] )
+ * part #32063: technic_beam( length = 6, height = 1/2 )
+ * part #32065: technic_beam( length = 7, height = 1/2 )
+ * part #32140: technic_beam( length = 5, angle = 90, vertex = 4, axle_holes = [1] )
+ * part #32271: technic_beam( length = 9, angle = 53.5, vertex = 7, axle_holes = [1, 9] )
+ * part #32278: technic_beam( length = 15 )
+ * part #32316: technic_beam( length = 5 )
+ * part #32348: technic_beam( length = 7, angle = 53.5, vertex = 4, axle_holes = [1, 7] )
+ * part #32449: technic_beam( length = 4, height = 1/2, axle_holes = [1, 4] )
+ * part #32523: technic_beam( length = 3 )
+ * part #32524: technic_beam( length = 7 )
+ * part #32525: technic_beam( length = 11 )
+ * part #32526: technic_beam( length = 7, angle = 90, vertex = 1 )
+ * part #40490: technic_beam( length = 9 )
+ * part #41239: technic_beam( length = 13 )
+ * part #41677: technic_beam( length = 2, height = 1/2, axle_holes = [1, 2] )
+ * part #43857: technic_beam( length = 2 )
+ * part #60483: technic_beam( length = 2, axle_holes = [1] )
+ *
+ * Origin is below the center of the first hole.
+ *
+ * @param int length How many holes should the beam contain?
+ * @param float height How tall (in multiples of technic beam thicknesses) should the beam be?
+ * @param float angle The change in angle (clockwise) that will occur at the vertex'th hole.
+ * @param int vertex The number of the hole at which the angle should change, if the angle param is not zero.
+ * @param array[int] axle_holes Which holes should be axle holes instead.
+ */
+module technic_beam( length = 5, height = 1, angle = 0, vertex = 1, axle_holes = [] ) {
+	// When making the second part of an angled beam, remap the axle hole locations for that smaller beam.
+	function angled_axle_holes( all_axle_holes, original_vertex ) = [
+		if ( len( all_axle_holes ) > 0 ) for ( i = [ 0 : len( all_axle_holes ) - 1 ] ) if ( all_axle_holes[i] > original_vertex ) all_axle_holes[i] - original_vertex + 1
+	];
+
+	// In theory, 120 is the maximum angle before it will interfere with itself.
+	// We could limit that, but we'll leave it as an exercise in self-restraint for the reader.
+	if ( angle != 0 ) {
+		// When it's an angled beam, construct it as the union of two smaller beams.
+		// This results in a small extra bit of wall near the vertex hole that
+		// wouldn't be present in a real Technic beam, but it's so much simpler
+		// to do it this way.
+		technic_beam( length = vertex, height = height, angle = 0, axle_holes = axle_holes );
+
+		translate( [ ( vertex - 1 ) * technic_beam_hole_spacing, 0, 0 ] ) {
+			rotate( [ 0, 0, angle ] ) {
+				technic_beam( length = length - vertex + 1, height = height, angle = 0, axle_holes = angled_axle_holes( axle_holes, vertex ) );
+			}
+		}
+	} else {
+		// Generate the pin connectors that make up the inside of the beam.
+		for ( i = [ 1 : length ] ) {
+			translate( [ technic_beam_hole_spacing * ( i - 1 ), 0, 0 ] ) {
+				if ( len( search( i, axle_holes ) ) > 0 ) {
+					difference() {
+						cylinder( d = technic_pin_connector_outer_diameter, h = height * technic_height_in_mm );
+
+						// @todo This still leaves a tiny bit of extra material in the axle hole at the vertex of an angled beam (if there is one there).
+						translate( [ 0, 0, -height * technic_height_in_mm ] ) {
+							technic_axle_hole( height = height * 2 );
+						}
+					}
+				} else {
+					technic_pin_connector( length = height );
+				}
+			}
+		}
+
+		// Add the walls along the edges of the rows of pins.
+		translate( [ 0, -( technic_pin_connector_outer_diameter / 2 ), ( technic_height_in_mm * height ) / 2 ] ) {
+			difference() {
+				translate( [ 0, 0, -technic_beam_webbing_thickness / 2 ] ) {
+					cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_outer_diameter, technic_beam_webbing_thickness ] );
+				}
+
+				union () {
+					for ( i = [ 1 : length ] ) {
+						translate( [ technic_beam_hole_spacing * ( i - 1 ), technic_pin_connector_outer_diameter / 2, 0 ] ) {
+							cylinder( d = technic_pin_connector_outer_diameter, h = technic_beam_webbing_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+						}
+					}
+				}
+			}
+		}
+
+		// Add the webbing between the pin connector walls.
+		translate( [ 0, - ( technic_pin_connector_outer_diameter / 2 ), 0 ] ) {
+			cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_mm * height ] );
+			translate( [ 0, technic_pin_connector_outer_diameter - technic_pin_connector_shoulder_wall_thickness, 0 ] ) {
+				cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_mm * height ] );
+			}
+		}
+	}
+}
+
+/**
  * Bushes.
  *
  * part #4265c: technic_bush( height = 1/2 );
@@ -334,40 +483,113 @@ module technic_bush( height = 1/2, stud_cutouts = true ) {
 }
 
 /**
- * Pin connectors.
+ * Elbows
  *
- * part #18654: technic_pin_connector( length = 1 ) [equivalent to a 1-hole beam]
+ * part #25214: technic_elbow( length = 2, width = 2 )
  *
- * Origin is centered at the bottom center of the pin connector.
+ * Origin is at the point where the X and Y axes would meet, with each of them centered in the hole at the end of each leg of the elbow.
  */
-module technic_pin_connector(
-	length = 1, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
+module technic_elbow(
+	length = 2, // The number of studs one leg would cover, if laid down on a plate.
+	width = 2, // The number of studs the other leg would cover, if laid down on a plate.
+	axle_socket_on_length = true, // Whether there should be an interior socket for accepting an axle on the X axis.
+	axle_socket_on_width = true, // Whether there should be an interior socket for accepting an axle on the Y axis.
 ) {
-	translate( [ 0, 0, ( technic_height_in_mm * length ) / 2 ] ) {
-		union() {
-			// The hollow cylinder that forms the outer wall.
-			difference() {
-				cylinder( h = technic_height_in_mm * length, d = technic_pin_connector_outer_diameter, center = true );
-				cylinder( h = technic_height_in_mm * length + EXTENSION_FOR_DIFFERENCE, r = ( technic_pin_connector_outer_diameter / 2 ) - technic_pin_connector_shoulder_wall_thickness, center = true );
-			};
+	// Use the longer dimension as the length and the shorter dimension as the width.
+	// This simplifies some decisions we need to make about what goes where.
+	//
+	// length is along the X axis, width is along the Y axis.
+	real_length = max( 2, max( length, width ) );
+	real_width = max( 2, min( length, width ) );
 
-			difference() {
-				cylinder( h = ( technic_height_in_mm * length ) - ( technic_pin_connector_shoulder_depth * 2 ), d = technic_pin_connector_outer_diameter, center = true );
-				cylinder( h = ( technic_height_in_mm * length ) - ( technic_pin_connector_shoulder_depth * 2 ) + EXTENSION_FOR_DIFFERENCE, r = ( technic_hole_diameter / 2 ), center = true );
-			};
-		};
+	difference() {
+		union() {
+			// The two straight parts can be placed in their known positions, and then we can calculate
+			// the starting and stopping points of the elbow.
+			translate( [ ( real_length * stud_spacing ) - technic_elbow_straight_length, 0, 0 ] ) {
+				rotate( [ 0, 90, 0 ] ) {
+					difference() {
+						cylinder( d = technic_elbow_outer_diameter, h = technic_elbow_straight_length );
+						translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) {
+							cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length + ( 2 * EXTENSION_FOR_DIFFERENCE ) );
+						}
+					}
+
+					if ( axle_socket_on_length ) {
+						// Add the material that will be the ridges for the axle socket.
+						cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length - technic_elbow_axle_socket_depth );
+					}
+				}
+			}
+
+			translate( [ 0, ( real_width * stud_spacing ) - technic_elbow_straight_length, 0 ] ) {
+				rotate( [ -90, 0, 0 ] ) {
+					difference() {
+						cylinder( d = technic_elbow_outer_diameter, h = technic_elbow_straight_length );
+						translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length + ( 2 * EXTENSION_FOR_DIFFERENCE ) );
+					}
+
+					if ( axle_socket_on_width ) {
+						// Add the material that will be the ridges for the axle socket.
+						cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length - technic_elbow_axle_socket_depth );
+					}
+				}
+			}
+
+			// So we need a tube to connect ( real_width * stud_spacing ) - technic_elbow_straight_length on both X and Y.
+			translate( [ ( real_width * stud_spacing ) - technic_elbow_straight_length, ( real_width * stud_spacing ) - technic_elbow_straight_length, 0 ] ) {
+				rotate( [ 180, 180, 0 ] ) {
+					rotate_extrude( angle = 90 ) {
+						translate( [ ( real_width * stud_spacing ) - technic_elbow_straight_length, 0, 0 ] ) {
+							circle( d = technic_elbow_outer_diameter );
+						}
+					}
+				}
+			}
+
+			// And we also need to fill in any gaps if length doesn't match width.
+			if ( real_length > real_width ) {
+				translate( [ ( real_width * stud_spacing ) - technic_elbow_straight_length, 0, 0 ] ) {
+					rotate( [ 0, 90, 0 ] ) {
+						cylinder( d = technic_elbow_outer_diameter, h = ( real_length - real_width ) * stud_spacing );
+					}
+				}
+			}
+		}
+
+		if ( axle_socket_on_length ) {
+			// Subtract the axle socket area along the length.
+			translate( [ real_width * stud_spacing, 0, 0 ] ) {
+				rotate( [ 0, -90, 0 ] ) {
+					technic_axle_hole( height = 1 );
+				}
+			}
+		}
+
+		if ( axle_socket_on_width ) {
+			// Subtract the axle socket area along the width.
+			translate( [ 0, real_length * stud_spacing, 0 ] ) {
+				rotate( [ 90, 0, 0 ] ) {
+					technic_axle_hole( height = 1 );
+				}
+			}
+		}
 	}
 }
 
 /**
- * 24-tooth gears.
+ * Double-sided gears (as opposed to the one-sided gears sometimes called "half-gears").
  *
- * part #3648: technic_24_tooth_gear();
+ * part #3648: technic_gear_double_sided();
  *
  * Origin is at the center of the gear in all directions.
+ *
+ * @param int teeth How many teeth should the gear have? The minimum reasonable value is probably X.
+ * @param int width In multiples of the original gear width, how wide should it be? e.g., a width of 3 would generate a single gear with the same total width as three gears set side-by-side.
  */
-module technic_24_tooth_gear(
-	width = 1, // In multiples of the original gear width, how wide should it be? e.g., a width of 3 would generate a single gear with the same total width as three gears set side-by-side.
+module technic_gear_double_sided(
+	teeth = 24,
+	width = 1,
 ) {
 	include <lib/gears/gears.scad>;
 
@@ -381,6 +603,8 @@ module technic_24_tooth_gear(
 	desired_pin_hole_thickness = desired_gear_axle_reinforcement_thickness - ( technic_gear_axle_reinforcement_thickness - technic_gear_pin_hole_thickness );
 	desired_gear_tooth_thickness = desired_gear_axle_reinforcement_thickness - ( technic_gear_axle_reinforcement_thickness - technic_gear_tooth_thickness );
 	desired_gear_wheel_thickness = desired_gear_axle_reinforcement_thickness - ( technic_gear_axle_reinforcement_thickness - technic_gear_wheel_thickness );
+
+	gear_diameter = ( teeth / 24 ) * technic_gear_24_tooth_outer_diameter;
 
 	difference() {
 		union() {
@@ -428,13 +652,13 @@ module technic_24_tooth_gear(
 
 			// The teeth.
 			translate( [ 0, 0, - ( desired_gear_tooth_thickness / 2 ) ] ) {
-				// The gear teeth seem like they're a little too long (exceeding technic_gear_24_tooth_outer_diameter), but I can't tell if it matters.
-				spur_gear( modul = 1, tooth_number = 24, width = desired_gear_tooth_thickness, bore = technic_gear_24_tooth_inner_diameter, pressure_angle=20 );
+				// The gear teeth seem like they're a little too long (exceeding gear_diameter), but I can't tell if it matters.
+				spur_gear( modul = 1, tooth_number = teeth, width = desired_gear_tooth_thickness, bore = technic_gear_24_tooth_inner_diameter, pressure_angle=20 );
 			};
 
 			// The gear function leaves very small gaps at the bottom corners of the teeth. Fill that all in.
 			difference() {
-				cylinder( d = technic_gear_24_tooth_outer_diameter - ( technic_gear_24_tooth_tooth_depth * 2 ), h = desired_gear_tooth_thickness, center = true );
+				cylinder( d = gear_diameter - ( technic_gear_24_tooth_tooth_depth * 2 ), h = desired_gear_tooth_thickness, center = true );
 				cylinder( d = technic_gear_24_tooth_inner_diameter, h = desired_gear_tooth_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
 			};
 
@@ -476,6 +700,112 @@ module technic_24_tooth_gear(
 			}
 		};
 	};
+}
+
+/**
+ * A single-sided gear.
+ *
+ * part #6589: technic_gear_single_sided()
+ * part #32198: technic_gear_single_sided( teeth = 20 )
+ * part #87407: technic_gear_single_sided( teeth = 20, center_hole = "pin" )
+ *
+ * Origin is centered at the bottom of the gear (the non-toothed side).
+ *
+ * @param int teeth How many teeth should the gear have? The minimum reasonable value is probably 10.
+ * @param bool bevel Should the gear teeth be beveled?
+ * @param string center_hole What connector should the center hole be compatible with? Supported values are "axle" and "pin".
+ */
+module technic_gear_single_sided( teeth = 12, bevel = true, center_hole = "axle" ) {
+	// Gears appear to be one inch wide for every 24 teeth they have.
+	gear_diameter = ( teeth / 12 ) * technic_gear_12_tooth_gear_diameter;
+
+	// The diameter of the hub grows with gear diameter enough to keep the length of the exposed teeth constant.
+	exposed_tooth_length = ( technic_gear_12_tooth_gear_diameter - technic_gear_12_tooth_hub_diameter );
+
+	// ...but the 12-tooth size is the minimum in order to support the axle or pin hole in the center.
+	hub_diameter = max( technic_gear_12_tooth_hub_diameter, gear_diameter - exposed_tooth_length );
+
+	difference() {
+		union() {
+			// The lip that acts as a washer between the gear and a beam or brick.
+			linear_extrude( technic_gear_12_tooth_lip_thickness ) {
+				difference() {
+					circle( d = technic_gear_12_tooth_lip_outer_diameter );
+					circle( d = technic_gear_12_tooth_lip_inner_diameter );
+				}
+			}
+
+			// The base of the gear.
+			translate( [ 0, 0, technic_gear_12_tooth_lip_thickness ] ) cylinder( d = gear_diameter, h = technic_gear_12_tooth_base_thickness );
+
+			// The hub of the gear.
+			translate( [ 0, 0, technic_gear_12_tooth_lip_thickness + technic_gear_12_tooth_base_thickness ] ) cylinder( d = hub_diameter, h = technic_gear_12_tooth_tooth_thickness );
+
+			// The teeth.
+			// @todo Is the tooth width/depth/etc. a function of the number of teeth? Or the diameter of the gear? Or something else?
+			translate( [ 0, 0, technic_gear_12_tooth_base_thickness + technic_gear_12_tooth_lip_thickness ] ) {
+				let( inward_slant = ( technic_gear_12_tooth_tooth_width_at_bottom - technic_gear_12_tooth_tooth_width_at_top ) / 2 ) {
+					for ( i = [ 1 : teeth ] ) {
+						rotate( [ 0, 0, 360 / teeth * i ] ) {
+							rotate( [ 90, 0, 0 ] ) {
+								translate( [ 0, 0, -gear_diameter / 2 ] ) {
+									difference() {
+										linear_extrude( gear_diameter / 2 ) {
+											translate( [ -technic_gear_12_tooth_tooth_width_at_bottom / 2, 0, 0 ] ) polygon(
+												points = [
+													[ 0, 0 ],
+													[ technic_gear_12_tooth_tooth_width_at_bottom, 0 ],
+													[ technic_gear_12_tooth_tooth_width_at_bottom - inward_slant, technic_gear_12_tooth_tooth_height ],
+													[ inward_slant, technic_gear_12_tooth_tooth_height ],
+													[ 0, 0 ]
+												]
+											);
+										}
+
+										// Remove the bevel.
+										if ( bevel ) {
+											let( extra_offset_for_preview = 0.001 ) {
+												translate( [-technic_gear_12_tooth_tooth_width_at_bottom / 2 - extra_offset_for_preview, technic_gear_12_tooth_tooth_height / 2 + extra_offset_for_preview, -extra_offset_for_preview ] ) {
+													rotate( [ 90, 0, 90 ] ) {
+														linear_extrude( technic_gear_12_tooth_tooth_width_at_bottom ) {
+															// The bevel is assumed to be a 45º cut that is half as tall as the tooth. This might be wrong.
+															polygon(
+																points = [
+																	[ 0, 0 ],
+																	[ technic_gear_12_tooth_tooth_height / 2, 0 ],
+																	[ technic_gear_12_tooth_tooth_height / 2, technic_gear_12_tooth_tooth_height / 2 ],
+																	[ 0, 0 ]
+																]
+															);
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if ( center_hole == "axle" ) {
+			// Remove the axle hole.
+			technic_axle_hole( height = 1 ); // @todo If we add a width/thickness option, it would replace 1 here.
+		} else if ( center_hole == "pin" ) {
+			translate( [ 0, 0, technic_gear_12_tooth_lip_thickness - ( EXTENSION_FOR_DIFFERENCE / 2 ) ] ) {
+				cylinder( d = min( technic_pin_connector_outer_diameter, technic_gear_12_tooth_lip_inner_diameter ), h = technic_gear_12_tooth_base_thickness + technic_gear_12_tooth_tooth_height + EXTENSION_FOR_DIFFERENCE );
+			}
+		}
+	}
+
+	if ( center_hole == "pin" ) {
+		translate( [ 0, 0, technic_gear_12_tooth_lip_thickness ] ) {
+			technic_pin_connector( length = 1 );
+		}
+	}
 }
 
 /**
@@ -603,6 +933,32 @@ module technic_pin(
 }
 
 /**
+ * Pin connectors.
+ *
+ * part #18654: technic_pin_connector( length = 1 ) [equivalent to a 1-hole beam]
+ *
+ * Origin is centered at the bottom center of the pin connector.
+ */
+module technic_pin_connector(
+	length = 1, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
+) {
+	translate( [ 0, 0, ( technic_height_in_mm * length ) / 2 ] ) {
+		union() {
+			// The hollow cylinder that forms the outer wall.
+			difference() {
+				cylinder( h = technic_height_in_mm * length, d = technic_pin_connector_outer_diameter, center = true );
+				cylinder( h = technic_height_in_mm * length + EXTENSION_FOR_DIFFERENCE, r = ( technic_pin_connector_outer_diameter / 2 ) - technic_pin_connector_shoulder_wall_thickness, center = true );
+			};
+
+			difference() {
+				cylinder( h = ( technic_height_in_mm * length ) - ( technic_pin_connector_shoulder_depth * 2 ), d = technic_pin_connector_outer_diameter, center = true );
+				cylinder( h = ( technic_height_in_mm * length ) - ( technic_pin_connector_shoulder_depth * 2 ) + EXTENSION_FOR_DIFFERENCE, r = ( technic_hole_diameter / 2 ), center = true );
+			};
+		};
+	}
+}
+
+/**
  * @param float length How long, in Technic units, is the pin half?
  * @param bool friction Whether it should have friction ridges.
  * @param bool squared_pin_holes Apparently "squared" pin holes mean the slits at the end of the pin are rotated 90º from their usual orientation.
@@ -703,236 +1059,8 @@ module technic_pin_half(
 }
 
 /**
- * Axle/pin combos.
- *
- * part #11214: technic_axle_pin( axle_length = 1, pin_length = 2 );
- *
- * Origin is centered at the bottom of the axle.
+ * Utility modules. None of these produce an entire Technic-compatible piece on their own.
  */
-module technic_axle_pin(
-	axle_length = 1,
-	pin_length = 2,
-	friction = true
-) {
-	translate( [ 0, 0, technic_height_in_mm * axle_length ] ) {
-		intersection() {
-			// Position it so the axle ends at the origin and the pin is above it.
-			rotate( [ 180, 0, 0 ] ) {
-				// Include a stop, which is the same as the pin collar.
-				technic_axle( length = axle_length, stop = true );
-			}
-
-			translate( [ 0, 0, -( ( technic_height_in_mm * axle_length ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
-				linear_extrude( ( technic_height_in_mm * axle_length ) + EXTENSION_FOR_DIFFERENCE ) {
-					circle( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE );
-				}
-			}
-		};
-
-		// The pin collar is already generated in technic_axle() as the stop, so shift the pin down a bit so it's not doubled.
-		// @todo In a real piece like this, is the collar part of the axle length or the pin length?
-		translate( [ 0, 0, -technic_pin_collar_thickness ] ) {
-			technic_pin_half( length = pin_length, friction = friction );
-		}
-	}
-}
-
-/**
- * Elbows
- *
- * part #25214: technic_elbow( length = 2, width = 2 )
- *
- * Origin is at the point where the X and Y axes would meet, with each of them centered in the hole at the end of each leg of the elbow.
- */
-module technic_elbow(
-	length = 2, // The number of studs one leg would cover, if laid down on a plate.
-	width = 2, // The number of studs the other leg would cover, if laid down on a plate.
-	axle_socket_on_length = true, // Whether there should be an interior socket for accepting an axle on the X axis.
-	axle_socket_on_width = true, // Whether there should be an interior socket for accepting an axle on the Y axis.
-) {
-	// Use the longer dimension as the length and the shorter dimension as the width.
-	// This simplifies some decisions we need to make about what goes where.
-	//
-	// length is along the X axis, width is along the Y axis.
-	real_length = max( 2, max( length, width ) );
-	real_width = max( 2, min( length, width ) );
-
-	difference() {
-		union() {
-			// The two straight parts can be placed in their known positions, and then we can calculate
-			// the starting and stopping points of the elbow.
-			translate( [ ( real_length * stud_spacing ) - technic_elbow_straight_length, 0, 0 ] ) {
-				rotate( [ 0, 90, 0 ] ) {
-					difference() {
-						cylinder( d = technic_elbow_outer_diameter, h = technic_elbow_straight_length );
-						translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) {
-							cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length + ( 2 * EXTENSION_FOR_DIFFERENCE ) );
-						}
-					}
-
-					if ( axle_socket_on_length ) {
-						// Add the material that will be the ridges for the axle socket.
-						cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length - technic_elbow_axle_socket_depth );
-					}
-				}
-			}
-
-			translate( [ 0, ( real_width * stud_spacing ) - technic_elbow_straight_length, 0 ] ) {
-				rotate( [ -90, 0, 0 ] ) {
-					difference() {
-						cylinder( d = technic_elbow_outer_diameter, h = technic_elbow_straight_length );
-						translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length + ( 2 * EXTENSION_FOR_DIFFERENCE ) );
-					}
-
-					if ( axle_socket_on_width ) {
-						// Add the material that will be the ridges for the axle socket.
-						cylinder( d = technic_elbow_inner_diameter, h = technic_elbow_straight_length - technic_elbow_axle_socket_depth );
-					}
-				}
-			}
-
-			// So we need a tube to connect ( real_width * stud_spacing ) - technic_elbow_straight_length on both X and Y.
-			translate( [ ( real_width * stud_spacing ) - technic_elbow_straight_length, ( real_width * stud_spacing ) - technic_elbow_straight_length, 0 ] ) {
-				rotate( [ 180, 180, 0 ] ) {
-					rotate_extrude( angle = 90 ) {
-						translate( [ ( real_width * stud_spacing ) - technic_elbow_straight_length, 0, 0 ] ) {
-							circle( d = technic_elbow_outer_diameter );
-						}
-					}
-				}
-			}
-
-			// And we also need to fill in any gaps if length doesn't match width.
-			if ( real_length > real_width ) {
-				translate( [ ( real_width * stud_spacing ) - technic_elbow_straight_length, 0, 0 ] ) {
-					rotate( [ 0, 90, 0 ] ) {
-						cylinder( d = technic_elbow_outer_diameter, h = ( real_length - real_width ) * stud_spacing );
-					}
-				}
-			}
-		}
-
-		if ( axle_socket_on_length ) {
-			// Subtract the axle socket area along the length.
-			translate( [ real_width * stud_spacing, 0, 0 ] ) {
-				rotate( [ 0, -90, 0 ] ) {
-					technic_axle_hole( height = 1 );
-				}
-			}
-		}
-
-		if ( axle_socket_on_width ) {
-			// Subtract the axle socket area along the width.
-			translate( [ 0, real_length * stud_spacing, 0 ] ) {
-				rotate( [ 90, 0, 0 ] ) {
-					technic_axle_hole( height = 1 );
-				}
-			}
-		}
-	}
-}
-
-/**
- * Beams.
- *
- * part #6629: technic_beam( length = 9, angle = 53.5, vertex = 6, axle_holes = [1, 9] )
- * part #6632: technic_beam( length = 3, height = 1/2, axle_holes = [1, 3] )
- * part #7229: technic_beam( length = 3, axle_holes = [2] )
- * part #11478: technic_beam( length = 5, height = 1/2, axle_holes = [1, 5] )
- * part #18654: technic_beam( length = 1 ) [equivalent to a pin connector]
- * part #32017: technic_beam( length = 5, height = 1/2 )
- * part #32056: technic_beam( length = 5, height = 1/2, angle = 90, vertex = 3, axle_holes = [1,3,5] )
- * part #32063: technic_beam( length = 6, height = 1/2 )
- * part #32065: technic_beam( length = 7, height = 1/2 )
- * part #32140: technic_beam( length = 5, angle = 90, vertex = 4, axle_holes = [1] )
- * part #32271: technic_beam( length = 9, angle = 53.5, vertex = 7, axle_holes = [1, 9] )
- * part #32278: technic_beam( length = 15 )
- * part #32316: technic_beam( length = 5 )
- * part #32348: technic_beam( length = 7, angle = 53.5, vertex = 4, axle_holes = [1, 7] )
- * part #32449: technic_beam( length = 4, height = 1/2, axle_holes = [1, 4] )
- * part #32523: technic_beam( length = 3 )
- * part #32524: technic_beam( length = 7 )
- * part #32525: technic_beam( length = 11 )
- * part #32526: technic_beam( length = 7, angle = 90, vertex = 1 )
- * part #40490: technic_beam( length = 9 )
- * part #41239: technic_beam( length = 13 )
- * part #41677: technic_beam( length = 2, height = 1/2, axle_holes = [1, 2] )
- * part #43857: technic_beam( length = 2 )
- * part #60483: technic_beam( length = 2, axle_holes = [1] )
- *
- * Origin is below the center of the first hole.
- *
- * @param int length How many holes should the beam contain?
- * @param float height How tall (in multiples of technic beam thicknesses) should the beam be?
- * @param float angle The change in angle (clockwise) that will occur at the vertex'th hole.
- * @param int vertex The number of the hole at which the angle should change, if the angle param is not zero.
- * @param array[int] axle_holes Which holes should be axle holes instead.
- */
-module technic_beam( length = 5, height = 1, angle = 0, vertex = 1, axle_holes = [] ) {
-	// When making the second part of an angled beam, remap the axle hole locations for that smaller beam.
-	function angled_axle_holes( all_axle_holes, original_vertex ) = [
-		if ( len( all_axle_holes ) > 0 ) for ( i = [ 0 : len( all_axle_holes ) - 1 ] ) if ( all_axle_holes[i] > original_vertex ) all_axle_holes[i] - original_vertex + 1
-	];
-
-	// In theory, 120 is the maximum angle before it will interfere with itself.
-	// We could limit that, but we'll leave it as an exercise in self-restraint for the reader.
-	if ( angle != 0 ) {
-		// When it's an angled beam, construct it as the union of two smaller beams.
-		// This results in a small extra bit of wall near the vertex hole that
-		// wouldn't be present in a real Technic beam, but it's so much simpler
-		// to do it this way.
-		technic_beam( length = vertex, height = height, angle = 0, axle_holes = axle_holes );
-
-		translate( [ ( vertex - 1 ) * technic_beam_hole_spacing, 0, 0 ] ) {
-			rotate( [ 0, 0, angle ] ) {
-				technic_beam( length = length - vertex + 1, height = height, angle = 0, axle_holes = angled_axle_holes( axle_holes, vertex ) );
-			}
-		}
-	} else {
-		// Generate the pin connectors that make up the inside of the beam.
-		for ( i = [ 1 : length ] ) {
-			translate( [ technic_beam_hole_spacing * ( i - 1 ), 0, 0 ] ) {
-				if ( len( search( i, axle_holes ) ) > 0 ) {
-					difference() {
-						cylinder( d = technic_pin_connector_outer_diameter, h = height * technic_height_in_mm );
-
-						// @todo This still leaves a tiny bit of extra material in the axle hole at the vertex of an angled beam (if there is one there).
-						translate( [ 0, 0, -height * technic_height_in_mm ] ) {
-							technic_axle_hole( height = height * 2 );
-						}
-					}
-				} else {
-					technic_pin_connector( length = height );
-				}
-			}
-		}
-
-		// Add the walls along the edges of the rows of pins.
-		translate( [ 0, -( technic_pin_connector_outer_diameter / 2 ), ( technic_height_in_mm * height ) / 2 ] ) {
-			difference() {
-				translate( [ 0, 0, -technic_beam_webbing_thickness / 2 ] ) {
-					cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_outer_diameter, technic_beam_webbing_thickness ] );
-				}
-
-				union () {
-					for ( i = [ 1 : length ] ) {
-						translate( [ technic_beam_hole_spacing * ( i - 1 ), technic_pin_connector_outer_diameter / 2, 0 ] ) {
-							cylinder( d = technic_pin_connector_outer_diameter, h = technic_beam_webbing_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
-						}
-					}
-				}
-			}
-		}
-
-		// Add the webbing between the pin connector walls.
-		translate( [ 0, - ( technic_pin_connector_outer_diameter / 2 ), 0 ] ) {
-			cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_mm * height ] );
-			translate( [ 0, technic_pin_connector_outer_diameter - technic_pin_connector_shoulder_wall_thickness, 0 ] ) {
-				cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_mm * height ] );
-			}
-		}
-	}
-}
 
 /**
  * Generate a rounded rectangle.

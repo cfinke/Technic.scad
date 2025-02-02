@@ -26,11 +26,8 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-use <../Technic.scad>;
+include <../Technic.scad>;
 
-/* [General] */
-
-// Width of the gear, in multiples of individual gears.
-gear_width = 1; // [1:100]
-
-color( "gray" ) technic_24_tooth_gear( width = gear_width );
+color( "gray" ) technic_gear_double_sided( teeth = 24, width = 1 );
+color( "blue" ) translate( [ 0, 30, 0 ] ) technic_gear_double_sided( teeth = 36, width = 2 );
+color( "orange" ) translate( [ 0, 30, 0 ] ) technic_gear_double_sided( teeth = 12, width = 1 );
