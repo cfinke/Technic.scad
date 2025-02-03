@@ -749,8 +749,9 @@ module technic_gear_double_sided(
 				// The walls of the pin holes
 				union () {
 					rotate( [ 0, 0, 45 ] ) {
-						for ( x = [ technic_gear_pin_hole_horizontal_offset_from_center : technic_gear_pin_hole_horizontal_offset_from_center * 2 : gear_inner_diameter / 2 ] ) {
-							for ( y = [ technic_gear_pin_hole_horizontal_offset_from_center : technic_gear_pin_hole_horizontal_offset_from_center * 2 : ( gear_inner_diameter / 2 ) ] ) {
+						// The max() calls in these loops is to ensure the support around the axle hole is shaped as if the pin holes were there even if the gear is too small for the pin holes. Otherwise it looks like just a big cube.
+						for ( x = [ technic_gear_pin_hole_horizontal_offset_from_center : technic_gear_pin_hole_horizontal_offset_from_center * 2 : max( technic_gear_pin_hole_horizontal_offset_from_center, gear_inner_diameter / 2 ) ] ) {
+							for ( y = [ technic_gear_pin_hole_horizontal_offset_from_center : technic_gear_pin_hole_horizontal_offset_from_center * 2 : max( technic_gear_pin_hole_horizontal_offset_from_center, ( gear_inner_diameter / 2 ) ) ] ) {
 								translate( [ x, y, 0 ] ) {
 									cylinder( d = technic_gear_pin_hole_outer_diameter, h = desired_gear_axle_reinforcement_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
 								};
