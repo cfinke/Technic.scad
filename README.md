@@ -79,7 +79,7 @@ Generate a Technic-compatible 90º elbow.
 
 `technic_gear_double_sided();`
 --------------------------
-![A 24-tooth gear compatible with LEGO part #3648.](images/Technic%20Gear%20%28Double-Sided%29.png)
+![A spur gear compatible with LEGO part #3648.](images/Technic%20Gear%20%28Double-Sided%29.png)
 
 Generate a Technic-compatible double-sided spur gear.
 
