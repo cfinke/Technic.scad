@@ -50,20 +50,47 @@ beam_vertices = "";
 color( "red" ) technic_beam(
 	length = beam_length,
 	height = beam_height,
-	angles = array_of_strings_to_array_of_ints( split_str( remove_everything_thats_not_a_number_or_comma( beam_angles ), "," ) ),
+	angles = array_of_strings_to_array_of_floats( split_str( remove_everything_thats_not_a_number_or_comma( beam_angles ), "," ) ),
 	vertices = array_of_strings_to_array_of_ints( split_str( remove_everything_thats_not_a_number_or_comma( beam_vertices ), "," ) ),
 	axle_holes = array_of_strings_to_array_of_ints( split_str( remove_everything_thats_not_a_number_or_comma( beam_axle_holes ), "," ) )
 );
 
+rotate( [ 0, 0, 90 - (11.25 / 2 )] ) technic_beam( length = 11 );
+
 // Functions for managing the conversion of a list of numbers in a text field to an array of actual numbers.
-function remove_everything_thats_not_a_number_or_comma( str ) = chr( [ for ( s = str ) if ( ( ord( s ) >= 48 && ord( s ) <= 57 ) || s == "," ) ord( s ) ] );
+function remove_everything_thats_not_a_number_or_comma( str ) = chr( [ for ( s = str ) if ( ( ord( s ) >= 48 && ord( s ) <= 57 ) || s == "," || s == "." ) ord( s ) ] );
 function array_of_strings_to_array_of_ints( str_arr ) = [ for ( s = str_arr ) if ( s != "" && s ) int( s ) ];
+function array_of_strings_to_array_of_floats( str_arr ) = [ for ( s = str_arr ) if ( s != "" && s ) float( s ) ];
 
 // From https://github.com/openscad/openscad/issues/4568
 function int(s, ret=0, i=0) =
 	i >= len(s)
 	? ret
 	: int(s, ret*10 + ord(s[i]) - ord("0"), i+1);
+
+// From https://github.com/openscad/openscad/issues/4568#issuecomment-1478860668
+function float (s) = let(
+    _f = function(s, i, x, vM, dM, ddM, m)
+      i >= len(s) ? round(x*dM)/dM :
+      let(
+        d = ord(s[i])
+      )
+      (d == 32 && m == 0) || (d == 43 && (m == 0 || m == 2)) ?
+        _f(s, i+1, x, vM, dM, ddM, m) :
+      d == 45 && (m == 0 || m == 2) ?
+        _f(s, i+1, x, vM, -dM, ddM, floor(m/2)+1) :
+      d >= 48 && d <= 57 ?
+        _f(s, i+1, x*vM + (d-48)/dM, vM, dM*ddM, ddM, floor(m/2)+1) :
+      d == 46 && m<=1 ? _f(s, i+1, x, 1, 10*dM, 10, max(m, 1)) :
+      (d == 69 || d == 101) && m==1 ? let(
+          expon = _f(s, i+1, 0, 10, 1, 1, 2)
+        )
+        (is_undef(expon) ? undef : expon >= 0 ?
+          (round(x*dM)*(10^expon/dM)) :
+          (round(x*dM)/dM)/10^(-expon)) :
+      undef
+  )
+  _f(s, 0, 0, 10, 1, 1, 0);
 
 // from https://github.com/JustinSDK/dotSCAD/blob/master/src/util/_impl/_split_str_impl.scad
 
