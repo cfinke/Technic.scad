@@ -28,6 +28,12 @@
 
 include <../Technic.scad>;
 
-color( "gray" ) technic_gear_double_sided( teeth = 24, width = 1 );
-color( "blue" ) translate( [ 0, 30, 0 ] ) technic_gear_double_sided( teeth = 36, width = 2 );
-color( "orange" ) translate( [ 0, 30, 0 ] ) technic_gear_double_sided( teeth = 12, width = 1 );
+/* [General] */
+
+// How many teeth?
+gear_teeth = 40;
+
+// Width of the gear, in multiples of individual gears.
+gear_width = 1; // [1:100]
+
+technic_gear_double_sided( width = gear_width, teeth = gear_teeth );

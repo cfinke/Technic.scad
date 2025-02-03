@@ -81,11 +81,12 @@ Generate a Technic-compatible 90º elbow.
 --------------------------
 ![A 24-tooth gear compatible with LEGO part #3648.](images/Technic%20Gear%20%28Double-Sided%29.png)
 
-Generate a Technic-compatible 24-tooth gear.
+Generate a Technic-compatible double-sided spur gear.
 
 | Parameter | Type | Description |
 |---|---|---|
 | `width` | int | In multiples of the original gear width, how wide should it be? e.g., a width of 3 would generate a single gear with the same total width as three gears set side-by-side. |
+| `teeth` | int | How many teeth should the gear have? The minimum reasonable value is probably 14. |
 
 `technic_gear_single_sided();`
 --------------------------
