@@ -26,9 +26,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-use <../Technic.scad>;
-
-$fa = 1; $fs = 0.05;
+include <../Technic.scad>;
 
 /* [General] */
 
@@ -43,23 +41,23 @@ beam_axle_holes = "";
 
 /* [Angles] */
 
-// If this is an angled beam, what should be the change in angle (moving clockwise)?
-beam_angle = 0; // [ -179:1:179 ]
+// If this is an angled beam, what should be the change in angle (clockwise) at each vertex?  Numbers separated by commas. e.g., "1, 4, 7"
+beam_angles = "";
 
-// If this is an angled beam, which hole should be the vertex of the angle?
-beam_vertex = 3;
+// If this is an angled beam, which holes should be the vertices at which the angle changes?  Numbers separated by commas. e.g., "1, 4, 7"
+beam_vertices = "";
 
 color( "red" ) technic_beam(
 	length = beam_length,
 	height = beam_height,
-	angle = beam_angle,
-	vertex = min( beam_length, beam_vertex ),
+	angles = array_of_strings_to_array_of_ints( split_str( remove_everything_thats_not_a_number_or_comma( beam_angles ), "," ) ),
+	vertices = array_of_strings_to_array_of_ints( split_str( remove_everything_thats_not_a_number_or_comma( beam_vertices ), "," ) ),
 	axle_holes = array_of_strings_to_array_of_ints( split_str( remove_everything_thats_not_a_number_or_comma( beam_axle_holes ), "," ) )
 );
 
 // Functions for managing the conversion of a list of numbers in a text field to an array of actual numbers.
 function remove_everything_thats_not_a_number_or_comma( str ) = chr( [ for ( s = str ) if ( ( ord( s ) >= 48 && ord( s ) <= 57 ) || s == "," ) ord( s ) ] );
-function array_of_strings_to_array_of_ints( str_arr ) = [ for ( s = str_arr ) int( s ) ];
+function array_of_strings_to_array_of_ints( str_arr ) = [ for ( s = str_arr ) if ( s != "" && s ) int( s ) ];
 
 // From https://github.com/openscad/openscad/issues/4568
 function int(s, ret=0, i=0) =

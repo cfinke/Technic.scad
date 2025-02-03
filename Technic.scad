@@ -328,100 +328,126 @@ module technic_axle_pin(
 /**
  * Beams.
  *
- * part #6629: technic_beam( length = 9, angle = 53.5, vertex = 6, axle_holes = [1, 9] )
- * part #6632: technic_beam( length = 3, height = 1/2, axle_holes = [1, 3] )
- * part #7229: technic_beam( length = 3, axle_holes = [2] )
+ * part #6629: technic_beam( length = 9, angles = [ 53.5 ], vertices = [ 6 ], axle_holes = [ 1, 9 ] )
+ * part #6632: technic_beam( length = 3, height = 1/2, axle_holes = [ 1, 3 ] )
+ * part #7229: technic_beam( length = 3, axle_holes = [ 2 ] )
  * part #11478: technic_beam( length = 5, height = 1/2, axle_holes = [1, 5] )
  * part #18654: technic_beam( length = 1 ) [equivalent to a pin connector]
+ * part #32009: technic_beam( length = 12, vertices = [ 3, 6 ], angles = [ 45, 45 ], axle_holes = [ 1, 12 ] );
  * part #32017: technic_beam( length = 5, height = 1/2 )
- * part #32056: technic_beam( length = 5, height = 1/2, angle = 90, vertex = 3, axle_holes = [1,3,5] )
+ * part #32056: technic_beam( length = 5, height = 1/2, angles = [ 90 ], vertices = [ 3 ], axle_holes = [ 1, 3, 5 ] )
  * part #32063: technic_beam( length = 6, height = 1/2 )
  * part #32065: technic_beam( length = 7, height = 1/2 )
- * part #32140: technic_beam( length = 5, angle = 90, vertex = 4, axle_holes = [1] )
- * part #32271: technic_beam( length = 9, angle = 53.5, vertex = 7, axle_holes = [1, 9] )
+ * part #32140: technic_beam( length = 5, angles = [ 90 ], vertices = [ 4 ], axle_holes = [ 1 ] )
+ * part #32271: technic_beam( length = 9, angles = [ 53.5 ], vertices = [ 7 ], axle_holes = [ 1, 9 ] )
  * part #32278: technic_beam( length = 15 )
  * part #32316: technic_beam( length = 5 )
- * part #32348: technic_beam( length = 7, angle = 53.5, vertex = 4, axle_holes = [1, 7] )
- * part #32449: technic_beam( length = 4, height = 1/2, axle_holes = [1, 4] )
+ * part #32348: technic_beam( length = 7, angles = [ 53.5 ], vertices = [ 4 ], axle_holes = [ 1, 7 ] )
+ * part #32449: technic_beam( length = 4, height = 1/2, axle_holes = [ 1, 4 ] )
  * part #32523: technic_beam( length = 3 )
  * part #32524: technic_beam( length = 7 )
  * part #32525: technic_beam( length = 11 )
- * part #32526: technic_beam( length = 7, angle = 90, vertex = 1 )
+ * part #32526: technic_beam( length = 7, angles = [ 90 ], vertices = [ 1 ] )
  * part #40490: technic_beam( length = 9 )
  * part #41239: technic_beam( length = 13 )
- * part #41677: technic_beam( length = 2, height = 1/2, axle_holes = [1, 2] )
+ * part #41677: technic_beam( length = 2, height = 1/2, axle_holes = [ 1, 2 ] )
  * part #43857: technic_beam( length = 2 )
- * part #60483: technic_beam( length = 2, axle_holes = [1] )
+ * part #60483: technic_beam( length = 2, axle_holes = [ 1 ] )
  *
  * Origin is below the center of the first hole.
  *
  * @param int length How many holes should the beam contain?
  * @param float height How tall (in multiples of technic beam thicknesses) should the beam be?
- * @param float angle The change in angle (clockwise) that will occur at the vertex'th hole.
- * @param int vertex The number of the hole at which the angle should change, if the angle param is not zero.
- * @param array[int] axle_holes Which holes should be axle holes instead.
+ * @param float[] angles The change in angle (clockwise) that will occur at the vertex'th hole.
+ * @param int[] vertices The number of each hole at which the angle should change.
+ * @param int[] axle_holes Which holes should be axle holes instead.
  */
-module technic_beam( length = 5, height = 1, angle = 0, vertex = 1, axle_holes = [] ) {
+module technic_beam( length = 5, height = 1, angles = [], vertices = [], axle_holes = [], depth = 0 ) {
 	// When making the second part of an angled beam, remap the axle hole locations for that smaller beam.
 	function angled_axle_holes( all_axle_holes, original_vertex ) = [
 		if ( len( all_axle_holes ) > 0 ) for ( i = [ 0 : len( all_axle_holes ) - 1 ] ) if ( all_axle_holes[i] > original_vertex ) all_axle_holes[i] - original_vertex + 1
 	];
 
-	// In theory, 120 is the maximum angle before it will interfere with itself.
-	// We could limit that, but we'll leave it as an exercise in self-restraint for the reader.
-	if ( angle != 0 ) {
-		// When it's an angled beam, construct it as the union of two smaller beams.
-		// This results in a small extra bit of wall near the vertex hole that
-		// wouldn't be present in a real Technic beam, but it's so much simpler
-		// to do it this way.
-		technic_beam( length = vertex, height = height, angle = 0, axle_holes = axle_holes );
-
-		translate( [ ( vertex - 1 ) * technic_beam_hole_spacing, 0, 0 ] ) {
-			rotate( [ 0, 0, angle ] ) {
-				technic_beam( length = length - vertex + 1, height = height, angle = 0, axle_holes = angled_axle_holes( axle_holes, vertex ) );
-			}
-		}
+	// Some error cases.
+	if ( length < 1 ) {
+		echo( "Length must be one or greater: ", length );
+	} else if ( len( angles ) != len( vertices ) ) {
+		echo( "Number of angles (", len(angles), ") must equal number of vertices (", len( vertices ), ")." );
+	} else if ( len( vertices ) >= length ) {
+		echo( "The number of vertices", len( vertices ), " cannot be as long as the length." );
+	} else if ( len( vertices ) > 0 && max( vertices ) >= length ) {
+		echo( "The largest vertex ", max( vertices ), " has to be smaller than the length, ", length );
 	} else {
-		// Generate the pin connectors that make up the inside of the beam.
-		for ( i = [ 1 : length ] ) {
-			translate( [ technic_beam_hole_spacing * ( i - 1 ), 0, 0 ] ) {
-				if ( len( search( i, axle_holes ) ) > 0 ) {
-					difference() {
-						cylinder( d = technic_pin_connector_outer_diameter, h = height * technic_height_in_mm );
+		if ( len( angles ) > 0 ) {
+			let(
+				// Each section of the beam will be as long as the first vertex in the list.
+				this_length = vertices[0],
+				this_angle = angles[0],
+				// Remove the first vertex from the list.
+				new_vertices = [ for ( i = [ 0 : ( len( vertices ) - 1 ) ] ) if ( i > 0 ) vertices[i] - this_length + 1 ],
+				// Remove the first angle from the list.
+				new_angles = [ for ( i = [ 0 : ( len( angles ) - 1 ) ] ) if ( i > 0 ) angles[i] ],
+				// Remove any axle holes we've already added, and shift the axle hole indices down to account for the beam portion we've already output.
+				new_axle_holes = len( axle_holes ) > 0 ? [ for ( i = [ 0 : ( len( axle_holes ) - 1 ) ] ) if ( axle_holes[i] > this_length ) axle_holes[i] - this_length + 1 ] : [],
+			) {
+				technic_beam( length = vertices[0], height = height, axle_holes = axle_holes, depth = depth + 1 );
 
-						// @todo This still leaves a tiny bit of extra material in the axle hole at the vertex of an angled beam (if there is one there).
-						translate( [ 0, 0, -height * technic_height_in_mm ] ) {
-							technic_axle_hole( height = height * 2 );
-						}
-					}
-				} else {
-					technic_pin_connector( length = height );
-				}
-			}
-		}
-
-		// Add the walls along the edges of the rows of pins.
-		translate( [ 0, -( technic_pin_connector_outer_diameter / 2 ), ( technic_height_in_mm * height ) / 2 ] ) {
-			difference() {
-				translate( [ 0, 0, -technic_beam_webbing_thickness / 2 ] ) {
-					cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_outer_diameter, technic_beam_webbing_thickness ] );
-				}
-
-				union () {
-					for ( i = [ 1 : length ] ) {
-						translate( [ technic_beam_hole_spacing * ( i - 1 ), technic_pin_connector_outer_diameter / 2, 0 ] ) {
-							cylinder( d = technic_pin_connector_outer_diameter, h = technic_beam_webbing_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
-						}
+				translate( [ ( this_length - 1 ) * technic_beam_hole_spacing, 0, 0 ] ) {
+					rotate( [ 0, 0, this_angle ] ) {
+						technic_beam(
+							// The length argument should be the total remaining length, plus the additional hole that will be overlayed on the last output hole. It came into the function as length, we output vertices[0] holes, so now we still need to output length - vertices[0] + 1 holes.
+							length = length - this_length + 1,
+							height = height,
+							angles = new_angles,
+							vertices = new_vertices,
+							axle_holes = new_axle_holes,
+							depth = depth + 1
+						);
 					}
 				}
 			}
-		}
+		} else {
+			// Generate the pin connectors that make up the inside of the beam.
+			for ( i = [ 1 : length ] ) {
+				translate( [ technic_beam_hole_spacing * ( i - 1 ), 0, 0 ] ) {
+					if ( len( search( i, axle_holes ) ) > 0 ) {
+						difference() {
+							cylinder( d = technic_pin_connector_outer_diameter, h = height * technic_height_in_mm );
 
-		// Add the webbing between the pin connector walls.
-		translate( [ 0, - ( technic_pin_connector_outer_diameter / 2 ), 0 ] ) {
-			cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_mm * height ] );
-			translate( [ 0, technic_pin_connector_outer_diameter - technic_pin_connector_shoulder_wall_thickness, 0 ] ) {
+							// @todo This still leaves a tiny bit of extra material in the axle hole at the vertex of an angled beam (if there is one there).
+							translate( [ 0, 0, -height * technic_height_in_mm ] ) {
+								technic_axle_hole( height = height * 2 );
+							}
+						}
+					} else {
+						technic_pin_connector( length = height );
+					}
+				}
+			}
+
+			// Add the walls along the edges of the rows of pins.
+			translate( [ 0, -( technic_pin_connector_outer_diameter / 2 ), ( technic_height_in_mm * height ) / 2 ] ) {
+				difference() {
+					translate( [ 0, 0, -technic_beam_webbing_thickness / 2 ] ) {
+						cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_outer_diameter, technic_beam_webbing_thickness ] );
+					}
+
+					union () {
+						for ( i = [ 1 : length ] ) {
+							translate( [ technic_beam_hole_spacing * ( i - 1 ), technic_pin_connector_outer_diameter / 2, 0 ] ) {
+								cylinder( d = technic_pin_connector_outer_diameter, h = technic_beam_webbing_thickness + EXTENSION_FOR_DIFFERENCE, center = true );
+							}
+						}
+					}
+				}
+			}
+
+			// Add the webbing between the pin connector walls.
+			translate( [ 0, - ( technic_pin_connector_outer_diameter / 2 ), 0 ] ) {
 				cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_mm * height ] );
+				translate( [ 0, technic_pin_connector_outer_diameter - technic_pin_connector_shoulder_wall_thickness, 0 ] ) {
+					cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_mm * height ] );
+				}
 			}
 		}
 	}
