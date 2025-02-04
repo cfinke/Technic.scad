@@ -52,6 +52,9 @@ technic_axle_stud_height = 1.8; // Matches LEGO.stud_height
 technic_axle_stud_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
 technic_axle_stud_outer_diameter = 4.85; // Matches LEGO.stud_diameter
 
+technic_bar_connector_outer_diameter = 7.36; // @todo Measure IRL
+technic_bar_connector_inner_diameter = 3.2; // @todo Measure IRL
+
 technic_bush_big_diameter = 7.4;
 technic_bush_small_diameter = 5.8;
 technic_bush_shoulder_height = 1.3; // Should this match technic_pin_multiple_center_lip_thickness ?
@@ -105,7 +108,7 @@ technic_pin_multiple_center_lip_thickness = 1.2; // Should this match technic_bu
 technic_pin_multiple_offset = 7.75;
 technic_pin_multiple_center_lip_overhang = 1.35;
 technic_pin_tow_ball_total_length = 6.6;
-technic_pin_tow_ball_neck_diameter = 3.2;
+technic_pin_tow_ball_neck_diameter = 3.2; // I believe this "neck" is really just a bar.
 
 technic_elbow_outer_diameter = 7.9; // Matches LEGO.stud_spacing - LEGO.wall_play
 technic_elbow_inner_diameter = 5;
@@ -295,6 +298,86 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 }
 
 /**
+ * A connector hub. Some sort of round connector with things like axles or pins protruding like spokes.
+ *
+ * part #5713: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ], spoke_lengths = [ 3 ] )
+ * part #10197: technic_connector_hub( spoke_angles = [ 0, 90 ] )
+ * part #22961: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ] )
+ * part #27940: technic_connector_hub( spoke_angles = [ 0, 180 ] )
+ * part #24122: technic_connector_hub( hub_type = "axle", spoke_types = [ "bar connector", "bar connector" ] )
+ * part #57585: technic_connector_hub( hub_type = "axle", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 120, 240 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle", "axle", "axle" ] )
+ *
+ * @todo I haven't measured this in real life to confirm dimensions.
+ *
+ * The origin is centered underneath the hub.
+ *
+ * @param int hub_height The height of the hub, in Technic units.
+ * @param string hub_type What type of hub should it be? Either "axle" or "pin".
+ * @param float[] spoke_lengths How long should each spoke be?
+ * @param float[] spoke_angles At what angle should each spoke connect?
+ * @param float[] spoke_heights How high up on the hub should each spoke be placed?
+ * @param string[] spoke_types What type of connector should each spoke be? Either "axle" or "bar connector"
+ */
+module technic_connector_hub(
+	hub_height = 1,
+	hub_type = "pin",
+	spoke_lengths = [ 1, 1 ],
+	spoke_angles = [ 0, 180 ],
+	spoke_heights = [ 1, 1 ],
+	spoke_types = [ "axle", "axle" ]
+) {
+
+	if ( len( spoke_lengths ) == 0 ) {
+		echo( "You must provide at least one spoke." );
+	} else if ( len( spoke_lengths ) != len( spoke_angles ) ) {
+		echo( "The number of spoke lengths must match the number of spoke lengths." );
+	} else if ( len( spoke_lengths ) != len( spoke_types ) ) {
+		echo( "The number of spoke types must match the number of spoke lengths." );
+	} else if ( max( spoke_heights ) > hub_height ) {
+		echo( "You cannot have a spoke placed higher than the top of the hub." );
+	} else {
+		// The central hub.
+		if ( hub_type == "pin" ) {
+			technic_pin_connector( length = hub_height );
+		} else if ( hub_type == "axle" ) {
+			difference() {
+				cylinder( d = technic_pin_connector_outer_diameter, h = hub_height * technic_height_in_mm );
+				translate( [ 0, 0, hub_height * technic_height_in_mm / 2 ] ) {
+					technic_axle_hole( height = hub_height );
+				}
+			}
+		}
+
+		// The spokes.
+		difference() {
+			for ( i = [ 0 : len( spoke_angles ) - 1 ] ) {
+				rotate( [ 0, 0, spoke_angles[i] ] ) {
+					translate( [ 0, 0, (( spoke_heights[i] - 1 ) * technic_height_in_mm ) + ( technic_height_in_mm / 2 ) ] ) {
+						rotate( [ 0, 90, 0 ] ) {
+							if ( spoke_types[i] == "axle" ) {
+								technic_axle( length = spoke_lengths[i] + .5 );
+							} else if ( spoke_types[i] == "bar connector" ) {
+								linear_extrude( ( technic_height_in_mm * ( spoke_lengths[i] ) ) ) {
+									difference() {
+										circle( d = technic_bar_connector_outer_diameter );
+										circle( d = technic_bar_connector_inner_diameter );
+									}
+								}
+							}
+
+							cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm / 2 );
+						}
+					}
+				}
+			}
+
+			// Remove anything that has overlapped into the center of the hub.
+			cylinder( d = technic_pin_connector_outer_diameter, h = hub_height * technic_height_in_mm );
+		}
+	}
+}
+
+/**
  * Axle/pin combos.
  *
  * part #11214: technic_axle_pin( axle_length = 1, pin_length = 2 );
@@ -448,6 +531,7 @@ module technic_beam( length = 5, height = 1, angles = [], vertices = [], axle_ho
 			}
 
 			// Add the webbing between the pin connector walls.
+			// @todo 1/2 thick beams don't have webbing, they're just solid.
 			translate( [ 0, - ( technic_pin_connector_outer_diameter / 2 ), 0 ] ) {
 				cube( [ ( length - 1 ) * technic_beam_hole_spacing, technic_pin_connector_shoulder_wall_thickness, technic_height_in_mm * height ] );
 				translate( [ 0, technic_pin_connector_outer_diameter - technic_pin_connector_shoulder_wall_thickness, 0 ] ) {

@@ -64,6 +64,21 @@ Generate a Technic-compatible bush.
 | `height` | int | The height of the bush. |
 | `stud_cutouts` | bool | Whether one end should have cutouts in the edge to fit between studs. Only applies to heights greater than 1/2. |
 
+`technic_connector_hub();`
+--------------------------
+![A connector hub compatible with LEGO part #27940, for example.](images/Technic%20Connector%20Hub.png)
+
+Generate a Technic-compatible connector hub.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `hub_height` | int | The height of the hub, in Technic units. |
+| `hub_type` | string | What type of hub should it be? Either "axle" or "pin". |
+| `spoke_lengths` | float[] | How long should each spoke be? |
+| `spoke_angles` | float[] | At what angle should each spoke connect? |
+| `spoke_heights` | float[] | How high up on the hub should each spoke be placed? |
+| `spoke_types` | string | What type of connector should each spoke be? Either "axle" or "bar connector". |
+
 `technic_elbow();`
 --------------------------
 ![A 90º elbow compatible with LEGO part #25214.](images/Technic%20Elbow.png)
