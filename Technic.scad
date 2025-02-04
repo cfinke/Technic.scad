@@ -104,6 +104,8 @@ technic_pin_multiple_center_width = 7.8;
 technic_pin_multiple_center_lip_thickness = 1.2; // Should this match technic_bush_shoulder_height ?
 technic_pin_multiple_offset = 7.75;
 technic_pin_multiple_center_lip_overhang = 1.35;
+technic_pin_tow_ball_total_length = 6.6;
+technic_pin_tow_ball_neck_diameter = 3.2;
 
 technic_elbow_outer_diameter = 7.9; // Matches LEGO.stud_spacing - LEGO.wall_play
 technic_elbow_inner_diameter = 5;
@@ -114,6 +116,8 @@ technic_elbow_axle_socket_depth = 2.4; // Matches LEGO.stud_spacing
 
 technic_beam_hole_spacing = 8; // Matches LEGO.stud_spacing
 technic_beam_webbing_thickness = 0.8;
+
+technic_tow_ball_diameter = 5.85;
 
 // When OpenSCAD does the preview render, if two objects in a difference() end at exactly
 // the same plane, it will show a shadowy 0-thickness layer. If instead, one of the difference()
@@ -968,21 +972,23 @@ module technic_gear_single_sided( teeth = 12, bevel = true, center_hole = "axle"
  * part #4274: technic_pin( top_length = 1, stud = true )
  * part #4459: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true ) // This part has long friction ridges along the length of the pin, which isn't supported yet.
  * part #6558: technic_pin( top_length = 2, top_friction = true, bottom_length = 1, bottom_friction = true )
+ * part #6628: technic_pin( bottom_type = "tow ball" )
  * part #32138: technic_pin( multiplier = 2 )
  * part #32556: technic_pin( top_length = 2, top_friction = false, bottom_length = 1, bottom_friction = false )
  * part #65098: technic_pin( multiplier = 2, squared_pin_holes = true )
  * part #77765: technic_pin( top_length = 3, top_friction = false, bottom_length = 0, bottom_friction = false )
- * part #89678: technic_pin( top_length = 1, top_friction = true, stud = true )
+ * part #80477: technic_pin( bottom_length = 2, bottom_type = "tow ball" )
+ * part #89678: technic_pin( top_length = 1, top_friction = true, bottom_type = "stud" )
  *
  * Origin is centered at the bottom of the pin.
  *
  * @param float top_length How long is the pin on the top?
  * @param bool top_friction Should the top part have friction ridges?
+ * @param string bottom_type What should the bottom of the pin be? "pin", "tow ball", or "stud"
  * @param float bottom_length How long is the pin on the bottom?
  * @param bool bottom_friction Should the bottom part have friction ridges?
  * @param int multiplier How many pin sets should there be?
  * @param bool axle_hole If a multiple pin, should there be an axle hole?
- * @param bool stud If true, the bottom part of the pin will be a stud, regardless of bottom_length and bottom_friction.
  */
 module technic_pin(
 	top_length = 1,
@@ -992,9 +998,9 @@ module technic_pin(
 	multiplier = 1,
 	axle_holes = true,
 	squared_pin_holes = false,
-	stud = false
+	bottom_type = "pin"
 ) {
-	let ( bottom_length_in_mm = stud ? stud_height : bottom_length * technic_height_in_mm ) {
+	let ( bottom_length_in_mm = ( bottom_type == "stud" ? stud_height : ( bottom_type == "tow ball" ? bottom_length * technic_pin_tow_ball_total_length : bottom_length * technic_height_in_mm ) ) ) {
 		if ( multiplier > 1 ) {
 			translate( [ 0, 0, bottom_length_in_mm ] ) {
 				difference() {
@@ -1003,8 +1009,10 @@ module technic_pin(
 						for ( i = [ 1 : multiplier ] ) {
 							translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, technic_pin_multiple_center_width ] ) technic_pin_half( length = top_length, friction = top_friction, squared_pin_holes = squared_pin_holes );
 
-							if ( stud ) {
+							if ( bottom_type == "stud" ) {
 								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, -bottom_length_in_mm] ) technic_hollow_stud();
+							} else if ( bottom_type == "tow ball" ) {
+								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, -bottom_length_in_mm] ) technic_tow_ball( length = bottom_length );
 							} else {
 								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, 0 ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
 							}
@@ -1068,13 +1076,16 @@ module technic_pin(
 				}
 			}
 		} else {
-			translate( [ 0, 0, ( bottom_length_in_mm ) - ( stud ? 0 : technic_pin_collar_thickness ) ] ) {
+			translate( [ 0, 0, ( bottom_length_in_mm ) - ( bottom_type == "pin" ? technic_pin_collar_thickness : 0 ) ] ) {
 				// The top half of the pin.
 				technic_pin_half( length = top_length, friction = top_friction, squared_pin_holes = squared_pin_holes );
 
-				if ( stud ) {
+				if ( bottom_type == "stud" ) {
 					// The stud.
 					translate( [ 0, 0, -bottom_length_in_mm ] ) technic_hollow_stud();
+				} else if ( bottom_type == "tow ball" ) {
+					// The tow ball.
+					translate( [ 0, 0, -bottom_length_in_mm ] ) technic_tow_ball( length = bottom_length );
 				} else {
 					// The bottom half of the pin.
 					translate( [ 0, 0, technic_pin_collar_thickness ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
@@ -1254,5 +1265,13 @@ module technic_hollow_stud() {
 			circle( d = stud_outer_diameter );
 			circle( d = stud_inner_diameter );
 		}
+	}
+}
+
+module technic_tow_ball( length = 1 ) {
+	// I don't have a tow ball piece longer than length 1, but I'm assuming it's just a multiple of the original length. @todo
+	translate( [ 0, 0, technic_tow_ball_diameter / 2 ] ) {
+		sphere( d = technic_tow_ball_diameter );
+		cylinder( h = ( length * technic_pin_tow_ball_total_length ) - ( technic_tow_ball_diameter / 2 ), d = technic_pin_tow_ball_neck_diameter );
 	}
 }

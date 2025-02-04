@@ -39,8 +39,11 @@ pin_top_friction = true; // [ true, false ]
 // Length of the bottom end of the pin, in studs
 pin_bottom_length = 1; // [ 1:100 ]
 
-// Should the bottom pin end have friction ridges?
+// Should the bottom pin end have friction ridges? Irrelevant for anything but bottom_type=pin.
 pin_bottom_friction = true; // [ true, false ]
+
+// What should the bottom half of the pin be? "stud" ignores the bottom_length arg.
+pin_bottom_type = "pin"; // [ pin, stud, tow ball ]
 
 // How many sets of pins should there be?
 pin_multiplier = 1; // [ 1:100 ]
@@ -51,9 +54,6 @@ pin_axle_holes = true; // [ true, false ]
 // Should the slits in the ends of the pin form a continuous line instead of being parallel with each other? This only really matters for models with pin_multiplier > 1.
 pin_squared_pin_holes = false; // [ true, false ]
 
-// Should the bottom of the pin be a stud? This will override the bottom length setting.
-pin_stud = false; // [ true, false ]
-
 color( "gray" ) technic_pin(
 	top_length = pin_top_length,
 	top_friction = pin_top_friction,
@@ -62,5 +62,5 @@ color( "gray" ) technic_pin(
 	multiplier = pin_multiplier,
 	axle_holes = pin_axle_holes,
 	squared_pin_holes = pin_squared_pin_holes,
-	stud = pin_stud
+	bottom_type = pin_bottom_type
 );
