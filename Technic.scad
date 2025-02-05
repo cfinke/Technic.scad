@@ -122,6 +122,9 @@ technic_beam_webbing_thickness = 0.8;
 
 technic_tow_ball_diameter = 5.85;
 
+technic_worm_gear_diameter = 14; // @todo Measure IRL. Measurement from https://www.briquespassion.fr/en/boutique/101_technic-gear-vis/8605_lego-technic-gear-worm-screw-short
+technic_worm_gear_end_inset = 0.5; // @todo Measure IRL.
+
 // When OpenSCAD does the preview render, if two objects in a difference() end at exactly
 // the same plane, it will show a shadowy 0-thickness layer. If instead, one of the difference()
 // children extends any amount past that surface, the preview is much cleaner.
@@ -1325,6 +1328,37 @@ module technic_tire(
 		}
 	}
 }
+
+/**
+ * Worm gears.
+ *
+ * part #4716:  technic_worm_gear( height = 2, width = 3 );                    // 10mm   wide, 16mm   tall
+ * part #27938: technic_worm_gear( height = 1, width = 4 );                    // 13.5mm wide, 8mm    tall
+ * part #32905: technic_worm_gear( height = 2, width = 3, opening = "axle2" ); // 10mm   wide, 15.7mm tall
+ *
+ * @param float height The height of the gear, in Technic units.
+ * @param int width The width of the gear, in some unknown units. The two real-world Technic worm gears seem to be roughly multiples of 3.5mm (3x and 4x), and values outside of 3-5 don't really work.
+ * @param string opening Whether the opening should be axle shaped, or the half-axle/half-circle shape that some new gears use. "axle" or "axle2"
+ */
+module technic_worm_gear( height = 2, width = 3, opening = "axle" ) {
+	include <lib/gears/gears.scad>;
+
+	// This is BS, but it works for values 1 through 5
+	lead_angle = 102.37 - 106.1667 * width + 44.55417 * width^2 - 8.333333 * width^3 + 0.5758333 * width^4;
+
+	difference() {
+		// These parameters appear to be correct, but I can't guarantee that they are.
+		worm( modul = 1, thread_starts = 1, length = technic_height_in_mm * height, bore = 0, lead_angle = lead_angle, pressure_angle = 30 );
+
+		// Remove the axle hole.
+		technic_axle_hole( height = height );
+
+		// Remove a little indented circle around the axle at each end.
+		translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) cylinder( d = technic_pin_connector_outer_diameter, h = technic_worm_gear_end_inset + EXTENSION_FOR_DIFFERENCE );
+		translate( [ 0, 0, technic_height_in_mm * height - technic_worm_gear_end_inset ] ) cylinder( d = technic_pin_connector_outer_diameter, h = technic_worm_gear_end_inset + EXTENSION_FOR_DIFFERENCE );
+	}
+}
+
 /**
  * Utility modules. None of these produce an entire Technic-compatible piece on their own.
  */

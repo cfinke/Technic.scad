@@ -152,3 +152,15 @@ Generate a Technic-compatible tire.
 | `tread_width` | float | Width of the tire tread. |
 | `diameter` | float | Outer diameter of the tire. |
 | `tread_thickness` | float | Thickness of the tire tread. |
+
+`technic_worm_gear();`
+--------------------------
+![A worm gear compatible with LEGO part #4716.](images/Technic%20Gear%20%28Worm%29.png)
+
+Generate a Technic-compatible worm gear.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `height` | float | The height of the gear, in Technic units. |
+| `width` | int | The width of the gear, in some unknown units. The two real-world Technic worm gears seem to be roughly multiples of 3.5mm (3x and 4x), and values outside of 3-5 don't really work. |
+| `opening` | string | Whether the opening should be axle shaped, or the half-axle/half-circle shape that some new gears use. "axle" or "axle2" |
