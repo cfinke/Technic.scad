@@ -1306,6 +1306,26 @@ module technic_pin_half(
 }
 
 /**
+ * @todo Tread pattern.
+ * @todo Inner band
+ *
+ * @param float tread_width Width of the tire tread.
+ * @param float diameter Outer diameter of the tire.
+ * @param float tread_thickness Thickness of the tire tread.
+ */
+module technic_tire(
+	tread_width = 14,
+	diameter = 24,
+	tread_thickness = 3
+) {
+	linear_extrude( tread_width ) {
+		difference() {
+			circle( d = diameter );
+			circle( d = diameter - ( tread_thickness * 2 ) );
+		}
+	}
+}
+/**
  * Utility modules. None of these produce an entire Technic-compatible piece on their own.
  */
 

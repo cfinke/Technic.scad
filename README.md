@@ -140,3 +140,15 @@ Generate a Technic-compatible pin connector.
 | Parameter | Type | Description |
 |---|---|---|
 | `length` | int | The length of the pin connector in "studs." FWIW, LEGO only makes these in length 1. |
+
+`technic_tire();`
+--------------------------
+![A tire connector compatible with LEGO part #89201.](images/Technic%20Tire.png)
+
+Generate a Technic-compatible tire.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `tread_width` | float | Width of the tire tread. |
+| `diameter` | float | Outer diameter of the tire. |
+| `tread_thickness` | float | Thickness of the tire tread. |
