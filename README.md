@@ -153,6 +153,21 @@ Generate a Technic-compatible tire.
 | `diameter` | float | Outer diameter of the tire. |
 | `tread_thickness` | float | Thickness of the tire tread. |
 
+`technic_wheel();`
+--------------------------
+![A wheel compatible with LEGO part #20896.](images/Technic%20Wheel.png)
+
+Generate a Technic-compatible wheel (also referred to as rims).
+
+| Parameter | Type | Description |
+|---|---|---|
+| `diameter` | float | The diameter of the wheel. |
+| `width` | float | The width of the wheel, across where the tread would lie. |
+| `center_groove` | bool | Whether it has a center groove for holding a tire in place. |
+| `hole_type` | string | Is the center hole for an "axle" or a "pin"? |
+| `spoke_count` | int | How many spokes should it have? |
+| `spoke_style` | string | What style of spoke does it have? Only "double" is supported now. |
+
 `technic_worm_gear();`
 --------------------------
 ![A worm gear compatible with LEGO part #4716.](images/Technic%20Gear%20%28Worm%29.png)

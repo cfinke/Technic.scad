@@ -122,6 +122,15 @@ technic_beam_webbing_thickness = 0.8;
 
 technic_tow_ball_diameter = 5.85;
 
+// @todo These values are preliminary.
+wheel_face_inset = 2.8;
+wheel_wall_thickness = 1;
+wheel_center_groove_depth = 6.5;
+wheel_center_groove_width = 1.5;
+wheel_spoke_connection_depth = .75;
+wheel_spoke_edge_width = 0.9;
+wheel_spoke_width = 3;
+
 technic_worm_gear_diameter = 14; // @todo Measure IRL. Measurement from https://www.briquespassion.fr/en/boutique/101_technic-gear-vis/8605_lego-technic-gear-worm-screw-short
 technic_worm_gear_end_inset = 0.5; // @todo Measure IRL.
 
@@ -1325,6 +1334,88 @@ module technic_tire(
 		difference() {
 			circle( d = diameter );
 			circle( d = diameter - ( tread_thickness * 2 ) );
+		}
+	}
+}
+
+/**
+ * Wheels (without tires)
+ *
+ * @todo Fake studs.
+ * @todo spokes aren't curved downward.
+ * @todo Multiple grooves.
+ *
+ * @param float diameter The diameter of the wheel.
+ * @param float width The width of the wheel, across where the tread would lie.
+ * @param bool center_groove Whether it has a center groove for holding a tire in place.
+ * @param string hole_type Is the center hole for an "axle" or a "pin"?
+ * @param int spoke_count How many spokes should it have?
+ * @param string spoke_style What style of spoke does it have? Only "double" is supported now.
+ */
+module technic_wheel( diameter = 1, width = 1, center_groove = true, hole_type = "axle", spoke_count = 6, spoke_style = "double" ) {
+	difference() {
+		union() {
+			difference() {
+				// The bulk of the wheel.
+				cylinder( d = diameter, h = width );
+
+				// Remove the inset portions on either face.
+				translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE / 2 ] ) cylinder( d = diameter - ( wheel_wall_thickness * 2 ), h = wheel_face_inset + EXTENSION_FOR_DIFFERENCE );
+				translate( [ 0, 0, width - wheel_face_inset + ( EXTENSION_FOR_DIFFERENCE / 2 ) ] ) cylinder( d = diameter - ( wheel_wall_thickness * 2 ), h = wheel_face_inset + EXTENSION_FOR_DIFFERENCE );
+
+				// Remove the center groove.
+				if ( center_groove ) {
+					translate( [ 0, 0, ( width / 2 ) - ( wheel_center_groove_width / 2 ) ] ) {
+						difference() {
+							cylinder( d = diameter + EXTENSION_FOR_DIFFERENCE, h = wheel_center_groove_width );
+							cylinder( d = diameter - wheel_center_groove_depth, h = wheel_center_groove_width );
+						}
+					}
+				}
+			}
+
+			// Add any support around the center hole.
+			if ( hole_type == "axle" ) {
+				cylinder( d = technic_pin_connector_outer_diameter, h = width );
+			} else if ( hole_type == "pin" ) {
+				technic_pin_connector( length = width / technic_height_in_mm );
+			}
+
+			// Remove
+			difference() {
+				translate([ 0, 0, width - wheel_face_inset ] ) {
+					intersection() {
+						// Add the spokes.
+						if ( spoke_count > 0 ) {
+							for ( i = [ 1 : spoke_count ] ) {
+								rotate( [ 0, 0, ( 360 / spoke_count ) * i ] ) {
+									translate( [ 0, -wheel_spoke_width / 2, 0 ] ) {
+										difference() {
+											cube( [ diameter, wheel_spoke_width, wheel_face_inset ] );
+											translate( [ 0, wheel_spoke_edge_width, 0 ] ) cube( [ diameter, wheel_spoke_width - ( 2 * wheel_spoke_edge_width ), wheel_face_inset + EXTENSION_FOR_DIFFERENCE ] );
+										}
+									}
+								}
+							}
+						}
+
+						// But only keep the part of the spokes that are inside the wheel.
+						cylinder( d = diameter, h = wheel_face_inset );
+					}
+
+				}
+
+				// Remove the spoke parts that cross into the center hole.
+				cylinder( d = technic_pin_connector_outer_diameter, h = width + EXTENSION_FOR_DIFFERENCE );
+			}
+
+		}
+
+		// Remove the center hole.
+		if ( hole_type == "axle" ) {
+			technic_axle_hole( height = width );
+		} else if ( hole_type == "pin" ) {
+			translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE / 2 ] ) cylinder( d = technic_pin_connector_outer_diameter - ( 2 * technic_pin_connector_wall_thickness ), h = width + EXTENSION_FOR_DIFFERENCE );
 		}
 	}
 }
