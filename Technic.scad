@@ -707,8 +707,10 @@ module technic_elbow(
 /**
  * Double-sided gears (as opposed to the one-sided gears sometimes called "half-gears").
  *
+ * part #3647: technic_gear_double_sided( teeth = 8, width = 1.5 ); // @todo Multiple issues.
  * part #3648: technic_gear_double_sided( teeth = 24 );
  * part #3549: technic_gear_double_sided( teeth = 40 );
+ * part #10928: technic_gear_double_sided( teeth = 8, width = 1.5 ); // @todo The teeth are not exactly right.
  *
  * Origin is at the center of the gear in all directions.
  *
@@ -829,8 +831,11 @@ module technic_gear_double_sided(
 				union() {
 					rotate( [ 0, 0, 45 ] ) {
 						// The center hole.
-						rotate( [ 0, 0, 90 ] ) {
-							cube( size = [ technic_gear_axle_reinforcement_width, technic_gear_axle_reinforcement_height, desired_gear_axle_reinforcement_thickness ], center = true );
+						if ( teeth  >= 14 ) { // If the tooth count is 14 or below, the axle reinforcement will conflict with the teeth, so omit it.
+
+							rotate( [ 0, 0, 90 ] ) {
+								cube( size = [ technic_gear_axle_reinforcement_width, technic_gear_axle_reinforcement_height, desired_gear_axle_reinforcement_thickness ], center = true );
+							}
 						}
 
 						let ( x = technic_gear_pin_hole_horizontal_offset_from_center ) {
@@ -905,7 +910,11 @@ module technic_gear_double_sided(
 		rotate( [ 0, 0, 45 ] ) {
 			// The center hole.
 			rotate( [ 0, 0, 90 ] ) {
-				technic_gear_wide_axle_hole( height = desired_gear_axle_reinforcement_thickness, center_of_multiple = true ); // @todo Theoretically, center_of_multiple should be false if there's only one axle hole in total.
+				if ( teeth >= 14 ) {
+					technic_gear_wide_axle_hole( height = desired_gear_axle_reinforcement_thickness, center_of_multiple = true ); // @todo Theoretically, center_of_multiple should be false if there's only one axle hole in total.
+				} else {
+					technic_axle_hole( height = desired_gear_axle_reinforcement_thickness );
+				}
 			}
 
 			// Run along the x axis and add the other holes.
