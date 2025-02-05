@@ -26,9 +26,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-use <../Technic.scad>;
-
-$fa = 1; $fs = 0.05;
+include <../Technic.scad>;
 
 /* [General] */
 

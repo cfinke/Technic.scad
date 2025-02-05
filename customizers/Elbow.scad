@@ -26,11 +26,10 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-use <../Technic.scad>;
-
-$fa = 1; $fs = 0.05;
+include <../Technic.scad>;
 
 /* [General] */
+
 // How long (in studs) should one leg of the elbow be?
 elbow_length = 2; // [ 2:100 ]
 
