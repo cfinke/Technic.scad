@@ -719,7 +719,7 @@ module technic_elbow(
  */
 module technic_gear_double_sided(
 	teeth = 24,
-	width = 1,
+	width = 1
 ) {
 	include <lib/gears/gears.scad>;
 
