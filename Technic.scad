@@ -488,7 +488,7 @@ module technic_beam( length = 5, height = 1, angles = [], vertices = [], axle_ho
 				// Remove the first angle from the list.
 				new_angles = [ for ( i = [ 0 : ( len( angles ) - 1 ) ] ) if ( i > 0 ) angles[i] ],
 				// Remove any axle holes we've already added, and shift the axle hole indices down to account for the beam portion we've already output.
-				new_axle_holes = len( axle_holes ) > 0 ? [ for ( i = [ 0 : ( len( axle_holes ) - 1 ) ] ) if ( axle_holes[i] > this_length ) axle_holes[i] - this_length + 1 ] : [],
+				new_axle_holes = len( axle_holes ) > 0 ? [ for ( i = [ 0 : ( len( axle_holes ) - 1 ) ] ) if ( axle_holes[i] > this_length ) axle_holes[i] - this_length + 1 ] : []
 			) {
 				technic_beam( length = vertices[0], height = height, axle_holes = axle_holes, depth = depth + 1 );
 
