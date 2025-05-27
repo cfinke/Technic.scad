@@ -1264,7 +1264,7 @@ module technic_pin_half(
 						intersection() {
 							// The cylinders that define the areas vertically where the friction lines will appear
 							union() {
-								for ( idx = [ 0 : length ] ) {
+								for ( idx = [ 0 : 1 : length ] ) {
 									// Center.
 									translate( [ 0, 0, ( idx * 2 * technic_height_in_mm ) / 2 - ( technic_pin_friction_vertical_length / 2 )  ] ) {
 										cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_vertical_length );
@@ -1286,7 +1286,7 @@ module technic_pin_half(
 
 						// The radial friction lines
 						if ( length > 1 ) {
-							for ( idx = [ 1 : length - 1 ] ) {
+							for ( idx = [ 1 : 1 : length - 1 ] ) {
 								translate( [ 0, 0, ( idx * 2 * technic_height_in_mm ) / 2 ] ) {
 									cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_width, center = true );
 								}
@@ -1314,7 +1314,7 @@ module technic_pin_half(
 
 			// Remove the slot across the center of the pin.
 			if ( length > 1 ) {
-				for ( idx = [ 1 : length - 1 ] ) {
+				for ( idx = [ 1 : 1 : length - 1 ] ) {
 					translate( [ 0, 0, ( idx * 2 * technic_height_in_mm ) / 2 ] ) {
 						rotate( [ 90, 0, idx % 2 == 0 ? 0 : 90 ] ) {
 							translate( [ 0, 0, - technic_pin_lip_diameter ] ) {
