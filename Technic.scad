@@ -314,10 +314,12 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
  *
  * part #5713: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ], spoke_lengths = [ 3 ] )
  * part #10197: technic_connector_hub( spoke_angles = [ 0, 90 ] )
+ * part #15100: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1 ], spoke_angles = [ 0 ], spoke_heights = [ 1 ], spoke_types = [ "pin" ])
  * part #22961: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ] )
  * part #27940: technic_connector_hub( spoke_angles = [ 0, 180 ] )
  * part #24122: technic_connector_hub( hub_type = "axle", spoke_types = [ "bar connector", "bar connector" ] )
  * part #57585: technic_connector_hub( hub_type = "axle", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 120, 240 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle", "axle", "axle" ] )
+ * part #87082: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1, 1 ], spoke_angles = [ 0, 180 ], spoke_heights = [ 1, 1 ], spoke_types = [ "pin", "pin" ])
  *
  * @todo I haven't measured this in real life to confirm dimensions.
  *
@@ -328,7 +330,7 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
  * @param float[] spoke_lengths How long should each spoke be?
  * @param float[] spoke_angles At what angle should each spoke connect?
  * @param float[] spoke_heights How high up on the hub should each spoke be placed?
- * @param string[] spoke_types What type of connector should each spoke be? Either "axle" or "bar connector"
+ * @param string[] spoke_types What type of connector should each spoke be? Either "axle", "pin" or "bar connector"
  */
 module technic_connector_hub(
 	hub_height = 1,
@@ -375,6 +377,8 @@ module technic_connector_hub(
 										circle( d = technic_bar_connector_inner_diameter );
 									}
 								}
+							} else if ( spoke_types[i] == "pin" ) {
+                                technic_pin_half( length = spoke_lengths[i] + .5, friction = true, squared_pin_holes = false );
 							}
 
 							cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm / 2 );

@@ -77,7 +77,7 @@ Generate a Technic-compatible connector hub.
 | `spoke_lengths` | float[] | How long should each spoke be? |
 | `spoke_angles` | float[] | At what angle should each spoke connect? |
 | `spoke_heights` | float[] | How high up on the hub should each spoke be placed? |
-| `spoke_types` | string | What type of connector should each spoke be? Either "axle" or "bar connector". |
+| `spoke_types` | string | What type of connector should each spoke be? Either "axle", "pin" or "bar connector". |
 
 `technic_elbow();`
 --------------------------

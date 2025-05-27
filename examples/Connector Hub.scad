@@ -34,4 +34,5 @@ color( "orange" ) translate( [ 0, 40, 0 ] ) technic_connector_hub( spoke_angles 
 color( "cornflowerblue" ) translate( [ 0, 60, 0 ] ) technic_connector_hub( spoke_angles = [ 0 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ], spoke_lengths = [ 3 ] );
 color( "yellow" ) translate( [ 0, 80, 0 ] ) technic_connector_hub( hub_type = "axle", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 120, 240 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle", "axle", "axle" ] );
 color( "silver" ) translate( [ 0, 100, 0 ] ) technic_connector_hub( hub_type = "axle", spoke_types = [ "bar connector", "bar connector" ] );
+color( "green" ) translate( [ 0, 120, 0 ] ) technic_connector_hub( hub_type = "axle", spoke_lengths = [ 1, 1 ], spoke_angles = [ 0, 90 ], spoke_heights = [ 1, 1 ], spoke_types = [ "pin", "pin" ] );
 
