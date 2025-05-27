@@ -36,4 +36,5 @@ translate( [ -3 * technic_pin_multiple_offset, 0, 0 ] ) {
 	color( "gray" ) translate( [ technic_pin_multiple_offset * 4, 0, 0 ] ) technic_pin( top_length = 2, top_friction = false, multiplier = 3, squared_pin_holes = true);
 	color( "cornflowerblue" ) translate( [ technic_pin_multiple_offset * 7, 0, 0 ] ) technic_pin( bottom_type = "tow ball" );
 	color( "thistle" ) translate( [ technic_pin_multiple_offset * 8, 0, 0 ] ) technic_pin( bottom_length = 2, bottom_type = "tow ball" );
+	color( "blue" ) translate( [ technic_pin_multiple_offset * 9, 0, 0 ] ) technic_pin( top_length = 2, bottom_length = 1, bottom_type = "bush" );
 }

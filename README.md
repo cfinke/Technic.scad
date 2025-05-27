@@ -125,7 +125,7 @@ Generate a Technic-compatible pin.
 |---|---|---|
 | `top_length` | int | In studs, how long the top half of the pin should be. |
 | `top_friction` | bool | Whether the top half of the pin should have friction ridges on it. |
-| `bottom_type` | string | What should the bottom of the pin be? "pin", "tow ball", or "stud" |
+| `bottom_type` | string | What should the bottom of the pin be? "pin", "tow ball", "stud", or "bush" |
 | `bottom_length` | int | In studs, how long the bottom half of the pin should be. |
 | `bottom_friction` | bool | Whether the bottom half of the pin should have friction ridges on it. |
 | `multiplier` | int | Should this generate multiple sets of connected pins? If so, how many? |

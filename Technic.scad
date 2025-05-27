@@ -1087,6 +1087,7 @@ module technic_gear_single_sided( teeth = 12, bevel = true, center_hole = "axle"
  * part #4459: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true ) // This part has long friction ridges along the length of the pin, which isn't supported yet.
  * part #6558: technic_pin( top_length = 2, top_friction = true, bottom_length = 1, bottom_friction = true )
  * part #6628: technic_pin( bottom_type = "tow ball" )
+ * part #32054: technic_pin( top_length = 2, bottom_length = 1, bottom_type = "bush" )
  * part #32138: technic_pin( multiplier = 2 )
  * part #32556: technic_pin( top_length = 2, top_friction = false, bottom_length = 1, bottom_friction = false )
  * part #65098: technic_pin( multiplier = 2, squared_pin_holes = true )
@@ -1098,7 +1099,7 @@ module technic_gear_single_sided( teeth = 12, bevel = true, center_hole = "axle"
  *
  * @param float top_length How long is the pin on the top?
  * @param bool top_friction Should the top part have friction ridges?
- * @param string bottom_type What should the bottom of the pin be? "pin", "tow ball", or "stud"
+ * @param string bottom_type What should the bottom of the pin be? "pin", "tow ball", "stud", or "bush"
  * @param float bottom_length How long is the pin on the bottom?
  * @param bool bottom_friction Should the bottom part have friction ridges?
  * @param int multiplier How many pin sets should there be?
@@ -1127,6 +1128,8 @@ module technic_pin(
 								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, -bottom_length_in_mm] ) technic_hollow_stud();
 							} else if ( bottom_type == "tow ball" ) {
 								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, -bottom_length_in_mm] ) technic_tow_ball( length = bottom_length );
+							} else if ( bottom_type == "bush" ) {
+								rotate( a = 180, v = [ 0, 1, 0 ] ) technic_bush( height = bottom_length, stud_cutouts = false );
 							} else {
 								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, 0 ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
 							}
@@ -1200,6 +1203,9 @@ module technic_pin(
 				} else if ( bottom_type == "tow ball" ) {
 					// The tow ball.
 					translate( [ 0, 0, -bottom_length_in_mm ] ) technic_tow_ball( length = bottom_length );
+				} else if ( bottom_type == "bush" ) {
+					// The bush.
+					rotate( a = 180, v = [ 0, 1, 0 ] ) technic_bush( height = bottom_length, stud_cutouts = false );
 				} else {
 					// The bottom half of the pin.
 					translate( [ 0, 0, technic_pin_collar_thickness ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
