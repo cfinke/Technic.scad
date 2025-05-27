@@ -315,6 +315,7 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
  * part #5713: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ], spoke_lengths = [ 3 ] )
  * part #10197: technic_connector_hub( spoke_angles = [ 0, 90 ] )
  * part #15100: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1 ], spoke_angles = [ 0 ], spoke_heights = [ 1 ], spoke_types = [ "pin" ])
+ * part #15460: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 90, 180 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "tow ball", "tow ball", "tow ball" ] );
  * part #22961: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ] )
  * part #27940: technic_connector_hub( spoke_angles = [ 0, 180 ] )
  * part #24122: technic_connector_hub( hub_type = "axle", spoke_types = [ "bar connector", "bar connector" ] )
@@ -330,7 +331,7 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
  * @param float[] spoke_lengths How long should each spoke be?
  * @param float[] spoke_angles At what angle should each spoke connect?
  * @param float[] spoke_heights How high up on the hub should each spoke be placed?
- * @param string[] spoke_types What type of connector should each spoke be? Either "axle", "pin" or "bar connector"
+ * @param string[] spoke_types What type of connector should each spoke be? Either "axle", "pin", "bar connector" or "tow ball"
  */
 module technic_connector_hub(
 	hub_height = 1,
@@ -378,10 +379,14 @@ module technic_connector_hub(
 									}
 								}
 							} else if ( spoke_types[i] == "pin" ) {
-                                technic_pin_half( length = spoke_lengths[i] + .5, friction = true, squared_pin_holes = false );
+								technic_pin_half( length = spoke_lengths[i] + .5, friction = true, squared_pin_holes = false );
+							} else if ( spoke_types[i] == "tow ball" ) {
+								translate( [ 0, 0, -(spoke_lengths[i] + 1) * technic_pin_tow_ball_total_length ] ) technic_tow_ball( length = spoke_lengths[i] + .5 );
 							}
 
-							cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm / 2 );
+							if ( spoke_types[i] != "tow ball" ) {
+								cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm / 2 );
+							}
 						}
 					}
 				}
