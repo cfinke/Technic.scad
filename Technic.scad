@@ -52,7 +52,7 @@ technic_axle_stud_height = 1.8; // Matches LEGO.stud_height
 technic_axle_stud_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
 technic_axle_stud_outer_diameter = 4.85; // Matches LEGO.stud_diameter
 
-technic_axle_connector_outer_diameter = 7.9; // @todo Measure IRL
+technic_axle_connector_outer_diameter = 7.36; // @todo Measure IRL
 technic_axle_connector_ridged_inner_diameter = 6.5; // @todo Measure IRL
 technic_axle_connector_ridge_thickness = 0.6; // @todo Measure IRL
 
@@ -350,12 +350,22 @@ module technic_axle_connector(
 /**
  * A connector hub. Some sort of round connector with things like axles or pins protruding like spokes.
  *
+ * part #4450: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 168.75 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
+ * part #6611: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 120, 240 ], spoke_lengths = [ 1, 1, 1 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector" ] )
+ * part #7329: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 60, 180 ], spoke_lengths = [ 1, 1, 1 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector" ] )
  * part #5713: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ], spoke_lengths = [ 3 ] )
  * part #10197: technic_connector_hub( spoke_angles = [ 0, 90 ] )
+ * part #10288: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 60, 120, 180 ], spoke_lengths = [ 1, 1, 1, 1 ], spoke_heights = [ 1, 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector", "axle connector" ] )
  * part #15100: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1 ], spoke_angles = [ 0 ], spoke_heights = [ 1 ], spoke_types = [ "pin" ])
  * part #15460: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 90, 180 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "tow ball", "tow ball", "tow ball" ] );
  * part #22961: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ] )
  * part #27940: technic_connector_hub( spoke_angles = [ 0, 180 ] )
+ * part #32013: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle connector" ] )
+ * part #32014: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 90 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
+ * part #32015: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 157.5 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
+ * part #32016: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 112.5 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
+ * part #32034: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 180 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
+ * part #32192: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 135 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
  * part #24122: technic_connector_hub( hub_type = "axle", spoke_types = [ "bar connector", "bar connector" ] )
  * part #57585: technic_connector_hub( hub_type = "axle", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 120, 240 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle", "axle", "axle" ] )
  * part #87082: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1, 1 ], spoke_angles = [ 0, 180 ], spoke_heights = [ 1, 1 ], spoke_types = [ "pin", "pin" ])
@@ -369,7 +379,7 @@ module technic_axle_connector(
  * @param float[] spoke_lengths How long should each spoke be?
  * @param float[] spoke_angles At what angle should each spoke connect?
  * @param float[] spoke_heights How high up on the hub should each spoke be placed?
- * @param string[] spoke_types What type of connector should each spoke be? Either "axle", "pin", "bar connector" or "tow ball"
+ * @param string[] spoke_types What type of connector should each spoke be? Either "axle", "axle connector", "pin", "bar connector" or "tow ball"
  */
 module technic_connector_hub(
 	hub_height = 1,
@@ -420,9 +430,11 @@ module technic_connector_hub(
 								technic_pin_half( length = spoke_lengths[i] + .5, friction = true, squared_pin_holes = false );
 							} else if ( spoke_types[i] == "tow ball" ) {
 								translate( [ 0, 0, -(spoke_lengths[i] + 1) * technic_pin_tow_ball_total_length ] ) technic_tow_ball( length = spoke_lengths[i] + .5 );
+							} else if ( spoke_types[i] == "axle connector" ) {
+								technic_axle_connector( length = spoke_lengths[i] + .5);
 							}
 
-							if ( spoke_types[i] != "tow ball" ) {
+							if ( spoke_types[i] != "tow ball" && spoke_types[i] != "axle connector" ) {
 								cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm / 2 );
 							}
 						}
@@ -431,7 +443,7 @@ module technic_connector_hub(
 			}
 
 			// Remove anything that has overlapped into the center of the hub.
-			cylinder( d = technic_pin_connector_outer_diameter, h = hub_height * technic_height_in_mm );
+			translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) cylinder( d = technic_pin_connector_outer_diameter, h = hub_height * technic_height_in_mm +  EXTENSION_FOR_DIFFERENCE * 2 );
 		}
 	}
 }

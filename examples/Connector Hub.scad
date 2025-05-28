@@ -30,7 +30,7 @@ include <../Technic.scad>;
 
 color( "gray" ) technic_connector_hub( spoke_lengths = [ 1, 1 ], spoke_angles = [ 0, 180 ] );
 color( "white" ) translate( [ 0, 20, 0 ] ) technic_connector_hub( spoke_angles = [ 0, 90 ] );
-color( "orange" ) translate( [ 0, 40, 0 ] ) technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ] );
+color( "orange" ) translate( [ 0, 40, 0 ] ) technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle connector" ] );
 color( "cornflowerblue" ) translate( [ 0, 60, 0 ] ) technic_connector_hub( spoke_angles = [ 0 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ], spoke_lengths = [ 3 ] );
 color( "yellow" ) translate( [ 0, 80, 0 ] ) technic_connector_hub( hub_type = "axle", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 120, 240 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle", "axle", "axle" ] );
 color( "silver" ) translate( [ 0, 100, 0 ] ) technic_connector_hub( hub_type = "axle", spoke_types = [ "bar connector", "bar connector" ] );
