@@ -17,6 +17,17 @@ Generate a Technic-compatible axle.
 | `stop` | bool | Whether there is a stop at the end. |
 | `stud` | bool | Whether there is a stud at the end. |
 
+`technic_axle_connector();`
+--------------------------
+![An axle connector compatible with LEGO part #6538a.](images/Technic%20Axle%20Connector.png)
+
+Generate a Technic-compatible axle connector.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `length` | int | The length of the axle connector in "studs." |
+| `ridged` | bool | Whether the connector should have ridges on it. |
+
 `technic_axle_pin();`
 --------------------------
 ![An axle pin compatible with LEGO part #11214.](images/Technic%20Axle%20Pin.png)

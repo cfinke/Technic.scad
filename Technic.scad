@@ -52,6 +52,10 @@ technic_axle_stud_height = 1.8; // Matches LEGO.stud_height
 technic_axle_stud_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
 technic_axle_stud_outer_diameter = 4.85; // Matches LEGO.stud_diameter
 
+technic_axle_connector_outer_diameter = 7.9; // @todo Measure IRL
+technic_axle_connector_ridged_inner_diameter = 6.5; // @todo Measure IRL
+technic_axle_connector_ridge_thickness = 0.6; // @todo Measure IRL
+
 technic_bar_connector_outer_diameter = 7.36; // @todo Measure IRL
 technic_bar_connector_inner_diameter = 3.2; // @todo Measure IRL
 
@@ -305,6 +309,40 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 	for ( i = [ 1 : length - 2 ] ) {
 		for ( j = [ 1 : height ] ) {
 			translate( [ i * technic_beam_hole_spacing, 0, ((j-1) * technic_height_in_mm ) + ( technic_height_in_mm / 2 ) ] ) rotate( [ 90, 0, 0 ] ) translate( [ 0, 0, -( technic_height_in_mm / 2 ) ] ) technic_pin_connector();
+		}
+	}
+}
+
+/**
+ * Axle connectors.
+ *
+ * part #6538a: technic_axle_connector( length = 2, ridged = true )
+ * part #6538c: technic_axle_connector( length = 2 )
+ *
+ * Origin is centered at the bottom center of the axle connector.
+ *
+ * @param int length The length of the axle connector, in Technic units.
+ */
+module technic_axle_connector(
+	length = 1,
+	ridged = false
+) {
+	difference() {
+		union() {
+			cylinder( d = technic_axle_connector_outer_diameter, h = length * technic_height_in_mm );
+			if ( length >= 1 && ridged ) {
+				for ( i = [ 1 : (length * 2) - 1 ] ) {
+					translate( [ 0, 0, i * technic_height_in_mm / 2 - technic_axle_connector_ridge_thickness ] ) cylinder( d = technic_axle_connector_outer_diameter + technic_axle_connector_ridge_thickness, h = technic_axle_connector_ridge_thickness );
+				}
+			}
+		}
+		translate( [ 0, 0, length * technic_height_in_mm / 2 ] ) {
+				technic_axle_hole( height = length );
+		}
+		if ( ridged ) {
+			technic_stud_cutouts( height = length, diameter = stud_diameter - (technic_axle_connector_outer_diameter - technic_axle_connector_ridged_inner_diameter ) / 2 );
+		} else {
+			technic_stud_cutouts( height = length );
 		}
 	}
 }
@@ -600,14 +638,7 @@ module technic_bush( height = 1/2, stud_cutouts = true ) {
 
 					if ( height > 1/2 && stud_cutouts ) {
 						// Bushes taller than 1/2 units get cutouts in the lip so that they'll fit between studs.
-						translate( [ -stud_spacing / 2, -stud_spacing / 2, -EXTENSION_FOR_DIFFERENCE / 2 ] ) {
-							union () {
-								cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
-								translate( [ stud_spacing, 0, 0 ] ) cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
-								translate( [ stud_spacing, stud_spacing, 0 ] ) cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
-								translate( [ 0, stud_spacing, 0 ] ) cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
-							}
-						}
+						technic_stud_cutouts( height = technic_bush_shoulder_height );
 					}
 				}
 			}
@@ -1526,5 +1557,16 @@ module technic_tow_ball( length = 1 ) {
 	translate( [ 0, 0, technic_tow_ball_diameter / 2 ] ) {
 		sphere( d = technic_tow_ball_diameter );
 		cylinder( h = ( length * technic_pin_tow_ball_total_length ) - ( technic_tow_ball_diameter / 2 ), d = technic_pin_tow_ball_neck_diameter );
+	}
+}
+
+module technic_stud_cutouts( height = 1, diameter = stud_diameter ) {
+	translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE / 2 ] ) {
+		union () {
+			translate( [ -0.5 * stud_spacing, -0.5 * stud_spacing, 0 ] )cylinder( d = diameter, h = height * technic_height_in_mm + EXTENSION_FOR_DIFFERENCE );
+			translate( [ -0.5 * stud_spacing, 0.5 * stud_spacing, 0 ] ) cylinder( d = diameter, h = height * technic_height_in_mm + EXTENSION_FOR_DIFFERENCE );
+			translate( [ 0.5 * stud_spacing, -0.5 * stud_spacing, 0 ] ) cylinder( d = diameter, h = height * technic_height_in_mm + EXTENSION_FOR_DIFFERENCE );
+			translate( [ 0.5 * stud_spacing, 0.5 * stud_spacing, 0 ] ) cylinder( d = diameter, h = height * technic_height_in_mm + EXTENSION_FOR_DIFFERENCE );
+		}
 	}
 }
