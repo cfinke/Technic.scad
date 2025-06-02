@@ -52,6 +52,10 @@ technic_axle_stud_height = 1.8; // Matches LEGO.stud_height
 technic_axle_stud_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
 technic_axle_stud_outer_diameter = 4.85; // Matches LEGO.stud_diameter
 
+technic_axle_connector_outer_diameter = 7.36; // @todo Measure IRL
+technic_axle_connector_ridged_inner_diameter = 6.5; // @todo Measure IRL
+technic_axle_connector_ridge_thickness = 0.6; // @todo Measure IRL
+
 technic_bar_connector_outer_diameter = 7.36; // @todo Measure IRL
 technic_bar_connector_inner_diameter = 3.2; // @todo Measure IRL
 
@@ -310,14 +314,61 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 }
 
 /**
+ * Axle connectors.
+ *
+ * part #6538a: technic_axle_connector( length = 2, ridged = true )
+ * part #6538c: technic_axle_connector( length = 2 )
+ *
+ * Origin is centered at the bottom center of the axle connector.
+ *
+ * @param int length The length of the axle connector, in Technic units.
+ */
+module technic_axle_connector(
+	length = 1,
+	ridged = false
+) {
+	difference() {
+		union() {
+			cylinder( d = technic_axle_connector_outer_diameter, h = length * technic_height_in_mm );
+			if ( length >= 1 && ridged ) {
+				for ( i = [ 1 : (length * 2) - 1 ] ) {
+					translate( [ 0, 0, i * technic_height_in_mm / 2 - technic_axle_connector_ridge_thickness ] ) cylinder( d = technic_axle_connector_outer_diameter + technic_axle_connector_ridge_thickness, h = technic_axle_connector_ridge_thickness );
+				}
+			}
+		}
+		translate( [ 0, 0, length * technic_height_in_mm / 2 ] ) {
+				technic_axle_hole( height = length );
+		}
+		if ( ridged ) {
+			technic_stud_cutouts( height = length, diameter = stud_diameter - (technic_axle_connector_outer_diameter - technic_axle_connector_ridged_inner_diameter ) / 2 );
+		} else {
+			technic_stud_cutouts( height = length );
+		}
+	}
+}
+
+/**
  * A connector hub. Some sort of round connector with things like axles or pins protruding like spokes.
  *
+ * part #4450: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 168.75 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
+ * part #6611: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 120, 240 ], spoke_lengths = [ 1, 1, 1 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector" ] )
+ * part #7329: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 60, 180 ], spoke_lengths = [ 1, 1, 1 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector" ] )
  * part #5713: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ], spoke_lengths = [ 3 ] )
  * part #10197: technic_connector_hub( spoke_angles = [ 0, 90 ] )
+ * part #10288: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 60, 120, 180 ], spoke_lengths = [ 1, 1, 1, 1 ], spoke_heights = [ 1, 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector", "axle connector" ] )
+ * part #15100: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1 ], spoke_angles = [ 0 ], spoke_heights = [ 1 ], spoke_types = [ "pin" ])
+ * part #15460: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 90, 180 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "tow ball", "tow ball", "tow ball" ] );
  * part #22961: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ] )
  * part #27940: technic_connector_hub( spoke_angles = [ 0, 180 ] )
+ * part #32013: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle connector" ] )
+ * part #32014: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 90 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
+ * part #32015: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 157.5 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
+ * part #32016: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 112.5 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
+ * part #32034: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 180 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
+ * part #32192: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 135 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
  * part #24122: technic_connector_hub( hub_type = "axle", spoke_types = [ "bar connector", "bar connector" ] )
  * part #57585: technic_connector_hub( hub_type = "axle", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 120, 240 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle", "axle", "axle" ] )
+ * part #87082: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1, 1 ], spoke_angles = [ 0, 180 ], spoke_heights = [ 1, 1 ], spoke_types = [ "pin", "pin" ])
  *
  * @todo I haven't measured this in real life to confirm dimensions.
  *
@@ -328,7 +379,7 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
  * @param float[] spoke_lengths How long should each spoke be?
  * @param float[] spoke_angles At what angle should each spoke connect?
  * @param float[] spoke_heights How high up on the hub should each spoke be placed?
- * @param string[] spoke_types What type of connector should each spoke be? Either "axle" or "bar connector"
+ * @param string[] spoke_types What type of connector should each spoke be? Either "axle", "axle connector", "pin", "bar connector" or "tow ball"
  */
 module technic_connector_hub(
 	hub_height = 1,
@@ -375,16 +426,24 @@ module technic_connector_hub(
 										circle( d = technic_bar_connector_inner_diameter );
 									}
 								}
+							} else if ( spoke_types[i] == "pin" ) {
+								technic_pin_half( length = spoke_lengths[i] + .5, friction = true, squared_pin_holes = false );
+							} else if ( spoke_types[i] == "tow ball" ) {
+								translate( [ 0, 0, -(spoke_lengths[i] + 1) * technic_pin_tow_ball_total_length ] ) technic_tow_ball( length = spoke_lengths[i] + .5 );
+							} else if ( spoke_types[i] == "axle connector" ) {
+								technic_axle_connector( length = spoke_lengths[i] + .5);
 							}
 
-							cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm / 2 );
+							if ( spoke_types[i] != "tow ball" && spoke_types[i] != "axle connector" ) {
+								cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm / 2 );
+							}
 						}
 					}
 				}
 			}
 
 			// Remove anything that has overlapped into the center of the hub.
-			cylinder( d = technic_pin_connector_outer_diameter, h = hub_height * technic_height_in_mm );
+			translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) cylinder( d = technic_pin_connector_outer_diameter, h = hub_height * technic_height_in_mm +  EXTENSION_FOR_DIFFERENCE * 2 );
 		}
 	}
 }
@@ -591,14 +650,7 @@ module technic_bush( height = 1/2, stud_cutouts = true ) {
 
 					if ( height > 1/2 && stud_cutouts ) {
 						// Bushes taller than 1/2 units get cutouts in the lip so that they'll fit between studs.
-						translate( [ -stud_spacing / 2, -stud_spacing / 2, -EXTENSION_FOR_DIFFERENCE / 2 ] ) {
-							union () {
-								cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
-								translate( [ stud_spacing, 0, 0 ] ) cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
-								translate( [ stud_spacing, stud_spacing, 0 ] ) cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
-								translate( [ 0, stud_spacing, 0 ] ) cylinder( d = stud_diameter, h = technic_bush_shoulder_height + EXTENSION_FOR_DIFFERENCE );
-							}
-						}
+						technic_stud_cutouts( height = technic_bush_shoulder_height );
 					}
 				}
 			}
@@ -1078,6 +1130,7 @@ module technic_gear_single_sided( teeth = 12, bevel = true, center_hole = "axle"
  * part #4459: technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true ) // This part has long friction ridges along the length of the pin, which isn't supported yet.
  * part #6558: technic_pin( top_length = 2, top_friction = true, bottom_length = 1, bottom_friction = true )
  * part #6628: technic_pin( bottom_type = "tow ball" )
+ * part #32054: technic_pin( top_length = 2, bottom_length = 1, bottom_type = "bush" )
  * part #32138: technic_pin( multiplier = 2 )
  * part #32556: technic_pin( top_length = 2, top_friction = false, bottom_length = 1, bottom_friction = false )
  * part #65098: technic_pin( multiplier = 2, squared_pin_holes = true )
@@ -1089,7 +1142,7 @@ module technic_gear_single_sided( teeth = 12, bevel = true, center_hole = "axle"
  *
  * @param float top_length How long is the pin on the top?
  * @param bool top_friction Should the top part have friction ridges?
- * @param string bottom_type What should the bottom of the pin be? "pin", "tow ball", or "stud"
+ * @param string bottom_type What should the bottom of the pin be? "pin", "tow ball", "stud", or "bush"
  * @param float bottom_length How long is the pin on the bottom?
  * @param bool bottom_friction Should the bottom part have friction ridges?
  * @param int multiplier How many pin sets should there be?
@@ -1118,6 +1171,8 @@ module technic_pin(
 								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, -bottom_length_in_mm] ) technic_hollow_stud();
 							} else if ( bottom_type == "tow ball" ) {
 								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, -bottom_length_in_mm] ) technic_tow_ball( length = bottom_length );
+							} else if ( bottom_type == "bush" ) {
+								rotate( a = 180, v = [ 0, 1, 0 ] ) technic_bush( height = bottom_length, stud_cutouts = false );
 							} else {
 								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, 0 ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
 							}
@@ -1191,6 +1246,9 @@ module technic_pin(
 				} else if ( bottom_type == "tow ball" ) {
 					// The tow ball.
 					translate( [ 0, 0, -bottom_length_in_mm ] ) technic_tow_ball( length = bottom_length );
+				} else if ( bottom_type == "bush" ) {
+					// The bush.
+					rotate( a = 180, v = [ 0, 1, 0 ] ) technic_bush( height = bottom_length, stud_cutouts = false );
 				} else {
 					// The bottom half of the pin.
 					translate( [ 0, 0, technic_pin_collar_thickness ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
@@ -1260,7 +1318,7 @@ module technic_pin_half(
 						intersection() {
 							// The cylinders that define the areas vertically where the friction lines will appear
 							union() {
-								for ( idx = [ 0 : length ] ) {
+								for ( idx = [ 0 : 1 : length ] ) {
 									// Center.
 									translate( [ 0, 0, ( idx * 2 * technic_height_in_mm ) / 2 - ( technic_pin_friction_vertical_length / 2 )  ] ) {
 										cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_vertical_length );
@@ -1282,7 +1340,7 @@ module technic_pin_half(
 
 						// The radial friction lines
 						if ( length > 1 ) {
-							for ( idx = [ 1 : length - 1 ] ) {
+							for ( idx = [ 1 : 1 : length - 1 ] ) {
 								translate( [ 0, 0, ( idx * 2 * technic_height_in_mm ) / 2 ] ) {
 									cylinder( d = technic_pin_outer_diameter + ( 2 * technic_pin_friction_thickness ), h = technic_pin_friction_width, center = true );
 								}
@@ -1310,7 +1368,7 @@ module technic_pin_half(
 
 			// Remove the slot across the center of the pin.
 			if ( length > 1 ) {
-				for ( idx = [ 1 : length - 1 ] ) {
+				for ( idx = [ 1 : 1 : length - 1 ] ) {
 					translate( [ 0, 0, ( idx * 2 * technic_height_in_mm ) / 2 ] ) {
 						rotate( [ 90, 0, idx % 2 == 0 ? 0 : 90 ] ) {
 							translate( [ 0, 0, - technic_pin_lip_diameter ] ) {
@@ -1511,5 +1569,16 @@ module technic_tow_ball( length = 1 ) {
 	translate( [ 0, 0, technic_tow_ball_diameter / 2 ] ) {
 		sphere( d = technic_tow_ball_diameter );
 		cylinder( h = ( length * technic_pin_tow_ball_total_length ) - ( technic_tow_ball_diameter / 2 ), d = technic_pin_tow_ball_neck_diameter );
+	}
+}
+
+module technic_stud_cutouts( height = 1, diameter = stud_diameter ) {
+	translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE / 2 ] ) {
+		union () {
+			translate( [ -0.5 * stud_spacing, -0.5 * stud_spacing, 0 ] )cylinder( d = diameter, h = height * technic_height_in_mm + EXTENSION_FOR_DIFFERENCE );
+			translate( [ -0.5 * stud_spacing, 0.5 * stud_spacing, 0 ] ) cylinder( d = diameter, h = height * technic_height_in_mm + EXTENSION_FOR_DIFFERENCE );
+			translate( [ 0.5 * stud_spacing, -0.5 * stud_spacing, 0 ] ) cylinder( d = diameter, h = height * technic_height_in_mm + EXTENSION_FOR_DIFFERENCE );
+			translate( [ 0.5 * stud_spacing, 0.5 * stud_spacing, 0 ] ) cylinder( d = diameter, h = height * technic_height_in_mm + EXTENSION_FOR_DIFFERENCE );
+		}
 	}
 }

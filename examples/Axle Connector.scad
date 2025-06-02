@@ -4,7 +4,7 @@
  * For standard LEGO-compatible bricks, see LEGO.scad. This module
  * is specifically for parts without studs, like gears and axles.
  *
- * Copyright (c) 2025 Christopher Finke (cfinke@gmail.com)
+ * Copyright (c) 2025 BB (skidd13@gmx.de)
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,13 +28,5 @@
 
 include <../Technic.scad>;
 
-translate( [ -3 * technic_pin_multiple_offset, 0, 0 ] ) {
-	color( "orange" ) translate( [ -technic_pin_multiple_offset, 0, 0 ] ) technic_pin( bottom_type = "stud" );
-	color( "yellow" ) translate( [ 0, 0, 0 ] ) technic_pin();
-	color( "white" ) translate( [ technic_pin_multiple_offset, 0, 0 ] ) technic_pin( top_length = 2, bottom_friction = false );
-	color( "red" ) translate( [ technic_pin_multiple_offset * 2, 0, 0 ] ) technic_pin( top_friction = false, multiplier = 2 );
-	color( "gray" ) translate( [ technic_pin_multiple_offset * 4, 0, 0 ] ) technic_pin( top_length = 2, top_friction = false, multiplier = 3, squared_pin_holes = true);
-	color( "cornflowerblue" ) translate( [ technic_pin_multiple_offset * 7, 0, 0 ] ) technic_pin( bottom_type = "tow ball" );
-	color( "thistle" ) translate( [ technic_pin_multiple_offset * 8, 0, 0 ] ) technic_pin( bottom_length = 2, bottom_type = "tow ball" );
-	color( "blue" ) translate( [ technic_pin_multiple_offset * 9, 0, 0 ] ) technic_pin( top_length = 2, bottom_length = 1, bottom_type = "bush" );
-}
+color( "orange" ) technic_axle_connector( length = 2 );
+color( "red" ) translate( [ 0, 20, 0 ] ) technic_axle_connector( length = 2, ridged = true );

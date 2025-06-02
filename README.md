@@ -17,6 +17,17 @@ Generate a Technic-compatible axle.
 | `stop` | bool | Whether there is a stop at the end. |
 | `stud` | bool | Whether there is a stud at the end. |
 
+`technic_axle_connector();`
+--------------------------
+![An axle connector compatible with LEGO part #6538a.](images/Technic%20Axle%20Connector.png)
+
+Generate a Technic-compatible axle connector.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `length` | int | The length of the axle connector in "studs." |
+| `ridged` | bool | Whether the connector should have ridges on it. |
+
 `technic_axle_pin();`
 --------------------------
 ![An axle pin compatible with LEGO part #11214.](images/Technic%20Axle%20Pin.png)
@@ -77,7 +88,7 @@ Generate a Technic-compatible connector hub.
 | `spoke_lengths` | float[] | How long should each spoke be? |
 | `spoke_angles` | float[] | At what angle should each spoke connect? |
 | `spoke_heights` | float[] | How high up on the hub should each spoke be placed? |
-| `spoke_types` | string | What type of connector should each spoke be? Either "axle" or "bar connector". |
+| `spoke_types` | string | What type of connector should each spoke be? Either "axle", "axle connector", "pin", "bar connector" or "tow ball". |
 
 `technic_elbow();`
 --------------------------
@@ -125,7 +136,7 @@ Generate a Technic-compatible pin.
 |---|---|---|
 | `top_length` | int | In studs, how long the top half of the pin should be. |
 | `top_friction` | bool | Whether the top half of the pin should have friction ridges on it. |
-| `bottom_type` | string | What should the bottom of the pin be? "pin", "tow ball", or "stud" |
+| `bottom_type` | string | What should the bottom of the pin be? "pin", "tow ball", "stud", or "bush" |
 | `bottom_length` | int | In studs, how long the bottom half of the pin should be. |
 | `bottom_friction` | bool | Whether the bottom half of the pin should have friction ridges on it. |
 | `multiplier` | int | Should this generate multiple sets of connected pins? If so, how many? |
