@@ -7,7 +7,7 @@ Modules
 
 `technic_axle();`
 -----------------
-![An axle compatible with LEGO part #3704.](images/Technic%20Axle.png)
+![An axle compatible with LEGO part #3704.](images/technic_axle.png)
 
 Generate a Technic-compatible axle.
 
@@ -18,8 +18,8 @@ Generate a Technic-compatible axle.
 | `stud` | bool | Whether there is a stud at the end. |
 
 `technic_axle_connector();`
---------------------------
-![An axle connector compatible with LEGO part #6538a.](images/Technic%20Axle%20Connector.png)
+---------------------------
+![An axle connector compatible with LEGO part #6538a.](images/technic_axle_connector.png)
 
 Generate a Technic-compatible axle connector.
 
@@ -29,8 +29,8 @@ Generate a Technic-compatible axle connector.
 | `ridged` | bool | Whether the connector should have ridges on it. |
 
 `technic_axle_pin();`
---------------------------
-![An axle pin compatible with LEGO part #11214.](images/Technic%20Axle%20Pin.png)
+--------------------
+![An axle pin compatible with LEGO part #11214.](images/technic_axle_pin.png)
 
 Generate a Technic-compatible axle pin.
 
@@ -41,7 +41,8 @@ Generate a Technic-compatible axle pin.
 | `friction` | bool | Whether the pin component should have friction ridges on it. |
 
 `technic_axle_and_pin_connector();`
-![An axle and pin connector compatible with LEGO part #32184.](images/Technic%20Axle%20and%20Pin%20Connector.png)
+-----------------------------------
+![An axle and pin connector compatible with LEGO part #32184.](images/technic_axle_and_pin_connector.png)
 
 Generate a Technic-compatible axle and pin connector.
 
@@ -52,7 +53,7 @@ Generate a Technic-compatible axle and pin connector.
 
 `technic_beam();`
 -----------------
-![A beam compatible with LEGO part #32524, for example.](images/Technic%20Beam.png)
+![A beam compatible with LEGO part #32524, for example.](images/technic_beam.png)
 
 Generate a Technic-compatible beam.
 
@@ -66,7 +67,7 @@ Generate a Technic-compatible beam.
 
 `technic_bush();`
 -----------------
-![A bush compatible with LEGO part #4265c, for example.](images/Technic%20Bush.png)
+![A bush compatible with LEGO part #4265c, for example.](images/technic_bush.png)
 
 Generate a Technic-compatible bush.
 
@@ -77,7 +78,7 @@ Generate a Technic-compatible bush.
 
 `technic_connector_hub();`
 --------------------------
-![A connector hub compatible with LEGO part #27940, for example.](images/Technic%20Connector%20Hub.png)
+![A connector hub compatible with LEGO part #27940, for example.](images/technic_connector_hub.png)
 
 Generate a Technic-compatible connector hub.
 
@@ -92,7 +93,7 @@ Generate a Technic-compatible connector hub.
 
 `technic_elbow();`
 --------------------------
-![A 90º elbow compatible with LEGO part #25214.](images/Technic%20Elbow.png)
+![A 90º elbow compatible with LEGO part #25214.](images/technic_elbow.png)
 
 Generate a Technic-compatible 90º elbow.
 
@@ -105,7 +106,7 @@ Generate a Technic-compatible 90º elbow.
 
 `technic_gear_double_sided();`
 --------------------------
-![A spur gear compatible with LEGO part #3648.](images/Technic%20Gear%20%28Double-Sided%29.png)
+![A spur gear compatible with LEGO part #3648.](images/technic_gear_double_sided.png)
 
 Generate a Technic-compatible double-sided spur gear.
 
@@ -116,7 +117,7 @@ Generate a Technic-compatible double-sided spur gear.
 
 `technic_gear_single_sided();`
 --------------------------
-![A single-sided gear, compatible with LEGO part #6589.](images/Technic%20Gear%20%28Single-Sided%29.png)
+![A single-sided gear, compatible with LEGO part #6589.](images/technic_gear_single_sided.png)
 
 Generate a single-sided gear, sometimes called a half-gear.
 
@@ -128,7 +129,7 @@ Generate a single-sided gear, sometimes called a half-gear.
 
 `technic_pin();`
 --------------------------
-![A pin compatible with LEGO part #2780.](images/Technic%20Pin.png)
+![A pin compatible with LEGO part #2780.](images/technic_pin.png)
 
 Generate a Technic-compatible pin.
 
@@ -144,7 +145,7 @@ Generate a Technic-compatible pin.
 
 `technic_pin_connector();`
 --------------------------
-![A pin connector compatible with LEGO part #18654.](images/Technic%20Pin%20Connector.png)
+![A pin connector compatible with LEGO part #18654.](images/technic_pin_connector.png)
 
 Generate a Technic-compatible pin connector.
 
@@ -154,7 +155,7 @@ Generate a Technic-compatible pin connector.
 
 `technic_tire();`
 --------------------------
-![A tire connector compatible with LEGO part #89201.](images/Technic%20Tire.png)
+![A tire connector compatible with LEGO part #89201.](images/technic_tire.png)
 
 Generate a Technic-compatible tire.
 
@@ -166,7 +167,7 @@ Generate a Technic-compatible tire.
 
 `technic_wheel();`
 --------------------------
-![A wheel compatible with LEGO part #20896.](images/Technic%20Wheel.png)
+![A wheel compatible with LEGO part #20896.](images/technic_wheel.png)
 
 Generate a Technic-compatible wheel (also referred to as rims).
 
@@ -181,7 +182,7 @@ Generate a Technic-compatible wheel (also referred to as rims).
 
 `technic_worm_gear();`
 --------------------------
-![A worm gear compatible with LEGO part #4716.](images/Technic%20Gear%20%28Worm%29.png)
+![A worm gear compatible with LEGO part #4716.](images/technic_worm_gear.png)
 
 Generate a Technic-compatible worm gear.
 
