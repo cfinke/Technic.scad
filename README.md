@@ -86,7 +86,7 @@ Generate a Technic-compatible axle and pin connector.
 Axle and pin connectors: they connect axles to pins.
 The origin is centered underneath the first axle hole.
 
-![An axle connector compatible with LEGO part #6538a.](images/technic_axle_connector.png)
+![An axle connector compatible with LEGO part #6538a.](images/technic_axle_and_pin_connector.png)
 
 **Part Support:**
 - `part #32184`: technic_axle_and_pin_connector( length = 3 );
