@@ -1,3 +1,6 @@
 [submodule "lib/gears"]
 	path = lib/gears
 	url = git@github.com:chrisspen/gears.git
+[submodule "utils/doxydown"]
+	path = utils/doxydown
+	url = git@github.com:vstakhov/doxydown.git

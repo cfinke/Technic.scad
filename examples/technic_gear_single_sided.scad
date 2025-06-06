@@ -28,6 +28,6 @@
 
 include <../Technic.scad>;
 
-color( "gray" ) translate( [ 0, 0, 0 ] ) technic_gear_single_sided();
-color( "beige" ) translate( [ 0, 30, 0 ] ) technic_gear_single_sided( teeth = 20 );
-color( "red" ) translate( [ 30, 0, 0 ] ) technic_gear_single_sided( teeth = 20, center_hole = "pin" );
+color( "gray" ) translate( [ 0, 0, 0 ] ) render() technic_gear_single_sided();
+color( "beige" ) translate( [ 0, 30, 0 ] ) render() technic_gear_single_sided( teeth = 20 );
+color( "red" ) translate( [ 30, 0, 0 ] ) render() technic_gear_single_sided( teeth = 20, center_hole = "pin" );
