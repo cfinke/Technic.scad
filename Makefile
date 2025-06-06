@@ -22,7 +22,7 @@ images/%.png : examples/%.scad
 
 readme:
 	@echo "Generating Readme"
-	@$(docgen) -e c -l c < Technic.scad >$(MARKDOWN)
+	@$(docgen) -g -e c -l c < Technic.scad >$(MARKDOWN)
 
 clean:
 	@rm images/technic_*.png
