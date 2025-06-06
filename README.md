@@ -6,42 +6,42 @@ An OpenSCAD Technic-compatible piece generator. It currently supports generation
 
 **Functions**:
 
-> [`module technic_axle();`](#f22884): Technic, Axle [x]L [with Stud|Stop]
+> [`technic_axle();`](#fdb772): Technic, Axle [x]L [with Stud|Stop]
 
-> [`module technic_axle_and_pin_connector();`](#f22884): Technic, Axle and Pin Connector Perpendicular
+> [`technic_axle_and_pin_connector();`](#f51a2f): Technic, Axle and Pin Connector Perpendicular
 
-> [`module technic_axle_connector();`](#f22884): Technic, Axle Connector [x]L [(Ridged)]
+> [`technic_axle_connector();`](#f09833): Technic, Axle Connector [x]L [(Ridged)]
 
-> [`module technic_connector_hub();`](#f22884): Technic, Axle and Pin Connector
+> [`technic_connector_hub();`](#f81fcc): Technic, Axle and Pin Connector
 
-> [`module technic_axle_pin();`](#f22884): Technic, Axle [x]L with Pin [x]L [with Friction Ridges]
+> [`technic_axle_pin();`](#fcb2a3): Technic, Axle [x]L with Pin [x]L [with Friction Ridges]
 
-> [`module technic_beam();`](#f22884): Technic, Liftarm [Thick] [x]x[x] - [x]
+> [`technic_beam();`](#fb1153): Technic, Liftarm [Thick] [x]x[x] - [x]
 
-> [`module technic_bush();`](#f22884): Technic Bush
+> [`technic_bush();`](#f8f9cb): Technic Bush
 
-> [`module technic_elbow();`](#f22884): Brick, Round Tube 1 x 1 d. 90 degrees Elbow Macaroni
+> [`technic_elbow();`](#f0837e): Brick, Round Tube 1 x 1 d. 90 degrees Elbow Macaroni
 
-> [`module technic_gear_double_sided();`](#f22884): Technic, Gear [x] Tooth with [x] Axle Hole
+> [`technic_gear_double_sided();`](#fa6844): Technic, Gear [x] Tooth with [x] Axle Hole
 
-> [`module technic_gear_single_sided();`](#f22884): Technic, Gear [x] Tooth Bevel
+> [`technic_gear_single_sided();`](#f1801a): Technic, Gear [x] Tooth Bevel
 
-> [`module technic_pin();`](#f22884): Technic, Pin [with Friction Ridges]
+> [`technic_pin();`](#f482bb): Technic, Pin [with Friction Ridges]
 
-> [`module technic_pin_connector();`](#f22884): Technic, Liftarm Thick 1 x 1 (Spacer)
+> [`technic_pin_connector();`](#fc8661): Technic, Liftarm Thick 1 x 1 (Spacer)
 
-> [`module technic_tire();`](#f22884): Tyre
+> [`technic_tire();`](#f6d02a): Tyre
 
-> [`module technic_wheel();`](#f22884): Wheel
+> [`technic_wheel();`](#f39ec0): Wheel
 
-> [`module technic_worm_gear();`](#f22884): Technic, Gear Worm Screw
+> [`technic_worm_gear();`](#ffe8f0): Technic, Gear Worm Screw
 
 
 ## Functions
 
 The module `Technic.scad` defines the following functions.
 
-### Function `module technic_axle();` {#f22884}
+### Function `technic_axle();` {#fdb772}
 
 Generate a Technic-compatible axle.
 The origin is centered at the bottom of the axle.
@@ -80,7 +80,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_axle_and_pin_connector();` {#f22884}
+### Function `technic_axle_and_pin_connector();` {#f51a2f}
 
 Generate a Technic-compatible axle and pin connector.
 Axle and pin connectors: they connect axles to pins.
@@ -102,7 +102,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_axle_connector();` {#f22884}
+### Function `technic_axle_connector();` {#f09833}
 
 Generate a Technic-compatible axle connector.
 Origin is centered at the bottom center of the axle connector.
@@ -124,7 +124,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_connector_hub();` {#f22884}
+### Function `technic_connector_hub();` {#f81fcc}
 
 A connector hub. Some sort of round connector with things like axles or pins protruding like spokes.
 The origin is centered underneath the hub.
@@ -168,7 +168,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_axle_pin();` {#f22884}
+### Function `technic_axle_pin();` {#fcb2a3}
 
 Generate a Technic-compatible axle pin.
 The origin is centered at the bottom of the axle.
@@ -190,7 +190,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_beam();` {#f22884}
+### Function `technic_beam();` {#fb1153}
 
 Generate a Technic-compatible beam.
 Origin is below the center of the first hole.
@@ -239,7 +239,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_bush();` {#f22884}
+### Function `technic_bush();` {#f8f9cb}
 
 Generate a Technic-compatible bush.
 Origin is centered beneath the bush.
@@ -261,7 +261,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_elbow();` {#f22884}
+### Function `technic_elbow();` {#f0837e}
 
 Generate a Technic-compatible 90º elbow.
 Origin is at the point where the X and Y axes would meet, with each of them centered in the hole at the end of each leg of the elbow.
@@ -284,7 +284,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_gear_double_sided();` {#f22884}
+### Function `technic_gear_double_sided();` {#fa6844}
 
 Generate a Technic-compatible double-sided spur gear.
 Double-sided gears (as opposed to the one-sided gears sometimes called "half-gears").
@@ -309,7 +309,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_gear_single_sided();` {#f22884}
+### Function `technic_gear_single_sided();` {#f1801a}
 
 Generate a single-sided gear, sometimes called a half-gear.
 Origin is centered at the bottom of the gear (the non-toothed side).
@@ -333,7 +333,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_pin();` {#f22884}
+### Function `technic_pin();` {#f482bb}
 
 Generate a Technic-compatible pin.
 Origin is centered at the bottom of the pin.
@@ -371,7 +371,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_pin_connector();` {#f22884}
+### Function `technic_pin_connector();` {#fc8661}
 
 Generate a Technic-compatible pin connector.
 Origin is centered at the bottom center of the pin connector.
@@ -391,7 +391,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_tire();` {#f22884}
+### Function `technic_tire();` {#f6d02a}
 
 Generate a Technic-compatible tire.
 @todo Tread pattern.
@@ -412,7 +412,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_wheel();` {#f22884}
+### Function `technic_wheel();` {#f39ec0}
 
 Generate a Technic-compatible wheel (also referred to as rims).
 @todo Fake studs.
@@ -437,7 +437,7 @@ No return
 
 Back to [module description](#mb158e).
 
-### Function `module technic_worm_gear();` {#f22884}
+### Function `technic_worm_gear();` {#ffe8f0}
 
 Generate a Technic-compatible worm gear.
 

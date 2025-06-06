@@ -147,7 +147,7 @@ technic_worm_gear_end_inset = 0.5; // @todo Measure IRL.
 EXTENSION_FOR_DIFFERENCE = 1;
 
 /***
- * @function module technic_axle();
+ * @function technic_axle();
  * Generate a Technic-compatible axle.
  * @brief Technic, Axle [x]L [with Stud|Stop]
  * The origin is centered at the bottom of the axle.
@@ -244,7 +244,7 @@ module technic_axle(
 }
 
 /***
- * @function module technic_axle_and_pin_connector();
+ * @function technic_axle_and_pin_connector();
  * Generate a Technic-compatible axle and pin connector.
  * @brief Technic, Axle and Pin Connector Perpendicular
  * Axle and pin connectors: they connect axles to pins.
@@ -324,7 +324,7 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 }
 
 /***
- * @function module technic_axle_connector();
+ * @function technic_axle_connector();
  * Generate a Technic-compatible axle connector.
  * @brief Technic, Axle Connector [x]L [(Ridged)]
  * Origin is centered at the bottom center of the axle connector.
@@ -362,7 +362,7 @@ module technic_axle_connector(
 }
 
 /***
- * @function module technic_connector_hub();
+ * @function technic_connector_hub();
  * A connector hub. Some sort of round connector with things like axles or pins protruding like spokes.
  * @brief Technic, Axle and Pin Connector
  * The origin is centered underneath the hub.
@@ -465,7 +465,7 @@ module technic_connector_hub(
 }
 
 /***
- * @function module technic_axle_pin();
+ * @function technic_axle_pin();
  * Generate a Technic-compatible axle pin.
  * @brief Technic, Axle [x]L with Pin [x]L [with Friction Ridges]
  * The origin is centered at the bottom of the axle.
@@ -507,7 +507,7 @@ module technic_axle_pin(
 }
 
 /***
- * @function module technic_beam();
+ * @function technic_beam();
  * Generate a Technic-compatible beam.
  * @brief Technic, Liftarm [Thick] [x]x[x] - [x]
  * Origin is below the center of the first hole.
@@ -640,7 +640,7 @@ module technic_beam( length = 5, height = 1, angles = [], vertices = [], axle_ho
 }
 
 /***
- * @function module technic_bush();
+ * @function technic_bush();
  * Generate a Technic-compatible bush.
  * @brief Technic Bush
  * Origin is centered beneath the bush.
@@ -694,7 +694,7 @@ module technic_bush( height = 1/2, stud_cutouts = true ) {
 }
 
 /***
- * @function module technic_elbow();
+ * @function technic_elbow();
  * Generate a Technic-compatible 90º elbow.
  * @brief Brick, Round Tube 1 x 1 d. 90 degrees Elbow Macaroni
  * Origin is at the point where the X and Y axes would meet, with each of them centered in the hole at the end of each leg of the elbow.
@@ -797,7 +797,7 @@ module technic_elbow(
 }
 
 /***
- * @function module technic_gear_double_sided();
+ * @function technic_gear_double_sided();
  * Generate a Technic-compatible double-sided spur gear.
  * @brief Technic, Gear [x] Tooth with [x] Axle Hole
  * Double-sided gears (as opposed to the one-sided gears sometimes called "half-gears").
@@ -1060,7 +1060,7 @@ module technic_gear_double_sided(
 }
 
 /***
- * @function module technic_gear_single_sided();
+ * @function technic_gear_single_sided();
  * Generate a single-sided gear, sometimes called a half-gear.
  * @brief Technic, Gear [x] Tooth Bevel
  * Origin is centered at the bottom of the gear (the non-toothed side).
@@ -1169,7 +1169,7 @@ module technic_gear_single_sided( teeth = 12, bevel = true, center_hole = "axle"
 }
 
 /***
- * @function module technic_pin();
+ * @function technic_pin();
  * Generate a Technic-compatible pin.
  * @brief Technic, Pin [with Friction Ridges]
  * Origin is centered at the bottom of the pin.
@@ -1309,7 +1309,7 @@ module technic_pin(
 }
 
 /***
- * @function module technic_pin_connector();
+ * @function technic_pin_connector();
  * Generate a Technic-compatible pin connector.
  * @brief Technic, Liftarm Thick 1 x 1 (Spacer)
  * Origin is centered at the bottom center of the pin connector.
@@ -1440,7 +1440,7 @@ module technic_pin_half(
 }
 
 /***
- * @function module technic_tire();
+ * @function technic_tire();
  * Generate a Technic-compatible tire.
  * @brief Tyre
  * @todo Tread pattern.
@@ -1466,7 +1466,7 @@ module technic_tire(
 }
 
 /***
- * @function module technic_wheel();
+ * @function technic_wheel();
  * Generate a Technic-compatible wheel (also referred to as rims).
  * @brief Wheel
  * @todo Fake studs.
@@ -1551,7 +1551,7 @@ module technic_wheel( diameter = 1, width = 1, center_groove = true, hole_type =
 }
 
 /***
- * @function module technic_worm_gear();
+ * @function technic_worm_gear();
  * Generate a Technic-compatible worm gear.
  * @brief Technic, Gear Worm Screw
  *
