@@ -28,8 +28,11 @@
 
 include <../Technic.scad>;
 
+axle_types = rands(0, 4, 13);
+
 translate( [ -7 * 7, 0, 0 ] ) {
-    for ( i = [ 2 : 12 ]) {
-        translate([ i * 7, 0, 0] ) technic_axle( length = i, stop = ( i % 2 == 1 ) ? true : false, stud = ( i % 3 == 1 ) ? true : false );
+    for ( i = [ 2 : 13 ]) {
+		axle_type = floor(axle_types[i - 2]);
+        translate([ i * 7, 0, 0] ) technic_axle( length = i, stop = axle_type == 1, stud = axle_type == 2, notch = axle_type == 3 );
     }
 }

@@ -54,6 +54,8 @@ technic_axle_stop_diameter = 5.9;
 technic_axle_stud_height = 1.8; // Matches LEGO.stud_height
 technic_axle_stud_inner_diameter = 3.1; // Matches LEGO.hollow_stud_inner_diameter
 technic_axle_stud_outer_diameter = 4.85; // Matches LEGO.stud_diameter
+technic_axle_notch_height = 1.3; // Matches technic_bush_shoulder_height
+technic_axle_notch_diameter = 4.2;
 
 technic_axle_connector_outer_diameter = 7.36; // @todo Measure IRL
 technic_axle_connector_ridged_inner_diameter = 6.5; // @todo Measure IRL
@@ -166,6 +168,7 @@ EXTENSION_FOR_DIFFERENCE = 1;
  * - `part #15462`: technic_axle( length = 5, stop = true );
  * - `part #23948`: technic_axle( length = 11 );
  * - `part #24316`: technic_axle( length = 3, stop = true );
+ * - `part #32062`: technic_axle( length = 2, notch = true );
  * - `part #32073`: technic_axle( length = 5 );
  * - `part #44294`: technic_axle( length = 7 );
  * - `part #50450`: technic_axle( length = 32 );
@@ -176,11 +179,13 @@ EXTENSION_FOR_DIFFERENCE = 1;
  * @param length *float*  The length of the axle, in Technic units.
  * @param stop *bool* Whether there is a stop at the end.
  * @param stud *bool* Whether there is a stud at the end.
+ * @param notch *bool* Wether the axle is notched
  */
 module technic_axle(
 	length = 2, // The length in studs. An axle of length 2 will be the same length as a 2-stud brick.
 	stop = false, // Should it have a stop at the end?
 	stud = false, // Should it have a stud on the end?
+	notch = false
 ) {
 	translate( [ 0, 0, stud ? technic_axle_stud_height : 0 ] ) {
 		// A stud always requires a stop, in my opinion.
@@ -205,6 +210,20 @@ module technic_axle(
 					// Cut off the extra axle below the stop.
 					translate([ 0, 0, -( ( stud_spacing ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
 						cylinder( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE, h = ( stud_spacing ) + EXTENSION_FOR_DIFFERENCE );
+					}
+				}
+
+				if ( notch ) {
+					for ( i = [ 0.5 : 1 : length ] ) {
+						translate( [ 0, 0, ( technic_height_in_mm * i ) - ( 
+technic_axle_notch_height / 2 ) ] ) {
+							difference() {
+								cylinder( d = technic_axle_stud_outer_diameter + EXTENSION_FOR_DIFFERENCE, h = technic_axle_notch_height );
+								translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE ] ) {
+									cylinder( d = technic_axle_notch_diameter, h = technic_axle_notch_height + 2 * EXTENSION_FOR_DIFFERENCE );
+								}
+							}
+						}
 					}
 				}
 			}

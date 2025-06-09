@@ -60,6 +60,7 @@ The origin is centered at the bottom of the axle.
 - `part #15462`: technic_axle( length = 5, stop = true );
 - `part #23948`: technic_axle( length = 11 );
 - `part #24316`: technic_axle( length = 3, stop = true );
+- `part #32062`: technic_axle( length = 2, notch = true );
 - `part #32073`: technic_axle( length = 5 );
 - `part #44294`: technic_axle( length = 7 );
 - `part #50450`: technic_axle( length = 32 );
@@ -73,6 +74,7 @@ The origin is centered at the bottom of the axle.
 - `length`: *float*  The length of the axle, in Technic units.
 - `stop`: *bool* Whether there is a stop at the end.
 - `stud`: *bool* Whether there is a stud at the end.
+- `notch`: *bool* Wether the axle is notched
 
 **Returns:**
 
