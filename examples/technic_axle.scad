@@ -33,6 +33,16 @@ axle_types = rands(0, 4, 13);
 translate( [ -7 * 7, 0, 0 ] ) {
     for ( i = [ 2 : 13 ]) {
 		axle_type = floor(axle_types[i - 2]);
-        translate([ i * 7, 0, 0] ) technic_axle( length = i, stop = axle_type == 1, stud = axle_type == 2, notch = axle_type == 3 );
+        translate([ i * 7, 0, 0] ) {
+			if (axle_type == 0) {
+				color( c = (i%2 == 1) ? [ 156/255, 156/255, 156/255, 1.0 ] : [ 33/255, 33/255, 33/255, 1.0 ] ) technic_axle( length = i );
+			} else if (axle_type == 1) {
+				color( c = [ 130/255, 66/255, 42/255, 1.0 ] ) technic_axle( length = i, stop = true );
+			} else if (axle_type == 2) {
+				color( c = [ 83/255, 93/255, 96/255, 1.0 ] ) technic_axle( length = i, stud = true );
+			} else if (axle_type == 3) {
+				color( c = [ 197/255, 0, 6/255, 1.0 ] ) technic_axle( length = i, notch = true );
+			}
+		}
     }
 }
