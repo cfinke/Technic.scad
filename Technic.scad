@@ -448,29 +448,31 @@ module technic_connector_hub(
 
 		// The spokes.
 		difference() {
-			for ( i = [ 0 : len( spoke_angles ) - 1 ] ) {
-				rotate( [ 0, 0, spoke_angles[i] ] ) {
-					translate( [ 0, 0, (( spoke_heights[i] - 1 ) * technic_height_in_mm ) + ( technic_height_in_mm / 2 ) ] ) {
-						rotate( [ 0, 90, 0 ] ) {
-							if ( spoke_types[i] == "axle" ) {
-								technic_axle( length = spoke_lengths[i] + .5 );
-							} else if ( spoke_types[i] == "bar connector" ) {
-								linear_extrude( ( technic_height_in_mm * ( spoke_lengths[i] ) ) ) {
-									difference() {
-										circle( d = technic_bar_connector_outer_diameter );
-										circle( d = technic_bar_connector_inner_diameter );
+			union() {
+				for ( i = [ 0 : len( spoke_angles ) - 1 ] ) {
+					rotate( [ 0, 0, spoke_angles[i] ] ) {
+						translate( [ 0, 0, (( spoke_heights[i] - 1 ) * technic_height_in_mm ) + ( technic_height_in_mm / 2 ) ] ) {
+							rotate( [ 0, 90, 0 ] ) {
+								if ( spoke_types[i] == "axle" ) {
+									technic_axle( length = spoke_lengths[i] + .5 );
+								} else if ( spoke_types[i] == "bar connector" ) {
+									linear_extrude( ( technic_height_in_mm * ( spoke_lengths[i] ) ) ) {
+										difference() {
+											circle( d = technic_bar_connector_outer_diameter );
+											circle( d = technic_bar_connector_inner_diameter );
+										}
 									}
+								} else if ( spoke_types[i] == "pin" ) {
+									technic_pin_half( length = spoke_lengths[i] + .5, friction = true, squared_pin_holes = false );
+								} else if ( spoke_types[i] == "tow ball" ) {
+									translate( [ 0, 0, -(spoke_lengths[i] + 1) * technic_pin_tow_ball_total_length ] ) technic_tow_ball( length = spoke_lengths[i] + .5 );
+								} else if ( spoke_types[i] == "axle connector" ) {
+									technic_axle_connector( length = spoke_lengths[i] + .5);
 								}
-							} else if ( spoke_types[i] == "pin" ) {
-								technic_pin_half( length = spoke_lengths[i] + .5, friction = true, squared_pin_holes = false );
-							} else if ( spoke_types[i] == "tow ball" ) {
-								translate( [ 0, 0, -(spoke_lengths[i] + 1) * technic_pin_tow_ball_total_length ] ) technic_tow_ball( length = spoke_lengths[i] + .5 );
-							} else if ( spoke_types[i] == "axle connector" ) {
-								technic_axle_connector( length = spoke_lengths[i] + .5);
-							}
 
-							if ( spoke_types[i] != "tow ball" && spoke_types[i] != "axle connector" ) {
-								cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm / 2 );
+								if ( spoke_types[i] != "tow ball" && spoke_types[i] != "axle connector" ) {
+									cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm / 2 );
+								}
 							}
 						}
 					}
