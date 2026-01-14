@@ -621,9 +621,7 @@ module technic_beam( length = 5, height = 1, angles = [], vertices = [], axle_ho
 							cylinder( d = technic_pin_connector_outer_diameter, h = height * technic_height_in_mm );
 
 							// @todo This still leaves a tiny bit of extra material in the axle hole at the vertex of an angled beam (if there is one there).
-							translate( [ 0, 0, -height * technic_height_in_mm ] ) {
-								technic_axle_hole( height = height * 2 );
-							}
+							technic_axle_hole( height = height );
 						}
 					} else {
 						technic_pin_connector( length = height );
@@ -1624,7 +1622,12 @@ module technic_rounded_rectangle( width = 1, height = 1, radius = 0.1 ) {
 
 module technic_axle_hole( height = 1 ) {
 	scale( [ technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio, technic_axle_interference_fit_ratio ] ) {
-		translate( [ 0, 0, - ( height * 2 * technic_height_in_mm ) / 2 ] ) technic_axle( length = height * 2 );
+		// By default, the axle hole will begin at the origin and build up.
+		// We want it to be centered on the part, which is centered at height * technic_height_in_mm / 2.
+		// So first move it up to that location, and then move it down half of its length.
+		translate( [ 0, 0, ( height * technic_height_in_mm / 2 ) - ( height * 2 * technic_height_in_mm ) / 2 ] ) {
+			technic_axle( length = height * 2 );
+		}
 	}
 }
 
