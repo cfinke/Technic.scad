@@ -55,8 +55,6 @@ color( "red" ) technic_beam(
 	axle_holes = array_of_strings_to_array_of_ints( split_str( remove_everything_thats_not_a_number_or_comma( beam_axle_holes ), "," ) )
 );
 
-rotate( [ 0, 0, 90 - (11.25 / 2 )] ) technic_beam( length = 11 );
-
 // Functions for managing the conversion of a list of numbers in a text field to an array of actual numbers.
 function remove_everything_thats_not_a_number_or_comma( str ) = chr( [ for ( s = str ) if ( ( ord( s ) >= 48 && ord( s ) <= 57 ) || s == "," || s == "." ) ord( s ) ] );
 function array_of_strings_to_array_of_ints( str_arr ) = [ for ( s = str_arr ) if ( s != "" && s ) int( s ) ];
