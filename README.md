@@ -112,8 +112,8 @@ Origin is centered at the bottom center of the axle connector.
 ![An axle connector compatible with LEGO part #6538a.](images/technic_axle_connector.png)
 
 **Part Support:**
-- `part #6538a`: technic_axle_connector( length = 2, ridged = true )
-- `part #6538c`: technic_axle_connector( length = 2 )
+- `part #6538a`: technic_axle_connector( length = 2, ridged = true );
+- `part #6538c`: technic_axle_connector( length = 2 );
 
 **Parameters:**
 
@@ -135,25 +135,25 @@ The origin is centered underneath the hub.
 ![A connector hub compatible with LEGO part #27940, for example.](images/technic_connector_hub.png)
 
 **Part Support:**
-- `part #4450`:  technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 168.75 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
-- `part #6611`:  technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 120, 240 ], spoke_lengths = [ 1, 1, 1 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector" ] )
-- `part #7329`:  technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 60, 180 ], spoke_lengths = [ 1, 1, 1 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector" ] )
-- `part #5713`:  technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ], spoke_lengths = [ 3 ] )
-- `part #10197`: technic_connector_hub( spoke_angles = [ 0, 90 ] )
-- `part #10288`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 60, 120, 180 ], spoke_lengths = [ 1, 1, 1, 1 ], spoke_heights = [ 1, 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector", "axle connector" ] )
-- `part #15100`: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1 ], spoke_angles = [ 0 ], spoke_heights = [ 1 ], spoke_types = [ "pin" ])
+- `part #4450`:  technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 168.75 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] );
+- `part #6611`:  technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 120, 240 ], spoke_lengths = [ 1, 1, 1 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector" ] );
+- `part #7329`:  technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 60, 180 ], spoke_lengths = [ 1, 1, 1 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector" ] );
+- `part #5713`:  technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ], spoke_lengths = [ 3 ] );
+- `part #10197`: technic_connector_hub( spoke_angles = [ 0, 90 ] );
+- `part #10288`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 60, 120, 180 ], spoke_lengths = [ 1, 1, 1, 1 ], spoke_heights = [ 1, 1, 1, 1 ], spoke_types = [ "axle connector", "axle connector", "axle connector", "axle connector" ] );
+- `part #15100`: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1 ], spoke_angles = [ 0 ], spoke_heights = [ 1 ], spoke_types = [ "pin" ]);
 - `part #15460`: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 90, 180 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "tow ball", "tow ball", "tow ball" ] );
-- `part #22961`: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ] )
-- `part #27940`: technic_connector_hub( spoke_angles = [ 0, 180 ] )
-- `part #32013`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle connector" ] )
-- `part #32014`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 90 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
-- `part #32015`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 157.5 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
-- `part #32016`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 112.5 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
-- `part #32034`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 180 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
-- `part #32192`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 135 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] )
-- `part #24122`: technic_connector_hub( hub_type = "axle", spoke_types = [ "bar connector", "bar connector" ] )
-- `part #57585`: technic_connector_hub( hub_type = "axle", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 120, 240 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle", "axle", "axle" ] )
-- `part #87082`: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1, 1 ], spoke_angles = [ 0, 180 ], spoke_heights = [ 1, 1 ], spoke_types = [ "pin", "pin" ])
+- `part #22961`: technic_connector_hub( spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle" ] );
+- `part #27940`: technic_connector_hub( spoke_angles = [ 0, 180 ] );
+- `part #32013`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0 ], spoke_lengths = [ 1 ], spoke_heights = [ 1 ], spoke_types = [ "axle connector" ] );
+- `part #32014`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 90 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] );
+- `part #32015`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 157.5 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] );
+- `part #32016`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 112.5 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] );
+- `part #32034`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 180 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] );
+- `part #32192`: technic_connector_hub( hub_type = "pin", spoke_angles = [ 0, 135 ], spoke_lengths = [ 1, 1 ], spoke_heights = [ 1, 1 ], spoke_types = [ "axle connector", "axle connector" ] );
+- `part #24122`: technic_connector_hub( hub_type = "axle", spoke_types = [ "bar connector", "bar connector" ] );
+- `part #57585`: technic_connector_hub( hub_type = "axle", spoke_lengths = [ 1, 1, 1 ], spoke_angles = [ 0, 120, 240 ], spoke_heights = [ 1, 1, 1 ], spoke_types = [ "axle", "axle", "axle" ] );
+- `part #87082`: technic_connector_hub( hub_type = "pin", spoke_lengths = [ 1, 1 ], spoke_angles = [ 0, 180 ], spoke_heights = [ 1, 1 ], spoke_types = [ "pin", "pin" ]);
 
 **Parameters:**
 
@@ -200,31 +200,31 @@ Origin is below the center of the first hole.
 ![A beam compatible with LEGO part #32524, for example.](images/technic_beam.png)
 
 **Part Support:**
-- `part #6629`:  technic_beam( length = 9, angles = [ 53.5 ], vertices = [ 6 ], axle_holes = [ 1, 9 ] )
-- `part #6632`:  technic_beam( length = 3, height = 1/2, axle_holes = [ 1, 3 ] )
-- `part #7229`:  technic_beam( length = 3, axle_holes = [ 2 ] )
-- `part #11478`: technic_beam( length = 5, height = 1/2, axle_holes = [1, 5] )
-- `part #18654`: technic_beam( length = 1 ) [equivalent to a pin connector]
+- `part #6629`:  technic_beam( length = 9, angles = [ 53.5 ], vertices = [ 6 ], axle_holes = [ 1, 9 ] );
+- `part #6632`:  technic_beam( length = 3, height = 1/2, axle_holes = [ 1, 3 ] );
+- `part #7229`:  technic_beam( length = 3, axle_holes = [ 2 ] );
+- `part #11478`: technic_beam( length = 5, height = 1/2, axle_holes = [1, 5] );
+- `part #18654`: technic_beam( length = 1 ); // equivalent to a pin connector
 - `part #32009`: technic_beam( length = 12, vertices = [ 3, 6 ], angles = [ 45, 45 ], axle_holes = [ 1, 12 ] );
-- `part #32017`: technic_beam( length = 5, height = 1/2 )
-- `part #32056`: technic_beam( length = 5, height = 1/2, angles = [ 90 ], vertices = [ 3 ], axle_holes = [ 1, 3, 5 ] )
-- `part #32063`: technic_beam( length = 6, height = 1/2 )
-- `part #32065`: technic_beam( length = 7, height = 1/2 )
-- `part #32140`: technic_beam( length = 5, angles = [ 90 ], vertices = [ 4 ], axle_holes = [ 1 ] )
-- `part #32271`: technic_beam( length = 9, angles = [ 53.5 ], vertices = [ 7 ], axle_holes = [ 1, 9 ] )
-- `part #32278`: technic_beam( length = 15 )
-- `part #32316`: technic_beam( length = 5 )
-- `part #32348`: technic_beam( length = 7, angles = [ 53.5 ], vertices = [ 4 ], axle_holes = [ 1, 7 ] )
-- `part #32449`: technic_beam( length = 4, height = 1/2, axle_holes = [ 1, 4 ] )
-- `part #32523`: technic_beam( length = 3 )
-- `part #32524`: technic_beam( length = 7 )
-- `part #32525`: technic_beam( length = 11 )
-- `part #32526`: technic_beam( length = 7, angles = [ 90 ], vertices = [ 1 ] )
-- `part #40490`: technic_beam( length = 9 )
-- `part #41239`: technic_beam( length = 13 )
-- `part #41677`: technic_beam( length = 2, height = 1/2, axle_holes = [ 1, 2 ] )
-- `part #43857`: technic_beam( length = 2 )
-- `part #60483`: technic_beam( length = 2, axle_holes = [ 1 ] )
+- `part #32017`: technic_beam( length = 5, height = 1/2 );
+- `part #32056`: technic_beam( length = 5, height = 1/2, angles = [ 90 ], vertices = [ 3 ], axle_holes = [ 1, 3, 5 ] );
+- `part #32063`: technic_beam( length = 6, height = 1/2 );
+- `part #32065`: technic_beam( length = 7, height = 1/2 );
+- `part #32140`: technic_beam( length = 5, angles = [ 90 ], vertices = [ 4 ], axle_holes = [ 1 ] );
+- `part #32271`: technic_beam( length = 9, angles = [ 53.5 ], vertices = [ 7 ], axle_holes = [ 1, 9 ] );
+- `part #32278`: technic_beam( length = 15 );
+- `part #32316`: technic_beam( length = 5 );
+- `part #32348`: technic_beam( length = 7, angles = [ 53.5 ], vertices = [ 4 ], axle_holes = [ 1, 7 ] );
+- `part #32449`: technic_beam( length = 4, height = 1/2, axle_holes = [ 1, 4 ] );
+- `part #32523`: technic_beam( length = 3 );
+- `part #32524`: technic_beam( length = 7 );
+- `part #32525`: technic_beam( length = 11 );
+- `part #32526`: technic_beam( length = 7, angles = [ 90 ], vertices = [ 1 ] );
+- `part #40490`: technic_beam( length = 9 );
+- `part #41239`: technic_beam( length = 13 );
+- `part #41677`: technic_beam( length = 2, height = 1/2, axle_holes = [ 1, 2 ] );
+- `part #43857`: technic_beam( length = 2 );
+- `part #60483`: technic_beam( length = 2, axle_holes = [ 1 ] );
 - `part #77107`: technic_beam( length = 33, axle_holes = [ 1, 17 ], angles = [ 11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25,11.25 ], vertices = [ 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32 ] ); // This is roughly equivalent but not visually identical.
 
 **Parameters:**
@@ -249,7 +249,7 @@ Origin is centered beneath the bush.
 ![A bush compatible with LEGO part #4265c, for example.](images/technic_bush.png)
 
 **Part Support:**
-- `part #3713`:  technic_bush( height = 1 )
+- `part #3713`:  technic_bush( height = 1 );
 - `part #4265c`: technic_bush( height = 1/2 );
 
 **Parameters:**
@@ -271,7 +271,7 @@ Origin is at the point where the X and Y axes would meet, with each of them cent
 ![A 90º elbow compatible with LEGO part #25214.](images/technic_elbow.png)
 
 **Part Support:**
-- `part #25214`: technic_elbow( length = 2, width = 2 )
+- `part #25214`: technic_elbow( length = 2, width = 2 );
 
 **Parameters:**
 
@@ -319,9 +319,9 @@ Origin is centered at the bottom of the gear (the non-toothed side).
 ![A single-sided gear, compatible with LEGO part #6589.](images/technic_gear_single_sided.png)
 
 **Part Support:**
-- `part #6589`:  technic_gear_single_sided()
-- `part #32198`: technic_gear_single_sided( teeth = 20 )
-- `part #87407`: technic_gear_single_sided( teeth = 20, center_hole = "pin" )
+- `part #6589`:  technic_gear_single_sided();
+- `part #32198`: technic_gear_single_sided( teeth = 20 );
+- `part #87407`: technic_gear_single_sided( teeth = 20, center_hole = "pin" );
 
 **Parameters:**
 
@@ -343,19 +343,19 @@ Origin is centered at the bottom of the pin.
 ![A pin compatible with LEGO part #2780.](images/technic_pin.png)
 
 **Part Support:**
-- `part #2780`:  technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true )
-- `part #3673`:  technic_pin( top_length = 1, top_friction = false, bottom_length = 1, bottom_friction = false )
-- `part #4274`:  technic_pin( top_length = 1, stud = true )
-- `part #4459`:  technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true ) // This part has long friction ridges along the length of the pin, which isn't supported yet.
-- `part #6558`:  technic_pin( top_length = 2, top_friction = true, bottom_length = 1, bottom_friction = true )
-- `part #6628`:  technic_pin( bottom_type = "tow ball" )
-- `part #32054`: technic_pin( top_length = 2, bottom_length = 1, bottom_type = "bush" )
-- `part #32138`: technic_pin( multiplier = 2 )
-- `part #32556`: technic_pin( top_length = 2, top_friction = false, bottom_length = 1, bottom_friction = false )
-- `part #65098`: technic_pin( multiplier = 2, squared_pin_holes = true )
-- `part #77765`: technic_pin( top_length = 3, top_friction = false, bottom_length = 0, bottom_friction = false )
-- `part #80477`: technic_pin( bottom_length = 2, bottom_type = "tow ball" )
-- `part #89678`: technic_pin( top_length = 1, top_friction = true, bottom_type = "stud" )
+- `part #2780`:  technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true );
+- `part #3673`:  technic_pin( top_length = 1, top_friction = false, bottom_length = 1, bottom_friction = false );
+- `part #4274`:  technic_pin( top_length = 1, stud = true );
+- `part #4459`:  technic_pin( top_length = 1, top_friction = true, bottom_length = 1, bottom_friction = true ); // This part has long friction ridges along the length of the pin, which isn't supported yet.
+- `part #6558`:  technic_pin( top_length = 2, top_friction = true, bottom_length = 1, bottom_friction = true );
+- `part #6628`:  technic_pin( bottom_type = "tow ball" );
+- `part #32054`: technic_pin( top_length = 2, bottom_length = 1, bottom_type = "bush" );
+- `part #32138`: technic_pin( multiplier = 2 );
+- `part #32556`: technic_pin( top_length = 2, top_friction = false, bottom_length = 1, bottom_friction = false );
+- `part #65098`: technic_pin( multiplier = 2, squared_pin_holes = true );
+- `part #77765`: technic_pin( top_length = 3, top_friction = false, bottom_length = 0, bottom_friction = false );
+- `part #80477`: technic_pin( bottom_length = 2, bottom_type = "tow ball" );
+- `part #89678`: technic_pin( top_length = 1, top_friction = true, bottom_type = "stud" );
 
 **Parameters:**
 
@@ -381,7 +381,7 @@ Origin is centered at the bottom center of the pin connector.
 ![A pin connector compatible with LEGO part #18654.](images/technic_pin_connector.png)
 
 **Part Support:**
-- `part #18654`: technic_pin_connector( length = 1 ) [equivalent to a 1-hole beam]
+- `part #18654`: technic_pin_connector( length = 1 ); // equivalent to a 1-hole beam
 
 **Parameters:**
 
@@ -446,9 +446,9 @@ Generate a Technic-compatible worm gear.
 ![A worm gear compatible with LEGO part #4716.](images/technic_worm_gear.png)
 
 **Part Support:**
-- `part #4716`:  technic_worm_gear( height = 2, width = 3 );                    // 10mm   wide, 16mm   tall
-- `part #27938`: technic_worm_gear( height = 1, width = 4 );                    // 13.5mm wide, 8mm    tall
-- `part #32905`: technic_worm_gear( height = 2, width = 3, opening = "axle2" ); // 10mm   wide, 15.7mm tall
+- `part #4716`:  technic_worm_gear( height = 2, width = 3 );                    // 10mm wide, 16mm tall
+- `part #27938`: technic_worm_gear( height = 1, width = 4 );                    // 13.5mm wide, 8mm tall
+- `part #32905`: technic_worm_gear( height = 2, width = 3, opening = "axle2" ); // 10mm wide, 15.7mm tall
 
 **Parameters:**
 
