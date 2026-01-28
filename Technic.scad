@@ -1673,3 +1673,68 @@ module technic_stud_cutouts( height = 1, diameter = stud_diameter ) {
 		}
 	}
 }
+
+module technic_gusset(p1, p2, p3, height) {
+    hull() {
+        translate(p1)
+            cube([0.1, 0.1, height * technic_height_in_mm], center=false);
+
+        translate(p2)
+            cube([0.1, 0.1, height * technic_height_in_mm], center=false);
+
+        translate(p3)
+            cube([0.1, 0.1, height * technic_height_in_mm], center=false);
+    }
+}
+
+module technic_T_beam(
+    horizontal_length = 3,
+    vertical_length = 3,
+    height = 1
+) {
+    
+    center_x = technic_beam_hole_spacing * floor(horizontal_length / 2);
+    h = height * technic_height_in_mm;
+    s = technic_beam_hole_spacing;
+    gusset_h = technic_height_in_mm*height/4;
+    overlap = 0.6;
+    
+    union() {
+
+        // Horizontal beam
+        technic_beam(
+            length = horizontal_length,
+            height = height,
+            axle_holes = [1, horizontal_length]
+        );
+
+        // Vertical beam (centered on middle hole)
+        translate([
+            technic_beam_hole_spacing * floor(horizontal_length / 2), // center hole
+            0,
+            0
+        ])
+        rotate([0, 0, 90])
+        technic_beam(
+            length = vertical_length,
+            height = height
+        );
+        
+        // Triangle gusset (right side)
+        technic_gusset(
+            [center_x + (s/2) - overlap, (s/2)- overlap, 0],
+            [center_x + (s*horizontal_length/2 - s*.37), (s/2)- overlap, 0],
+            [center_x + (s/2) - overlap, s*(vertical_length-1.5), 0],
+            height
+        );
+        
+        // Triangle gusset (left side)
+        technic_gusset(
+            [0-s*.13, (s/2)- overlap, 0],
+            [center_x - (s/2) + overlap, (s/2)- overlap, 0],
+            [center_x - (s/2) + overlap, s*(vertical_length-1.5),0 ],
+            height
+        );
+        
+    }
+}
