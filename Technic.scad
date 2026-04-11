@@ -276,9 +276,11 @@ technic_axle_notch_height / 2 ) ] ) {
  * @param length *float* The length of the connector, in Technic holes.
  * @param height *float* The height of the connector, in multiples of standard connector heights.
  */
-module technic_axle_and_pin_connector( length = 4, height = 1 ) {
+module technic_axle_and_pin_connector( length = 4, height = 1, bush_on_both_ends = true ) {
 	// Add the two bushes, one on each end.
 	                                                     technic_bush( height = height, stud_cutouts = false );
+    
+    if (bush_on_both_ends)
 	translate( [ ( length - 1 ) * stud_spacing, 0, 0 ] ) technic_bush( height = height, stud_cutouts = false );
 
 	// Add the connector faces.
@@ -312,9 +314,11 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 				translate( [ 0, 0, -EXTENSION_FOR_DIFFERENCE / 2 ] ) {
 					cylinder( d = technic_bush_big_diameter, h = ( height * technic_height_in_mm ) + EXTENSION_FOR_DIFFERENCE );
 
-					translate( [ stud_spacing * ( length - 1 ), 0, 0 ] ) {
-						cylinder( d = technic_bush_big_diameter, h = ( height * technic_height_in_mm ) + EXTENSION_FOR_DIFFERENCE);
-					}
+                    if (bush_on_both_ends) {
+                        translate( [ stud_spacing * ( length - 1 ), 0, 0 ] ) {
+                            cylinder( d = technic_bush_big_diameter, h = ( height * technic_height_in_mm ) + EXTENSION_FOR_DIFFERENCE);
+                        }
+                    }
 				}
 			}
 
@@ -324,18 +328,21 @@ module technic_axle_and_pin_connector( length = 4, height = 1 ) {
 			}
 		}
 
-		// Remove the cylinders from the center that are occupied by the pin connectors.
-		for ( i = [ 1 : length - 2 ] ) {
+        cylinder_substract = bush_on_both_ends ? 2 : 1; 
+
+		for ( i = [ 1 : length - cylinder_substract ] ) {
 			for ( j = [ 1 : height ] ) {
 				translate( [ i * technic_beam_hole_spacing, 0, ((j-1) * technic_height_in_mm ) + ( technic_height_in_mm / 2 ) ] ) rotate( [ 90, 0, 0 ] ) translate( [ 0, 0, -( technic_height_in_mm / 2 ) ] ) cylinder( d = technic_pin_connector_outer_diameter, h = technic_height_in_mm );
 			}
 		}
 	}
 
+    
 	// Add the pin holes along the center, essentially a beam portion.
 	// These protrude every so slightly past the outer connector faces, which looks like an error,
 	// but is how those pieces actually are in reality.
-	for ( i = [ 1 : length - 2 ] ) {
+    pin_hole_substract = bush_on_both_ends ? 2 : 1; 
+	for ( i = [ 1 : length - pin_hole_substract ] ) {
 		for ( j = [ 1 : height ] ) {
 			translate( [ i * technic_beam_hole_spacing, 0, ((j-1) * technic_height_in_mm ) + ( technic_height_in_mm / 2 ) ] ) rotate( [ 90, 0, 0 ] ) translate( [ 0, 0, -( technic_height_in_mm / 2 ) ] ) technic_pin_connector();
 		}
