@@ -1248,7 +1248,7 @@ module technic_pin(
 							} else if ( bottom_type == "tow ball" ) {
 								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, -bottom_length_in_mm] ) technic_tow_ball( length = bottom_length );
 							} else if ( bottom_type == "bush" ) {
-								rotate( a = 180, v = [ 0, 1, 0 ] ) technic_bush( height = bottom_length, stud_cutouts = false );
+								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, 0 ] ) rotate( a = 180, v = [ 0, 1, 0 ] ) technic_bush( height = bottom_length, stud_cutouts = false );
 							} else {
 								translate( [ ( i - 1 ) * technic_pin_multiple_offset, 0, 0 ] ) rotate( [ 0, 180, 0 ] ) technic_pin_half( length = bottom_length, friction = bottom_friction, squared_pin_holes = squared_pin_holes );
 							}
