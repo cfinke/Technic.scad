@@ -194,7 +194,7 @@ module technic_axle(
 				union() {
 					// If there's a stop (and thus an extra segment of length to cut off, we need to move the axle
 					// down a segment, since it's returned from technic_axle_spline with the center of its base at the origin.
-					translate( [ 0, 0, has_stop ? - ( stud_spacing ) : 0 ] ) {
+					translate( [ 0, 0, has_stop ? - ( technic_height_in_mm ) : 0 ] ) {
 						// If there's a stop, add an extra bit of length so that we can cut it off flush without seeing the small bit of rounded corners.
 						                       technic_axle_spline( length = has_stop ? length + 1 : length );
 						rotate( [ 0, 0, 90 ] ) technic_axle_spline( length = has_stop ? length + 1 : length );
@@ -208,8 +208,8 @@ module technic_axle(
 
 				if ( has_stop ) {
 					// Cut off the extra axle below the stop.
-					translate([ 0, 0, -( ( stud_spacing ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
-						cylinder( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE, h = ( stud_spacing ) + EXTENSION_FOR_DIFFERENCE );
+					translate([ 0, 0, -( ( technic_height_in_mm ) + EXTENSION_FOR_DIFFERENCE ) ] ) {
+						cylinder( d = technic_axle_spline_width + EXTENSION_FOR_DIFFERENCE, h = ( technic_height_in_mm ) + EXTENSION_FOR_DIFFERENCE );
 					}
 				}
 
