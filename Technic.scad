@@ -804,7 +804,7 @@ module technic_elbow(
 
 		if ( axle_socket_on_length ) {
 			// Subtract the axle socket area along the length.
-			translate( [ real_width * stud_spacing, 0, 0 ] ) {
+			translate( [ real_length * stud_spacing, 0, 0 ] ) {
 				rotate( [ 0, -90, 0 ] ) {
 					technic_axle_hole( height = 1 );
 				}
@@ -813,7 +813,7 @@ module technic_elbow(
 
 		if ( axle_socket_on_width ) {
 			// Subtract the axle socket area along the width.
-			translate( [ 0, real_length * stud_spacing, 0 ] ) {
+			translate( [ 0, real_width * stud_spacing, 0 ] ) {
 				rotate( [ 90, 0, 0 ] ) {
 					technic_axle_hole( height = 1 );
 				}
