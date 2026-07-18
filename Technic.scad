@@ -376,9 +376,7 @@ module technic_axle_connector(
 				}
 			}
 		}
-		translate( [ 0, 0, length * technic_height_in_mm / 2 ] ) {
-				technic_axle_hole( height = length );
-		}
+		technic_axle_hole( height = length );
 		if ( ridged ) {
 			technic_stud_cutouts( height = length, diameter = stud_diameter - (technic_axle_connector_outer_diameter - technic_axle_connector_ridged_inner_diameter ) / 2 );
 		} else {
@@ -447,9 +445,7 @@ module technic_connector_hub(
 		} else if ( hub_type == "axle" ) {
 			difference() {
 				cylinder( d = technic_pin_connector_outer_diameter, h = hub_height * technic_height_in_mm );
-				translate( [ 0, 0, hub_height * technic_height_in_mm / 2 ] ) {
-					technic_axle_hole( height = hub_height );
-				}
+				technic_axle_hole( height = hub_height );
 			}
 		}
 
@@ -715,8 +711,8 @@ module technic_bush( height = 1/2, stud_cutouts = true ) {
 			}
 		}
 
-		// The axle hole.
-		translate( [ 0, 0, ( height * technic_height_in_mm ) / 2 ] ) technic_axle_hole( height = height );
+		// The axle hole. technic_axle_hole() centers its own cutter on the part, so no translation is needed.
+		technic_axle_hole( height = height );
 	}
 }
 
