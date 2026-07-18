@@ -372,7 +372,7 @@ module technic_axle_connector(
 			cylinder( d = technic_axle_connector_outer_diameter, h = length * technic_height_in_mm );
 			if ( length >= 1 && ridged ) {
 				for ( i = [ 1 : (length * 2) - 1 ] ) {
-					translate( [ 0, 0, i * technic_height_in_mm / 2 - technic_axle_connector_ridge_thickness ] ) cylinder( d = technic_axle_connector_outer_diameter + technic_axle_connector_ridge_thickness, h = technic_axle_connector_ridge_thickness );
+					translate( [ 0, 0, i * technic_height_in_mm / 2 - ( technic_axle_connector_ridge_thickness / 2 ) ] ) cylinder( d = technic_axle_connector_outer_diameter + technic_axle_connector_ridge_thickness, h = technic_axle_connector_ridge_thickness );
 				}
 			}
 		}
