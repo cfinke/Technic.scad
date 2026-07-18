@@ -1313,7 +1313,8 @@ module technic_pin(
 				}
 			}
 		} else {
-			translate( [ 0, 0, ( bottom_length_in_mm ) - ( bottom_type == "pin" ? technic_pin_collar_thickness : 0 ) ] ) {
+			// Only shift down to merge the two halves' collars if there is actually a bottom pin half to merge with.
+			translate( [ 0, 0, ( bottom_length_in_mm ) - ( bottom_type == "pin" && bottom_length > 0 ? technic_pin_collar_thickness : 0 ) ] ) {
 				// The top half of the pin.
 				technic_pin_half( length = top_length, friction = top_friction, squared_pin_holes = squared_pin_holes );
 
