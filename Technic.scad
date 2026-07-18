@@ -472,7 +472,8 @@ module technic_connector_hub(
 								} else if ( spoke_types[i] == "pin" ) {
 									technic_pin_half( length = spoke_lengths[i] + .5, friction = true, squared_pin_holes = false );
 								} else if ( spoke_types[i] == "tow ball" ) {
-									translate( [ 0, 0, -(spoke_lengths[i] + 1) * technic_pin_tow_ball_total_length ] ) technic_tow_ball( length = spoke_lengths[i] + .5 );
+									// technic_tow_ball() builds upward with the ball at its near end; mirror it across the spoke plane so the ball ends up at the far end of the spoke, pointing outward.
+									mirror( [ 0, 0, 1 ] ) translate( [ 0, 0, -(spoke_lengths[i] + 1) * technic_pin_tow_ball_total_length ] ) technic_tow_ball( length = spoke_lengths[i] + .5 );
 								} else if ( spoke_types[i] == "axle connector" ) {
 									technic_axle_connector( length = spoke_lengths[i] + .5);
 								}
